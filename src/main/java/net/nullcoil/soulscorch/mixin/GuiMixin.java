@@ -1,7 +1,7 @@
 package net.nullcoil.soulscorch.mixin;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Gui.class)
+@Mixin(Hud.class)
 public abstract class GuiMixin {
 
     @Shadow protected abstract LivingEntity getPlayerVehicleWithHealth();
@@ -51,7 +51,7 @@ public abstract class GuiMixin {
 
     @Inject(method = "extractHeart", at = @At("TAIL"))
     private void soulscorch$overlayPlayerCrackedHeart(
-            GuiGraphicsExtractor graphics, Gui.HeartType type, int xo, int yo, boolean isHardcore, boolean blinks, boolean half, CallbackInfo ci
+            GuiGraphicsExtractor graphics, Hud.HeartType type, int xo, int yo, boolean isHardcore, boolean blinks, boolean half, CallbackInfo ci
     ) {
         if (type.toString().equals("CONTAINER")) {
             int currentS = soulscorch$playerHeartIndex;

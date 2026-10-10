@@ -4,5 +4,8 @@ accessible method net/minecraft/world/level/block/state/properties/WoodType regi
 accessible method net/minecraft/world/entity/animal/feline/Cat getSoundVariant ()Lnet/minecraft/core/Holder;
 accessible method net/minecraft/client/model/monster/piglin/AbstractPiglinModel getDefaultEarAngleInDegrees ()F
 extendable method net/minecraft/client/model/monster/piglin/AbstractPiglinModel getDefaultEarAngleInDegrees ()F
-accessible class net/minecraft/client/gui/Gui$HeartType
 accessible method net/minecraft/world/level/block/Blocks postProcessAbove (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+accessible method net/minecraft/advancements/triggers/CriteriaTriggers register (Ljava/lang/String;Lnet/minecraft/advancements/triggers/CriterionTrigger;)Lnet/minecraft/advancements/triggers/CriterionTrigger;
+accessible method net/minecraft/world/level/block/Blocks wallVariant (Lnet/minecraft/world/level/block/Block;Z)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+accessible field net/minecraft/world/level/levelgen/RandomState router Lnet/minecraft/world/level/levelgen/NoiseRouter;
+accessible class net/minecraft/client/gui/Hud$HeartType

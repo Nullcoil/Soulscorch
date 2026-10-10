@@ -16,11 +16,9 @@ import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
 public class SoullessRenderer extends HumanoidMobRenderer<SoullessEntity, SoullessRenderState, SoullessModel> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulless/soulless.png");
     private static final Identifier AWAKENED = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulless/awakened.png");
-    // Points back to the adult textures until baby variants are made
-    @Deprecated(since = "26.1", forRemoval = true)
-    private static final Identifier TEXTURE_BABY = TEXTURE;
-    @Deprecated(since = "26.1", forRemoval = true)
-    private static final Identifier AWAKENED_BABY = AWAKENED;
+
+    private static final Identifier TEXTURE_BABY = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulless/soulless_baby.png");
+    private static final Identifier AWAKENED_BABY = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulless/awakened_baby.png");
 
     public SoullessRenderer(EntityRendererProvider.Context context) {
         super(context,
@@ -31,8 +29,9 @@ public class SoullessRenderer extends HumanoidMobRenderer<SoullessEntity, Soulle
         this.addLayer(new HumanoidArmorLayer<>(
                       this,
                       ArmorModelSet.bake(ModelLayers.ZOMBIFIED_PIGLIN_ARMOR, context.getModelSet(), SoullessModel::new),
-                      ArmorModelSet.bake(ModelLayers.ZOMBIFIED_PIGLIN_ARMOR, context.getModelSet(), SoullessModel::new),
+                      ArmorModelSet.bake(ModelLayers.ZOMBIFIED_PIGLIN_BABY_ARMOR, context.getModelSet(), SoullessModel::new),
                       context.getEquipmentRenderer()));
+        this.addLayer(new SoullessEmissiveLayer(this));
     }
 
     @Override

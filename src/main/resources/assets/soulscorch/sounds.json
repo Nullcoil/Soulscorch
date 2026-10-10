@@ -110,5 +110,51 @@
     "sounds": [
       "soulscorch:ethel_spin"
     ]
+  },
+  "heedless_death": {
+    "subtitle": "sounds.soulscorch.heedless_death",
+    "sounds": ["soulscorch:soulless_death"]
+  },
+  "heedless_hurt": {
+    "subtitle": "sounds.soulscorch.heedless_hurt",
+    "sounds": [
+      "soulscorch:soulless_hurt0",
+      "soulscorch:soulless_hurt1",
+      "soulscorch:soulless_hurt2"
+    ]
+  },
+  "heedless_wake": {
+    "subtitle": "sounds.soulscorch.heedless_wake",
+    "sounds": [
+      "soulscorch:soulless_wake0",
+      "soulscorch:soulless_wake1",
+      "soulscorch:soulless_wake2",
+      "soulscorch:soulless_wake3",
+      "soulscorch:soulless_wake4"
+    ]
+  },
+  "soulless_whisper": {
+    "subtitle": "sounds.soulscorch.soulless_whisper",
+    "sounds": [
+      { "name": "minecraft:particle.soul_escape", "type": "event" }
+    ]
+  },
+  "heedless_whisper": {
+    "subtitle": "sounds.soulscorch.heedless_whisper",
+    "sounds": [
+      { "name": "minecraft:particle.soul_escape", "type": "event" }
+    ]
+  },
+  "restless_whisper": {
+    "subtitle": "sounds.soulscorch.restless_whisper",
+    "sounds": [
+      { "name": "minecraft:particle.soul_escape", "type": "event" }
+    ]
+  },
+  "soul_drip": {
+    "subtitle": "sounds.soulscorch.soul_drip",
+    "sounds": [
+      { "name": "minecraft:block.beehive.drip", "type": "event" }
+    ]
   }
 }

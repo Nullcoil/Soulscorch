@@ -37,7 +37,7 @@ public class SoulbreakEventHandler {
         Queue<SoullessEntity> queue = new LinkedList<>();
 
         // Step 1: Find initial Soulless within LISTENING_RANGE
-        Vec3 center = pos.getCenter();
+        Vec3 center = Vec3.atCenterOf(pos);
         AABB initialBox = new AABB(
                 center.x - LISTENING_RANGE, center.y - LISTENING_RANGE, center.z - LISTENING_RANGE,
                 center.x + LISTENING_RANGE, center.y + LISTENING_RANGE, center.z + LISTENING_RANGE

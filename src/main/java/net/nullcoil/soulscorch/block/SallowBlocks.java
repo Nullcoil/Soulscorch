@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.block;
 
-import com.terraformersmc.terraform.sign.api.block.TerraformSignBlockHelper;
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.fabricmc.fabric.api.item.v1.BlockTransformerHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.nullcoil.soulscorch.Soulscorch;
 
@@ -44,7 +43,7 @@ public class SallowBlocks {
     }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties, boolean buildItem) {
-        Identifier id = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
 
         ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, id);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
@@ -59,9 +58,9 @@ public class SallowBlocks {
     }
 
     public static void register() {
-        BlockEntityType.SHELF.addValidBlock(SALLOW_SHELF);
-        StrippableBlockRegistry.register(SALLOW_LOG, STRIPPED_SALLOW_LOG);
-        StrippableBlockRegistry.register(SALLOW_WOOD, STRIPPED_SALLOW_WOOD);
+        BlockEntityTypes.SHELF.addValidBlock(SALLOW_SHELF);
+        BlockTransformerHelper.registerStripping(SALLOW_LOG, STRIPPED_SALLOW_LOG);
+        BlockTransformerHelper.registerStripping(SALLOW_WOOD, STRIPPED_SALLOW_WOOD);
         Soulscorch.LOGGER.info("Registering Sallow Blocks for " + Soulscorch.MOD_ID);
     }
 
@@ -84,9 +83,9 @@ public class SallowBlocks {
 
         // Add the block to the correct BlockEntityType so signs render and function properly
         if (block instanceof StandingSignBlock || block instanceof WallSignBlock) {
-            BlockEntityType.SIGN.addValidBlock(block);        // This is the correct method name in 26.1
+            BlockEntityTypes.SIGN.addValidBlock(block);        // This is the correct method name in 26.1
         } else if (block instanceof CeilingHangingSignBlock || block instanceof WallHangingSignBlock) {
-            BlockEntityType.HANGING_SIGN.addValidBlock(block);
+            BlockEntityTypes.HANGING_SIGN.addValidBlock(block);
         }
 
         return block;
@@ -121,22 +120,22 @@ public class SallowBlocks {
                 p -> new TrapDoorBlock(ModBlockSets.SALLOW, p), BlockBehaviour.Properties.ofFullCopy(SeepingBlocks.SEEPING_TRAPDOOR));
 
         SALLOW_WALL_SIGN = registerSignBlock(
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow_wall_sign"),
+                Soulscorch.id("sallow_wall_sign"),
                 p -> new WallSignBlock(ModWoodTypes.SALLOW, p),
                 BlockBehaviour.Properties.ofFullCopy(SeepingBlocks.SEEPING_WALL_SIGN)
         );
         SALLOW_SIGN = registerSignBlock(
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow_sign"),
+                Soulscorch.id("sallow_sign"),
                 p -> new StandingSignBlock(ModWoodTypes.SALLOW, p),
                 BlockBehaviour.Properties.ofFullCopy(SeepingBlocks.SEEPING_SIGN)
         );
         SALLOW_WALL_HANGING_SIGN = registerSignBlock(
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow_wall_hanging_sign"),
+                Soulscorch.id("sallow_wall_hanging_sign"),
                 p -> new WallHangingSignBlock(ModWoodTypes.SALLOW, p),
                 BlockBehaviour.Properties.ofFullCopy(SeepingBlocks.SEEPING_WALL_HANGING_SIGN)
         );
         SALLOW_HANGING_SIGN = registerSignBlock(
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow_hanging_sign"),
+                Soulscorch.id("sallow_hanging_sign"),
                 p -> new CeilingHangingSignBlock(ModWoodTypes.SALLOW, p),
                 BlockBehaviour.Properties.ofFullCopy(SeepingBlocks.SEEPING_HANGING_SIGN)
         );

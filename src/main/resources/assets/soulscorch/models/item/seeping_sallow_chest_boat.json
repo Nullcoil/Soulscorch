@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "soulscorch:item/seeping_sallow_chest_boat"
+  }
+}

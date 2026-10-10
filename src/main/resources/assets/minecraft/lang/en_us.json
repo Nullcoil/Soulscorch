@@ -1,8 +1,6 @@
 {
-  "subtitles.particle.soul_escape": "Souls whisper",
   "subtitles.block.copper_bulb.turn_off": "Bulb turns off",
   "subtitles.block.copper_bulb.turn_on": "Bulb turns on",
-  "subtitles.block.beehive.drip": "Viscous fluid drips",
   "advancements.adventure.avoid_vibration.description": "Sneak near a Sculk Sensor, Warden, or other listening block to prevent detection",
 
   "item.minecraft.tipped_arrow.effect.soul_rendering": "Tipped Arrow of Soul Rendering",
@@ -13,8 +11,5 @@
   "item.minecraft.tipped_arrow.effect.soul_rendering_strong": "Tipped Arrow of Soul Rendering II",
   "item.minecraft.potion.effect.soul_rendering_strong": "Potion of Soul Rendering II",
   "item.minecraft.splash_potion.effect.soul_rendering_strong": "Splash Potion of Soul Rendering II",
-  "item.minecraft.lingering_potion.effect.soul_rendering_strong": "Lingering Potion of Soul Rendering II",
-
-  "enchantment.minecraft.soul_fire_aspect": "Soul Fire Aspect",
-  "enchantment.minecraft.soul_flame": "Soul Flame"
+  "item.minecraft.lingering_potion.effect.soul_rendering_strong": "Lingering Potion of Soul Rendering II"
 }

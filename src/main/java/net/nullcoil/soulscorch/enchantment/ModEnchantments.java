@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.enchantment;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.nullcoil.soulscorch.Soulscorch;
@@ -9,7 +8,7 @@ import net.nullcoil.soulscorch.Soulscorch;
 public class ModEnchantments {
     public static final ResourceKey<Enchantment> CATHARSIS = ResourceKey.create(
             Registries.ENCHANTMENT,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "catharsis")
+            Soulscorch.id("catharsis")
     );
 
     public static void register() {

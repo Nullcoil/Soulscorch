@@ -9,11 +9,6 @@
           "weight": 25
         },
         {
-          "type": "minecraft:item",
-          "name": "soulscorch:avalcomb",
-          "weight": 10
-        },
-        {
           "type": "minecraft:empty",
           "weight": 65
         }

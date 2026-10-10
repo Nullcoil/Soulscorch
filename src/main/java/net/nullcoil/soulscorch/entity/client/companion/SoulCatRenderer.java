@@ -18,6 +18,8 @@ import net.nullcoil.soulscorch.entity.ai.SoulborneCatEntity;
 public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatRenderState, AbstractFelineModel<CatRenderState>> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/midnight.png");
+    private static final Identifier BABY =
+            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulkitten.png");
 
     public SoulCatRenderer(EntityRendererProvider.Context context) {
         super(context, new AdultCatModel(context.bakeLayer(ModelLayers.CAT)), new BabyCatModel(context.bakeLayer(ModelLayers.CAT_BABY)), .4f);
@@ -26,7 +28,7 @@ public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatR
 
     @Override
     public Identifier getTextureLocation(CatRenderState state) {
-        return TEXTURE;
+        return state.isBaby ? BABY : TEXTURE;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatR
         float lieDownAmount = state.lieDownAmount;
         if (lieDownAmount > 0.0F) {
             poseStack.translate(0.4F * lieDownAmount, 0.15F * lieDownAmount, 0.1F * lieDownAmount);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(lieDownAmount, 0.0F, 90.0F)));
+            poseStack.rotateDegrees(Axis.ZP, Mth.rotLerp(lieDownAmount, 0.0F, 90.0F));
             if (state.isLyingOnTopOfSleepingPlayer) {
                 poseStack.translate(0.15F * lieDownAmount, 0.0F, 0.0F);
             }

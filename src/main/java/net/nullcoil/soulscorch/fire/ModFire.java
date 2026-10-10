@@ -1,19 +1,10 @@
 package net.nullcoil.soulscorch.fire;
 
-import it.crystalnest.prometheus.api.Fire;
-import it.crystalnest.prometheus.api.FireManager;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
+
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.effect.ModEffects;
-import net.nullcoil.soulscorch.item.ModItems;
-import org.jetbrains.annotations.ApiStatus;
 
 public final class ModFire {
+    /*
     @ApiStatus.Internal
     public static final Identifier SOUL_FIRE_TYPE = FireManager.SOUL_FIRE_TYPE;
 
@@ -44,6 +35,11 @@ public final class ModFire {
 
     private ModFire() {}
 
-    public static void register() { Soulscorch.LOGGER.info("Registering Fire Registry for " + Soulscorch.MOD_ID); }
+
+     */
+    public static void register() {
+        Soulscorch.LOGGER.info("Skipping registering ModFire for " + Soulscorch.MOD_ID);
+    }
+
 
 }

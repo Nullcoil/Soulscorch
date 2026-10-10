@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.util;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -31,7 +30,7 @@ public class ModTags {
         public static final TagKey<Block> SEEPING_SALLOW_BLOCKS = createTag("seeping_sallow_blocks");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name));
+            return TagKey.create(Registries.BLOCK, Soulscorch.id(name));
         }
     }
 
@@ -59,7 +58,7 @@ public class ModTags {
         public static final TagKey<Item> SEEPING_LOGS = createTag("seeping_logs");
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name));
+            return TagKey.create(Registries.ITEM, Soulscorch.id(name));
         }
     }
 
@@ -70,7 +69,7 @@ public class ModTags {
         public static final TagKey<EntityType<?>> NETHER_BOATS = createTag("nether_boats");
 
         private static TagKey<EntityType<?>> createTag(String name) {
-            return TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name));
+            return TagKey.create(Registries.ENTITY_TYPE, Soulscorch.id(name));
         }
     }
 
@@ -78,7 +77,7 @@ public class ModTags {
         public static final TagKey<Biome> SOUL_BIOMES = createTag("soul_biomes");
 
         private static TagKey<Biome> createTag(String name) {
-            return TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name));
+            return TagKey.create(Registries.BIOME, Soulscorch.id(name));
         }
     }
 }

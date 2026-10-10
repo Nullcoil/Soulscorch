@@ -1,13 +1,14 @@
 package net.nullcoil.soulscorch.entity;
 
-import com.terraformersmc.terraform.boat.impl.data.TerraformBoatDataImpl;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.vehicle.boat.*;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -21,67 +22,57 @@ import net.nullcoil.soulscorch.entity.vehicle.SeepingChestBoat;
 import java.util.function.Supplier;
 
 public class ModBoats {
-    public static final Identifier SEEPING = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping");
-    public static final Identifier SALLOW = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow");
-    public static final Identifier CRIMSON = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "crimson");
-    public static final Identifier WARPED = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "warped");
+    public record BoatEntry(EntityType<? extends AbstractBoat> entityType, BoatItem item) {}
 
-    public static final BoatItem SALLOW_BOAT = registerCustomBoat(SALLOW, false, false);
-    public static final BoatItem SALLOW_CHEST_BOAT = registerCustomBoat(SALLOW, true, false);
-    public static final BoatItem CRIMSON_BOAT = registerCustomBoat(CRIMSON, false, false);
-    public static final BoatItem CRIMSON_CHEST_BOAT = registerCustomBoat(CRIMSON, true, false);
-    public static final BoatItem WARPED_BOAT = registerCustomBoat(WARPED, false, false);
-    public static final BoatItem WARPED_CHEST_BOAT = registerCustomBoat(WARPED, true, false);
+    public static final BoatEntry SALLOW_BOAT = registerBoat("sallow", false, false);
+    public static final BoatEntry SALLOW_CHEST_BOAT = registerBoat("sallow", true, false);
+    public static final BoatEntry CRIMSON_BOAT = registerBoat("crimson", false, false);
+    public static final BoatEntry CRIMSON_CHEST_BOAT = registerBoat("crimson", true, false);
+    public static final BoatEntry WARPED_BOAT = registerBoat("warped", false, false);
+    public static final BoatEntry WARPED_CHEST_BOAT = registerBoat("warped", true, false);
+    public static final BoatEntry SEEPING_BOAT = registerBoat("seeping", false, true);
+    public static final BoatEntry SEEPING_CHEST_BOAT = registerBoat("seeping", true, true);
 
-    public static final BoatItem SEEPING_BOAT = registerCustomBoat(SEEPING, false, true);
-    public static final BoatItem SEEPING_CHEST_BOAT = registerCustomBoat(SEEPING, true, true);
+    private static BoatEntry registerBoat(String wood, boolean chest, boolean seeping) {
+        Identifier id = Soulscorch.id(wood + (chest ? "_chest_boat" : "_boat"));
+        ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
+        ResourceKey<EntityType<?>> entityKey = ResourceKey.create(Registries.ENTITY_TYPE, id);
 
-    private static BoatItem registerCustomBoat(Identifier id, boolean chest, boolean seeping) {
-        TerraformBoatDataImpl boatData = TerraformBoatDataImpl.empty(id);
+        Item[] drop = {Items.AIR};
+        Supplier<Item> dropSupplier = () -> drop[0];
 
-        var itemKey = chest ? boatData.chestRaftKey() : boatData.raftKey();
-        var entityTypeKey = chest ? boatData.chestRaftEntityTypeKey() : boatData.raftEntityTypeKey();
-
-        Item[] itemHolder = { Items.AIR };
-        Supplier<Item> itemSupplier = () -> itemHolder[0];
-
+        EntityType<? extends AbstractBoat> entityType;
         if (chest) {
-            EntityType<? extends NetherChestBoat> entityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, entityTypeKey,
+            entityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, entityKey,
                     EntityType.Builder.<NetherChestBoat>of(
                                     seeping
-                                            ? (type, world) -> new SeepingChestBoat(type, world, itemSupplier)
-                                            : (type, world) -> new NetherChestBoat(type, world, itemSupplier),
+                                            ? (type, level) -> new SeepingChestBoat(type, level, dropSupplier)
+                                            : (type, level) -> new NetherChestBoat(type, level, dropSupplier),
                                     MobCategory.MISC)
                             .noLootTable()
-                            .sized(1.375f, 0.5625f)
-                            .eyeHeight(0.5625f)
+                            .sized(1.375F, 0.5625F)
+                            .eyeHeight(0.5625F)
                             .clientTrackingRange(10)
-                            .build(entityTypeKey));
-            TerraformBoatDataImpl.addChestRaft(id, (EntityType<ChestRaft>)(EntityType<?>) entityType);
-            BoatItem item = Registry.register(BuiltInRegistries.ITEM, itemKey,
-                    new BoatItem((EntityType<? extends AbstractBoat>) entityType, new Item.Properties().stacksTo(1).fireResistant().setId(itemKey)));
-            itemHolder[0] = item;
-            DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior((EntityType<? extends AbstractBoat>) entityType));
-            return item;
+                            .build(entityKey));
         } else {
-            EntityType<? extends NetherBoat> entityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, entityTypeKey,
+            entityType = Registry.register(BuiltInRegistries.ENTITY_TYPE, entityKey,
                     EntityType.Builder.<NetherBoat>of(
                                     seeping
-                                            ? (type, world) -> new SeepingBoat(type, world, itemSupplier)
-                                            : (type, world) -> new NetherBoat(type, world, itemSupplier),
+                                            ? (type, level) -> new SeepingBoat(type, level, dropSupplier)
+                                            : (type, level) -> new NetherBoat(type, level, dropSupplier),
                                     MobCategory.MISC)
                             .noLootTable()
-                            .sized(1.375f, 0.5625f)
-                            .eyeHeight(0.5625f)
+                            .sized(1.375F, 0.5625F)
+                            .eyeHeight(0.5625F)
                             .clientTrackingRange(10)
-                            .build(entityTypeKey));
-            TerraformBoatDataImpl.addRaft(id, (EntityType<Raft>)(EntityType<?>) entityType);
-            BoatItem item = Registry.register(BuiltInRegistries.ITEM, itemKey,
-                    new BoatItem((EntityType<? extends AbstractBoat>) entityType, new Item.Properties().stacksTo(1).fireResistant().setId(itemKey)));
-            itemHolder[0] = item;
-            DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior((EntityType<? extends AbstractBoat>) entityType));
-            return item;
+                            .build(entityKey));
         }
+
+        BoatItem item = Registry.register(BuiltInRegistries.ITEM, itemKey,
+                new BoatItem(entityType, new Item.Properties().stacksTo(1).fireResistant().setId(itemKey)));
+        drop[0] = item;
+        DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(entityType));
+        return new BoatEntry(entityType, item);
     }
 
     public static void register() {

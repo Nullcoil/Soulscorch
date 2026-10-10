@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.nullcoil.soulscorch.particles.ModParticles;
+import net.nullcoil.soulscorch.sound.ModSounds;
 
 public class SeepingFenceGate extends FenceGateBlock {
     public SeepingFenceGate(WoodType woodType, Properties properties) {
@@ -29,7 +30,7 @@ public class SeepingFenceGate extends FenceGateBlock {
                     double e = direction.getStepY() == 0 ? random.nextDouble() : (double)0.5f + (double) direction.getStepY() * 0.6;
                     double f = direction.getStepZ() == 0 ? random.nextDouble() : (double)0.5f + (double) direction.getStepZ() * 0.6;
                     level.addParticle(ModParticles.SEEPING_DRIP_HANG, (double) pos.getX() + d, (double)pos.getY()+e, (double)pos.getZ()+f, 0d, 0d, 0d);
-                    level.playLocalSound(pos, SoundEvents.BEEHIVE_DRIP, SoundSource.BLOCKS, 1.0F, 0.8F, false);
+                    level.playLocalSound(pos, ModSounds.SOUL_DRIP, SoundSource.BLOCKS, 1.0F, 0.8F, false);
                 }
             }
         }

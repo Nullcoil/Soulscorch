@@ -3,9 +3,9 @@
 	"id": "soulscorch",
 	"version": "${version}",
 	"name": "Soulscorch",
-	"description": "Slowly revamping the Soul Sand Valley.",
+	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Nullcoil"
+		"Me!"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/soulscorch",
@@ -25,13 +25,12 @@
 			"net.nullcoil.soulscorch.SoulscorchDataGenerator"
 		]
 	},
-	"accessWidener": "soulscorch.accesswidener",
 	"mixins": [
 		"soulscorch.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.18.4",
-		"minecraft": "~26.1",
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
 		"java": ">=25",
 		"fabric-api": "*"
 	}

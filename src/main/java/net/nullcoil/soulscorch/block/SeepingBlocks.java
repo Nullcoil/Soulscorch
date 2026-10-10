@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.block;
 
-import com.terraformersmc.terraform.sign.api.block.TerraformSignBlockHelper;
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.fabricmc.fabric.api.item.v1.BlockTransformerHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +11,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -25,15 +25,14 @@ import java.util.function.Function;
 
 public class SeepingBlocks {
     public static final Block SEEPING_LEAVES = registerBlock("seeping_leaves",
-            props -> new SeepingLeaves(0.02f, ModParticles.SEEPING_SALLOW_LEAVES, props), BlockBehaviour.Properties.of()
+            props -> new SeepingLeaves(0.02f, ModParticles.SEEPING_SALLOW_LEAVES, AmbientLeavesBlockSoundPlayer.noAmbientSound(), props), BlockBehaviour.Properties.of()
                     .strength(0.2f)
                     .randomTicks()
                     .sound(SoundType.LEAF_LITTER)
                     .noOcclusion()
                     .isValidSpawn(Blocks::ocelotOrParrot)
                     .isSuffocating(Blocks::never)
-                    .isViewBlocking(Blocks::never)
-                    .pushReaction(PushReaction.DESTROY)
+                    .pushReaction(PushReaction.POPPED)
                     .isRedstoneConductor(Blocks::never));
 
     public static final Block SEEPING_LOG = registerBlock("seeping_log",
@@ -133,25 +132,25 @@ public class SeepingBlocks {
                     .sound(SoundType.WOOD));
 
     public static final Block SEEPING_WALL_SIGN = registerSignBlock(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_wall_sign"),
+            Soulscorch.id("seeping_wall_sign"),
             properties -> new SeepingWallSign(ModWoodTypes.SEEPING, properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn()
                     .instrument(NoteBlockInstrument.BASS).noCollision().strength(1f));
 
     public static final Block SEEPING_SIGN = registerSignBlock(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_sign"),
+            Soulscorch.id("seeping_sign"),
             properties -> new SeepingSign(ModWoodTypes.SEEPING, properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn()
                     .instrument(NoteBlockInstrument.BASS).noCollision().strength(1f));
 
     public static final Block SEEPING_WALL_HANGING_SIGN = registerSignBlock(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_wall_hanging_sign"),
+            Soulscorch.id("seeping_wall_hanging_sign"),
             properties -> new SeepingWallHangingSign(ModWoodTypes.SEEPING, properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn()
                     .instrument(NoteBlockInstrument.BASS).noCollision().strength(1f));
 
     public static final Block SEEPING_HANGING_SIGN = registerSignBlock(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_hanging_sign"),
+            Soulscorch.id("seeping_hanging_sign"),
             properties -> new SeepingHangingSign(ModWoodTypes.SEEPING, properties),
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn()
                     .instrument(NoteBlockInstrument.BASS).noCollision().strength(1f));
@@ -182,7 +181,7 @@ public class SeepingBlocks {
     }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties, boolean buildItem) {
-        Identifier id = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
 
         ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, id);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
@@ -215,18 +214,18 @@ public class SeepingBlocks {
 
         // Add the block to the correct BlockEntityType so signs render and function properly
         if (block instanceof StandingSignBlock || block instanceof WallSignBlock) {
-            BlockEntityType.SIGN.addValidBlock(block);        // This is the correct method name in 26.1
+            BlockEntityTypes.SIGN.addValidBlock(block);        // This is the correct method name in 26.1
         } else if (block instanceof CeilingHangingSignBlock || block instanceof WallHangingSignBlock) {
-            BlockEntityType.HANGING_SIGN.addValidBlock(block);
+            BlockEntityTypes.HANGING_SIGN.addValidBlock(block);
         }
 
         return block;
     }
 
     public static void register() {
-        StrippableBlockRegistry.register(SEEPING_LOG, STRIPPED_SEEPING_LOG);
-        StrippableBlockRegistry.register(SEEPING_WOOD, STRIPPED_SEEPING_WOOD);
-        BlockEntityType.SHELF.addValidBlock(SEEPING_SHELF);
+        BlockTransformerHelper.registerStripping(SEEPING_LOG, STRIPPED_SEEPING_LOG);
+        BlockTransformerHelper.registerStripping(SEEPING_WOOD, STRIPPED_SEEPING_WOOD);
+        BlockEntityTypes.SHELF.addValidBlock(SEEPING_SHELF);
         Soulscorch.LOGGER.info("Registering Seeping Blocks for " + Soulscorch.MOD_ID);
     }
 }

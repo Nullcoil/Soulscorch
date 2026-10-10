@@ -73,7 +73,7 @@ public class ModBlocks {
                     .instabreak()
                     .randomTicks()
                     .sound(SoundType.SWEET_BERRY_BUSH)
-                    .pushReaction(PushReaction.DESTROY) // Pistons will break it
+                    .pushReaction(PushReaction.POPPED) // Pistons will break it
                     .isRedstoneConductor(Blocks::never),
             false
             );
@@ -85,7 +85,7 @@ public class ModBlocks {
                     .instabreak()
                     .randomTicks()
                     .sound(SoundType.CHERRY_SAPLING)
-                    .pushReaction(PushReaction.DESTROY)
+                    .pushReaction(PushReaction.POPPED)
                     .isRedstoneConductor(Blocks::never));
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {

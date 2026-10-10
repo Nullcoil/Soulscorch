@@ -13,10 +13,10 @@ import net.nullcoil.soulscorch.Soulscorch;
 
 @Environment(EnvType.CLIENT)
 public class SoulBrewingStandScreen extends AbstractContainerScreen<SoulBrewingStandMenu> {
-    private static final Identifier FUEL_LENGTH_SPRITE = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID,"container/brewing_stand/soul_fuel_length");
-    private static final Identifier BREW_PROGRESS_SPRITE = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID,"container/brewing_stand/brew_progress");
-    private static final Identifier BUBBLES_SPRITE = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID,"container/brewing_stand/bubbles");
-    private static final Identifier BREWING_STAND_LOCATION = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID,"textures/gui/container/soul_brewing_stand.png");
+    private static final Identifier FUEL_LENGTH_SPRITE = Soulscorch.id("container/brewing_stand/soul_fuel_length");
+    private static final Identifier BREW_PROGRESS_SPRITE = Soulscorch.id("container/brewing_stand/brew_progress");
+    private static final Identifier BUBBLES_SPRITE = Soulscorch.id("container/brewing_stand/bubbles");
+    private static final Identifier BREWING_STAND_LOCATION = Soulscorch.id("textures/gui/container/soul_brewing_stand.png");
     private static final int[] BUBBLELENGTHS = new int[]{29, 24, 20, 16, 11, 6, 0};
 
     public SoulBrewingStandScreen(final SoulBrewingStandMenu menu, final Inventory inventory, final Component title) {

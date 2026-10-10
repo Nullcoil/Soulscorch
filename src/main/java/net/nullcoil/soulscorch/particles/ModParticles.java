@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.Soulscorch;
 
 public class ModParticles {
@@ -16,7 +15,7 @@ public class ModParticles {
 
     private static SimpleParticleType register(String name) {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE,
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name),
+                Soulscorch.id(name),
                 FabricParticleTypes.simple());
     }
 

@@ -23,6 +23,8 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.ZombieAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.chicken.Chicken;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -87,13 +89,17 @@ public class SoullessEntity extends ZombifiedPiglin implements NeutralMob {
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnData) {
+        if (spawnData instanceof Zombie.ZombieGroupData existing) {
+            spawnData = new Zombie.ZombieGroupData(existing.isBaby, false);
+        } else if (spawnData == null) {
+            spawnData = new Zombie.ZombieGroupData(Zombie.getSpawnAsBabyOdds(level.getRandom()), false);
+        }
         SpawnGroupData data = super.finalizeSpawn(level, difficulty, spawnReason, spawnData);
 
         float yaw = this.random.nextFloat() * 360f - 180f;
         this.setYRot(yaw);
         this.setYHeadRot(yaw);
         this.setYBodyRot(yaw);
-        this.setBaby(false);
 
         return data;
     }
@@ -345,7 +351,7 @@ public class SoullessEntity extends ZombifiedPiglin implements NeutralMob {
             case NEUTRAL -> { return ModSounds.SOULLESS_AMBIENT; }
             case HOSTILE -> { return ModSounds.SOULLESS_ANGRY; }
         }
-        return SoundEvents.SOUL_ESCAPE.value();
+        return ModSounds.SOULLESS_WHISPER.value();
     }
 
     @Override

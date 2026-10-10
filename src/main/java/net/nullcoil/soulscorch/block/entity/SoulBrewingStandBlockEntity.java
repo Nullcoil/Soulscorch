@@ -3,7 +3,9 @@ package net.nullcoil.soulscorch.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.WorldlyContainer;
@@ -12,9 +14,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.component.BrewingFuel;
+import net.minecraft.world.item.crafting.BrewingInput;
+import net.minecraft.world.item.crafting.BrewingRecipe;
+import net.minecraft.world.item.crafting.PotionIngredient;
+import net.minecraft.world.item.crafting.RecipeAccess;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -27,6 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
     private static final int INGREDIENT_SLOT = 3;
@@ -34,210 +45,276 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
     private static final int[] SLOTS_FOR_UP = new int[]{3};
     private static final int[] SLOTS_FOR_DOWN = new int[]{0, 1, 2, 3};
     private static final int[] SLOTS_FOR_SIDES = new int[]{0, 1, 2, 4};
-    public static final int FUEL_USES = 20;
+
     public static final int DATA_BREW_TIME = 0;
     public static final int DATA_FUEL_USES = 1;
-    public static final int NUM_DATA_VALUES = 2;
-    private static final short DEFAULT_BREW_TIME = 0;
-    private static final byte DEFAULT_FUEL = 0;
+    public static final int DATA_TOTAL_BREW_TIME = 2;
+    public static final int DATA_TOTAL_FUEL_USES = 3;
+    public static final int NUM_DATA_VALUES = 4;
+
+    /** Vanilla is 400 ticks. 200 = 2x speed. */
+    public static final int BREW_TIME_TICKS = 200;
+    public static final int BLAZT_FUEL_USES = 20;
+
     private static final Component DEFAULT_NAME = Component.translatable("container.soul_brewing_stand");
+
     private NonNullList<ItemStack> items;
-    int brewTime;
+    private int brewTime;
+    private int totalBrewTime;
     private boolean[] lastPotionCount;
     private Item ingredient;
-    int fuel;
+    private int fuel;
+    private int totalFuel;
     protected final ContainerData dataAccess;
+    private final RecipeManager.CachedCheck<BrewingInput, BrewingRecipe> quickCheck;
 
-    public SoulBrewingStandBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(ModBlockEntities.SOUL_BREWING_STAND, blockPos, blockState);
+    public SoulBrewingStandBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(ModBlockEntities.SOUL_BREWING_STAND, worldPosition, blockState);
         this.items = NonNullList.withSize(5, ItemStack.EMPTY);
         this.dataAccess = new ContainerData() {
-            public int get(int i) {
-                int var10000;
-                switch (i) {
-                    case 0 -> var10000 = SoulBrewingStandBlockEntity.this.brewTime;
-                    case 1 -> var10000 = SoulBrewingStandBlockEntity.this.fuel;
-                    default -> var10000 = 0;
-                }
-
-                return var10000;
+            {
+                Objects.requireNonNull(SoulBrewingStandBlockEntity.this);
             }
 
-            public void set(int i, int j) {
-                switch (i) {
-                    case 0 -> SoulBrewingStandBlockEntity.this.brewTime = j;
-                    case 1 -> SoulBrewingStandBlockEntity.this.fuel = j;
-                }
-
+            @Override
+            public int get(int dataId) {
+                return switch (dataId) {
+                    case 0 -> SoulBrewingStandBlockEntity.this.brewTime;
+                    case 1 -> SoulBrewingStandBlockEntity.this.fuel;
+                    case 2 -> SoulBrewingStandBlockEntity.this.totalBrewTime;
+                    case 3 -> SoulBrewingStandBlockEntity.this.totalFuel;
+                    default -> 0;
+                };
             }
 
+            @Override
+            public void set(int dataId, int value) {
+                switch (dataId) {
+                    case 0 -> SoulBrewingStandBlockEntity.this.brewTime = value;
+                    case 1 -> SoulBrewingStandBlockEntity.this.fuel = value;
+                    case 2 -> SoulBrewingStandBlockEntity.this.totalBrewTime = value;
+                    case 3 -> SoulBrewingStandBlockEntity.this.totalFuel = value;
+                }
+            }
+
+            @Override
             public int getCount() {
-                return 2;
+                return NUM_DATA_VALUES;
             }
         };
+        this.quickCheck = RecipeManager.createCheck(RecipeType.BREWING);
     }
 
+    @Override
     protected Component getDefaultName() {
         return DEFAULT_NAME;
     }
 
+    @Override
     public int getContainerSize() {
         return this.items.size();
     }
 
+    @Override
     protected NonNullList<ItemStack> getItems() {
         return this.items;
     }
 
-    protected void setItems(NonNullList<ItemStack> nonNullList) {
-        this.items = nonNullList;
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        this.items = items;
     }
 
-    public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, SoulBrewingStandBlockEntity brewingStandBlockEntity) {
-        ItemStack itemStack = (ItemStack)brewingStandBlockEntity.items.get(4);
-        if (brewingStandBlockEntity.fuel <= 0 && itemStack.is(ModItems.BLAZT_POWDER)) {
-            brewingStandBlockEntity.fuel = 20;
-            itemStack.shrink(1);
-            setChanged(level, blockPos, blockState);
+    public static void serverTick(ServerLevel level, BlockPos pos, BlockState selfState, SoulBrewingStandBlockEntity entity) {
+        NonNullList<ItemStack> items = entity.getItems();
+        ItemStack fuelStack = items.get(FUEL_SLOT);
+
+        if (entity.fuel <= 0 && isSoulFuel(fuelStack)) {
+            entity.fuel = getFuelUses(fuelStack);
+            entity.totalFuel = entity.fuel;
+            consumeFuel(level, pos, items, fuelStack);
+            setChanged(level, pos, selfState);
         }
 
-        boolean bl = isBrewable(level.potionBrewing(), brewingStandBlockEntity.items);
-        boolean bl2 = brewingStandBlockEntity.brewTime > 0;
-        ItemStack itemStack2 = (ItemStack)brewingStandBlockEntity.items.get(3);
-        if (bl2) {
-            --brewingStandBlockEntity.brewTime;
-            boolean bl3 = brewingStandBlockEntity.brewTime == 0;
-            if (bl3 && bl) {
-                doBrew(level, blockPos, brewingStandBlockEntity.items);
-            } else if (!bl || !itemStack2.is(brewingStandBlockEntity.ingredient)) {
-                brewingStandBlockEntity.brewTime = 0;
+        boolean brewable = isBrewable(level, entity);
+        boolean isBrewing = entity.brewTime > 0;
+        ItemStack ingredientStack = entity.items.get(INGREDIENT_SLOT);
+
+        if (isBrewing) {
+            --entity.brewTime;
+            if (entity.brewTime == 0 && brewable) {
+                doBrew(level, pos, entity);
+            } else if (!brewable || !ingredientStack.is(entity.ingredient)) {
+                entity.brewTime = 0;
             }
-
-            setChanged(level, blockPos, blockState);
-        } else if (bl && brewingStandBlockEntity.fuel > 0) {
-            --brewingStandBlockEntity.fuel;
-            brewingStandBlockEntity.brewTime = 200;
-            brewingStandBlockEntity.ingredient = itemStack2.getItem();
-            setChanged(level, blockPos, blockState);
+            setChanged(level, pos, selfState);
+        } else if (brewable && entity.fuel > 0) {
+            --entity.fuel;
+            entity.brewTime = BREW_TIME_TICKS;
+            entity.totalBrewTime = entity.brewTime;
+            entity.ingredient = ingredientStack.getItem();
+            setChanged(level, pos, selfState);
         }
 
-        boolean[] bls = brewingStandBlockEntity.getPotionBits();
-        if (!Arrays.equals(bls, brewingStandBlockEntity.lastPotionCount)) {
-            brewingStandBlockEntity.lastPotionCount = bls;
-            BlockState blockState2 = blockState;
-            if (!(blockState.getBlock() instanceof SoulBrewingStandBlock)) {
+        boolean[] newCount = entity.getPotionBits();
+        if (!Arrays.equals(newCount, entity.lastPotionCount)) {
+            entity.lastPotionCount = newCount;
+            BlockState state = selfState;
+            if (!(selfState.getBlock() instanceof SoulBrewingStandBlock)) {
                 return;
             }
-
-            for(int i = 0; i < SoulBrewingStandBlock.HAS_BOTTLE.length; ++i) {
-                blockState2 = (BlockState)blockState2.setValue(SoulBrewingStandBlock.HAS_BOTTLE[i], bls[i]);
+            for (int i = 0; i < SoulBrewingStandBlock.HAS_BOTTLE.length; ++i) {
+                state = state.setValue(SoulBrewingStandBlock.HAS_BOTTLE[i], newCount[i]);
             }
-
-            level.setBlock(blockPos, blockState2, 2);
+            level.setBlock(pos, state, 2);
         }
+    }
 
+    private static boolean isSoulFuel(ItemStack stack) {
+        return stack.is(ModItems.BLAZT_POWDER) || stack.has(DataComponents.BREWING_FUEL);
+    }
+
+    private static int getFuelUses(ItemStack stack) {
+        if (stack.is(ModItems.BLAZT_POWDER)) {
+            return BLAZT_FUEL_USES;
+        }
+        BrewingFuel brewingFuel = stack.get(DataComponents.BREWING_FUEL);
+        return brewingFuel != null ? 20 : 0;
+    }
+
+    private static void consumeFuel(ServerLevel level, BlockPos pos, NonNullList<ItemStack> items, ItemStack fuel) {
+        ItemStackTemplate remainder = fuel.getItem().getCraftingRemainder();
+        ItemStack newFuel = fuel;
+        fuel.shrink(1);
+        if (remainder != null) {
+            if (fuel.isEmpty()) {
+                newFuel = remainder.create();
+            } else {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder.create());
+            }
+        }
+        items.set(FUEL_SLOT, newFuel);
     }
 
     private boolean[] getPotionBits() {
-        boolean[] bls = new boolean[3];
-
-        for(int i = 0; i < 3; ++i) {
-            if (!((ItemStack)this.items.get(i)).isEmpty()) {
-                bls[i] = true;
+        boolean[] result = new boolean[3];
+        for (int potion = 0; potion < 3; ++potion) {
+            if (!this.items.get(potion).isEmpty()) {
+                result[potion] = true;
             }
         }
-
-        return bls;
+        return result;
     }
 
-    private static boolean isBrewable(PotionBrewing potionBrewing, NonNullList<ItemStack> nonNullList) {
-        ItemStack itemStack = (ItemStack)nonNullList.get(3);
-        if (itemStack.isEmpty()) {
+    private static boolean isBrewable(ServerLevel serverLevel, SoulBrewingStandBlockEntity entity) {
+        NonNullList<ItemStack> items = entity.getItems();
+        ItemStack ingredient = items.get(INGREDIENT_SLOT);
+        if (ingredient.isEmpty()) {
             return false;
-        } else if (!potionBrewing.isIngredient(itemStack)) {
+        }
+        RecipeManager recipeManager = serverLevel.recipeAccess();
+        if (!recipeManager.propertySet(RecipePropertySet.BREWING_REAGENTS).test(ingredient)) {
             return false;
-        } else {
-            for(int i = 0; i < 3; ++i) {
-                ItemStack itemStack2 = (ItemStack)nonNullList.get(i);
-                if (!itemStack2.isEmpty() && potionBrewing.hasMix(itemStack2, itemStack)) {
+        }
+        for (int dest = 0; dest < 3; ++dest) {
+            ItemStack bottle = items.get(dest);
+            if (!bottle.isEmpty()) {
+                Optional<RecipeHolder<BrewingRecipe>> recipe =
+                        entity.quickCheck.getRecipeFor(new BrewingInput(bottle, ingredient), serverLevel);
+                if (recipe.isPresent()) {
                     return true;
                 }
             }
-
-            return false;
         }
+        return false;
     }
 
-    private static void doBrew(Level level, BlockPos blockPos, NonNullList<ItemStack> nonNullList) {
-        ItemStack itemStack = (ItemStack)nonNullList.get(3);
-        PotionBrewing potionBrewing = level.potionBrewing();
+    private static void doBrew(ServerLevel level, BlockPos pos, SoulBrewingStandBlockEntity entity) {
+        NonNullList<ItemStack> items = entity.getItems();
+        ItemStack ingredient = items.get(INGREDIENT_SLOT);
 
-        for(int i = 0; i < 3; ++i) {
-            nonNullList.set(i, potionBrewing.mix(itemStack, (ItemStack)nonNullList.get(i)));
+        for (int dest = 0; dest < 3; ++dest) {
+            ItemStack container = items.get(dest);
+            BrewingInput input = new BrewingInput(container, ingredient);
+            Optional<RecipeHolder<BrewingRecipe>> recipe = entity.quickCheck.getRecipeFor(input, level);
+            items.set(dest, recipe.isPresent()
+                    ? recipe.get().value().assemble(input)
+                    : container);
         }
 
-        itemStack.shrink(1);
-        ItemStack itemStack2 = Objects.requireNonNull(itemStack.getItem().getCraftingRemainder()).create();
-        if (!itemStack2.isEmpty()) {
-            if (itemStack.isEmpty()) {
-                itemStack = itemStack2;
+        ItemStackTemplate remainder = ingredient.getItem().getCraftingRemainder();
+        ingredient.shrink(1);
+        if (remainder != null) {
+            if (ingredient.isEmpty()) {
+                ingredient = remainder.create();
             } else {
-                Containers.dropItemStack(level, (double)blockPos.getX(), (double)blockPos.getY(), (double)blockPos.getZ(), itemStack2);
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder.create());
             }
         }
 
-        nonNullList.set(3, itemStack);
-        level.levelEvent(1035, blockPos, 0);
+        items.set(INGREDIENT_SLOT, ingredient);
+        level.levelEvent(1035, pos, 0);
     }
 
-    protected void loadAdditional(ValueInput valueInput) {
-        super.loadAdditional(valueInput);
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(valueInput, this.items);
-        this.brewTime = valueInput.getShortOr("BrewTime", (short)0);
+        ContainerHelper.loadAllItems(input, this.items);
+        this.brewTime = input.getIntOr("BrewTime", 0);
+        this.totalBrewTime = input.getIntOr("total_brew_time", BREW_TIME_TICKS);
         if (this.brewTime > 0) {
-            this.ingredient = ((ItemStack)this.items.get(3)).getItem();
+            this.ingredient = this.items.get(INGREDIENT_SLOT).getItem();
         }
-
-        this.fuel = valueInput.getByteOr("Fuel", (byte)0);
+        this.fuel = input.getIntOr("Fuel", 0);
+        this.totalFuel = input.getIntOr("total_fuel", BLAZT_FUEL_USES);
     }
 
-    protected void saveAdditional(ValueOutput valueOutput) {
-        super.saveAdditional(valueOutput);
-        valueOutput.putShort("BrewTime", (short)this.brewTime);
-        ContainerHelper.saveAllItems(valueOutput, this.items);
-        valueOutput.putByte("Fuel", (byte)this.fuel);
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("BrewTime", this.brewTime);
+        output.putInt("total_brew_time", this.totalBrewTime);
+        ContainerHelper.saveAllItems(output, this.items);
+        output.putInt("Fuel", this.fuel);
+        output.putInt("total_fuel", this.totalFuel);
     }
 
-    public boolean canPlaceItem(int i, ItemStack itemStack) {
-        if (i == 3) {
-            PotionBrewing potionBrewing = this.level != null ? this.level.potionBrewing() : PotionBrewing.EMPTY;
-            return potionBrewing.isIngredient(itemStack);
-        } else if (i == 4) {
-            return itemStack.is(ModItems.BLAZT_POWDER);
-        } else {
-            return (itemStack.is(Items.POTION) || itemStack.is(Items.SPLASH_POTION) || itemStack.is(Items.LINGERING_POTION) || itemStack.is(Items.GLASS_BOTTLE)) && this.getItem(i).isEmpty();
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack itemStack) {
+        if (slot == FUEL_SLOT) {
+            return itemStack.is(ModItems.BLAZT_POWDER) || itemStack.has(DataComponents.BREWING_FUEL);
         }
+        if (this.level == null) {
+            return false;
+        }
+        RecipeAccess recipeAccess = this.level.recipeAccess();
+        if (slot == INGREDIENT_SLOT) {
+            return recipeAccess.propertySet(RecipePropertySet.BREWING_REAGENTS).test(itemStack);
+        }
+        return PotionIngredient.isPotionInput(itemStack, recipeAccess) && this.getItem(slot).isEmpty();
     }
 
+    @Override
     public int[] getSlotsForFace(Direction direction) {
         if (direction == Direction.UP) {
             return SLOTS_FOR_UP;
-        } else {
-            return direction == Direction.DOWN ? SLOTS_FOR_DOWN : SLOTS_FOR_SIDES;
         }
+        return direction == Direction.DOWN ? SLOTS_FOR_DOWN : SLOTS_FOR_SIDES;
     }
 
-    public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
-        return this.canPlaceItem(i, itemStack);
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
+        return this.canPlaceItem(slot, itemStack);
     }
 
-    public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction) {
-        return i == 3 ? itemStack.is(Items.GLASS_BOTTLE) : true;
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
+        return slot == INGREDIENT_SLOT ? itemStack.is(Items.GLASS_BOTTLE) : true;
     }
 
-    protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
-        return new SoulBrewingStandMenu(i, inventory, this, this.dataAccess);
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+        return new SoulBrewingStandMenu(containerId, inventory, this, this.dataAccess);
     }
-
 }

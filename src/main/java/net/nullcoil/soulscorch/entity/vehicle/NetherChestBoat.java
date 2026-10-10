@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
-public class NetherChestBoat extends ChestRaft {
+public class NetherChestBoat extends ChestBoat {
     public NetherChestBoat(EntityType<? extends NetherChestBoat> entityType, Level level, Supplier<Item> supplier) {
         super(entityType, level, supplier);
     }

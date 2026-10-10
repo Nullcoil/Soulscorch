@@ -117,8 +117,8 @@ public class RestlessManeLayer extends RenderLayer<RestlessRenderState, Restless
                 LivingEntityRenderer.getOverlayCoords(state, 0.0F),
                 argb,
                 (net.minecraft.client.renderer.texture.TextureAtlasSprite) null, // Explicit cast to fix the ambiguous null
-                state.outlineColor,
-                (net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay) null // Explicit cast to fix the ambiguous null
+                state.outlineColor
+                // Explicit cast to fix the ambiguous null
         );
     }
 }

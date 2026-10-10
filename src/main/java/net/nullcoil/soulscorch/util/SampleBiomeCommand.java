@@ -4,14 +4,16 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.QuartPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseRouter;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 
 public class SampleBiomeCommand {
 
@@ -22,22 +24,29 @@ public class SampleBiomeCommand {
                     ServerLevel level = source.getLevel();
                     BlockPos pos = BlockPos.containing(source.getPosition());
 
-                    if (!(level.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator generator)) {
+                    if (!(level.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator)) {
                         source.sendFailure(Component.literal("Only works in noise-generated dimensions."));
                         return 0;
                     }
 
                     RandomState randomState = level.getChunkSource().randomState();
-                    NoiseRouter router = randomState.router();
+                    int x = pos.getX();
+                    int y = pos.getY();
+                    int z = pos.getZ();
 
-                    DensityFunction.SinglePointContext ctx2 = new DensityFunction.SinglePointContext(pos.getX(), pos.getY(), pos.getZ());
+                    Climate.Sampler climate = randomState.createClimateSampler(SamplerContext.EMPTY_UNCACHED);
+                    Climate.TargetPoint sample = climate.sample(
+                            QuartPos.fromBlock(x),
+                            QuartPos.fromBlock(y),
+                            QuartPos.fromBlock(z)
+                    );
 
-                    double temperature      = router.temperature().compute(ctx2);
-                    double humidity        = router.vegetation().compute(ctx2);
-                    double continentalness = router.continents().compute(ctx2);
-                    double erosion         = router.erosion().compute(ctx2);
-                    double depth           = router.depth().compute(ctx2);
-                    double weirdness       = router.ridges().compute(ctx2);
+                    double temperature     = Climate.unquantizeCoord(sample.temperature());
+                    double humidity        = Climate.unquantizeCoord(sample.humidity());
+                    double continentalness = Climate.unquantizeCoord(sample.continentalness());
+                    double erosion         = Climate.unquantizeCoord(sample.erosion());
+                    double depth           = Climate.unquantizeCoord(sample.depth());
+                    double weirdness       = Climate.unquantizeCoord(sample.weirdness());
 
                     Identifier biomeKey = level.getBiome(pos)
                             .unwrapKey()
@@ -45,7 +54,7 @@ public class SampleBiomeCommand {
                             .orElse(Identifier.withDefaultNamespace("unknown"));
 
                     source.sendSuccess(() -> Component.literal(
-                            "=== Biome Sample @ " + pos.getX() + " " + pos.getY() + " " + pos.getZ() + " ===\n" +
+                            "=== Biome Sample @ " + x + " " + y + " " + z + " ===\n" +
                                     "Biome:           " + biomeKey + "\n" +
                                     "Temperature:     " + String.format("%.4f", temperature) + "\n" +
                                     "Humidity:        " + String.format("%.4f", humidity) + "\n" +

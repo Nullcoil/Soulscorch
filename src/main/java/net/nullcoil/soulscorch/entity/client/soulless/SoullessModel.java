@@ -7,11 +7,7 @@ import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.piglin.AbstractPiglinModel;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.resources.Identifier;
@@ -20,11 +16,9 @@ import net.nullcoil.soulscorch.Soulscorch;
 @Environment(EnvType.CLIENT)
 public class SoullessModel extends AbstractPiglinModel<SoullessRenderState> {
     public static final ModelLayerLocation SOULLESS = new ModelLayerLocation(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulless"), "main"
-    );
+            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulless"), "main");
     public static final ModelLayerLocation SOULLESS_BABY = new ModelLayerLocation(
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulless"), "baby"
-    );
+            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulless"), "baby");
 
     private final KeyframeAnimation passiveAnimation;
     private final KeyframeAnimation neutralHeadTwitch0;
@@ -98,6 +92,8 @@ public class SoullessModel extends AbstractPiglinModel<SoullessRenderState> {
     @Override
     public void setupAnim(SoullessRenderState state) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
+        float legZ = state.isBaby ? 0f : 4f;
+        float nLegZ = state.isBaby ? 1f : 3f;
 
         switch (state.currentActivity) {
             case PASSIVE -> {
@@ -105,8 +101,8 @@ public class SoullessModel extends AbstractPiglinModel<SoullessRenderState> {
                 this.head.xRot = (float) Math.toRadians(40);
                 this.head.yRot = (float) Math.toRadians(-12);
                 this.head.zRot = (float) Math.toRadians(-4);
-                this.leftLeg.z += 4;
-                this.rightLeg.z += 4;
+                this.leftLeg.z += legZ;
+                this.rightLeg.z += legZ;
                 this.leftLeg.xRot = (float) Math.toRadians(10);
                 this.leftLeg.zRot = (float) Math.toRadians(-5);
                 this.rightLeg.xRot = (float) Math.toRadians(-10);
@@ -117,8 +113,8 @@ public class SoullessModel extends AbstractPiglinModel<SoullessRenderState> {
             }
             case NEUTRAL -> {
                 super.setupAnim(state);
-                this.leftLeg.z += 3;
-                this.rightLeg.z += 3;
+                this.leftLeg.z += nLegZ;
+                this.rightLeg.z += nLegZ;
                 this.leftLeg.xRot = (float) Math.toRadians(10);
                 this.leftLeg.zRot = (float) Math.toRadians(-5);
                 this.rightLeg.xRot = (float) Math.toRadians(-10);
@@ -136,7 +132,7 @@ public class SoullessModel extends AbstractPiglinModel<SoullessRenderState> {
             case HOSTILE -> {
                 super.setupAnim(state);
 
-                float attackProgress = state.attackTime;
+                float attackProgress = state.swingAnimation;
                 float defaultPitch = -(float) Math.PI / 1.5F;
 
                 float swingSin1 = net.minecraft.util.Mth.sin(attackProgress * (float) Math.PI);

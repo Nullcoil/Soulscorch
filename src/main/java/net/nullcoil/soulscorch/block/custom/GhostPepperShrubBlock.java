@@ -14,10 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -29,7 +26,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.item.ModItems;
 
 public class GhostPepperShrubBlock extends VegetationBlock implements BonemealableBlock {
-    public static final MapCodec<GhostPepperShrubBlock> CODEC = simpleCodec(GhostPepperShrubBlock::new);
     public static final int MAX_AGE = 3;
 
     // We create our own custom property since vanilla doesn't have an AGE_4 built-in!
@@ -37,11 +33,6 @@ public class GhostPepperShrubBlock extends VegetationBlock implements Bonemealab
 
     private static final VoxelShape SHAPE_SAPLING = Block.column(10.0D, 0.0D, 8.0D);
     private static final VoxelShape SHAPE_GROWING = Block.column(14.0D, 0.0D, 16.0D);
-
-    @Override
-    public MapCodec<GhostPepperShrubBlock> codec() {
-        return CODEC;
-    }
 
     public GhostPepperShrubBlock(Properties properties) {
         super(properties);
@@ -127,18 +118,18 @@ public class GhostPepperShrubBlock extends VegetationBlock implements Bonemealab
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return blockState.getValue(AGE) < MAX_AGE;
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
+        return state.getValue(AGE) < MAX_AGE;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state, BonemealSource source) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        int i = Math.min(MAX_AGE, blockState.getValue(AGE) + 1);
-        serverLevel.setBlock(blockPos, blockState.setValue(AGE, i), 2);
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state, BonemealSource source) {
+        int i = Math.min(MAX_AGE, state.getValue(AGE) + 1);
+        level.setBlock(pos, state.setValue(AGE, i), 2);
     }
 }

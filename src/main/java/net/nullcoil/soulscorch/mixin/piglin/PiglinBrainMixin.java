@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.mixin.piglin;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.spongepowered.asm.mixin.Mixin;

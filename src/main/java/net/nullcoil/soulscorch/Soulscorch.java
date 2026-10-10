@@ -2,6 +2,7 @@ package net.nullcoil.soulscorch;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.advancement.ModCriteriaTriggers;
 import net.nullcoil.soulscorch.alchemy.ModAlchemy;
 import net.nullcoil.soulscorch.attribute.ModAttributes;
@@ -51,5 +52,9 @@ public class Soulscorch implements ModInitializer {
 				SampleBiomeCommand.register(dispatcher));
 
 		LOGGER.info("Soulscorch initialized successfully");
+	}
+
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

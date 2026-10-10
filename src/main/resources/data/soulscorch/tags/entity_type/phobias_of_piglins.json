@@ -6,10 +6,6 @@
     "minecraft:husk",
     "minecraft:drowned",
     "minecraft:zombie_horse",
-    "soulscorch:soulless",
-    "soulscorch:restless",
-    "soulscorch:soulborne_cat",
-    "soulscorch:soulborne_wolf",
-    "soulscorch:hytodom"
+    "#soulscorch:soulscorch_entities"
   ]
 }

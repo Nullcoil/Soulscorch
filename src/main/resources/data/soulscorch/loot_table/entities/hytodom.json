@@ -3,30 +3,37 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        { "condition": "minecraft:killed_by_player" }
-      ],
+      "rolls": 1.0,
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
       "entries": [
         {
           "type": "minecraft:item",
           "name": "soulscorch:soul_cream",
-          "functions": [
+          "modifier": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:set_count",
               "add": false,
-              "count": { "type": "minecraft:uniform", "min": 0.0, "max": 1.0 }
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0.0,
+                "max": 1.0
+              }
             },
             {
-              "function": "minecraft:enchanted_count_increase",
+              "type": "minecraft:enchanted_count_increase",
               "enchantment": "minecraft:looting",
-              "count": { "type": "minecraft:uniform", "min": 0.0, "max": 1.0 }
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 0.0,
+                "max": 1.0
+              }
             }
           ]
         }
-      ],
-      "rolls": 1.0
+      ]
     },
-
     {
       "bonus_rolls": 0.0,
       "rolls": 1.0,
@@ -34,23 +41,18 @@
         {
           "type": "minecraft:item",
           "name": "soulscorch:cerulean_froglight",
-          "conditions": [
-            {
-              "condition": "minecraft:damage_source_properties",
-              "predicate": {
-                "source_entity": {
-                  "type": "minecraft:frog"
-                }
+          "condition": {
+            "type": "minecraft:damage_source_properties",
+            "predicate": {
+              "source_entity": {
+                "minecraft:entity_type": "minecraft:frog"
               }
             }
-          ],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "add": false,
-              "count": 1.0
-            }
-          ]
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1.0
+          }
         }
       ]
     }

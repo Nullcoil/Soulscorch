@@ -1,6 +1,7 @@
 package net.nullcoil.soulscorch.block.custom;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +28,17 @@ public class SoulBrewingStandBlock extends BrewingStandBlock {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.SOUL_BREWING_STAND, SoulBrewingStandBlockEntity::serverTick);
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(
+            Level level, BlockState blockState, BlockEntityType<T> type) {
+        if (level instanceof ServerLevel serverLevel) {
+            return createTickerHelper(
+                    type,
+                    ModBlockEntities.SOUL_BREWING_STAND,
+                    (ignored, pos, state, entity) ->
+                            SoulBrewingStandBlockEntity.serverTick(serverLevel, pos, state, entity)
+            );
+        }
+        return null;
     }
 
     protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {

@@ -1,14 +1,10 @@
 package net.nullcoil.soulscorch.entity.ai;
 
-import it.crystalnest.prometheus.api.FireManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -17,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.entity.ModEntities;
-import net.nullcoil.soulscorch.fire.ModFire;
 import net.nullcoil.soulscorch.mixin.wolf.WolfInvoker;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jspecify.annotations.NonNull;
@@ -59,7 +54,21 @@ public class SoulborneWolfEntity extends Wolf {
     @Override
     public boolean doHurtTarget(ServerLevel level, Entity entity) {
         boolean result = super.doHurtTarget(level, entity);
-        if(result) FireManager.setOnFire(entity, 5, ModFire.SOUL_FIRE_TYPE);
+
+        if (result && entity instanceof LivingEntity living) {
+            // Apply the same effect the old soul-fire behavior used
+            living.addEffect(new MobEffectInstance(
+                    ModEffects.SOULSCORCH,
+                    100,          // 5 seconds (5 * 20) — matches the old "5" you were passing
+                    0,
+                    false,
+                    false,
+                    true
+            ));
+
+            living.igniteForSeconds(5.0F);
+        }
+
         return result;
     }
 
@@ -91,10 +100,22 @@ public class SoulborneWolfEntity extends Wolf {
         Identifier TAMED = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/king.png");
         Identifier ANGRY = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/soulwolf_angry.png");
         Identifier WILD  = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/soulwolf.png");
-        if (this.isTame()) {
-            return TAMED;
+
+        Identifier BABY = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/soulwolf_baby.png");
+        Identifier BABY_ANGRY = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/soulwolf_angry_baby.png");
+        Identifier BABY_TAMED = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulwolf/soulwolf_tame_baby.png");
+        if (this.isBaby()) {
+            if (this.isTame()) {
+                return BABY_TAMED;
+            } else {
+                return this.isAngry() ? BABY_ANGRY : BABY;
+            }
         } else {
-            return this.isAngry() ? ANGRY : WILD;
+            if (this.isTame()) {
+                return TAMED;
+            } else {
+                return this.isAngry() ? ANGRY : WILD;
+            }
         }
     }
 }
