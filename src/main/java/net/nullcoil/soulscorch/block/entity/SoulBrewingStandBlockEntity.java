@@ -33,6 +33,7 @@ import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.block.custom.SoulBrewingStandBlock;
 import net.nullcoil.soulscorch.item.ModItems;
 import net.nullcoil.soulscorch.screen.SoulBrewingStandMenu;
+import net.nullcoil.soulscorch.util.TranslationKeys;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
     public static final int BREW_TIME_TICKS = 200;
     public static final int BLAZT_FUEL_USES = 20;
 
-    private static final Component DEFAULT_NAME = Component.translatable("container.soul_brewing_stand");
+    private static final Component DEFAULT_NAME = Component.translatable(TranslationKeys.SOUL_BREWING_STAND);
 
     private NonNullList<ItemStack> items;
     private int brewTime;

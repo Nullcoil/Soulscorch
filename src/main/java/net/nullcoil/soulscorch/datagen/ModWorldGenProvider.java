@@ -14,8 +14,6 @@ public class ModWorldGenProvider extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(HolderLookup.Provider registries, Entries entries) {
-        // We use the provider to look up the registry, then add all to entries
-        // This avoids the 'RegistryLookup' vs 'Reference' type variable mismatch
         registries.lookup(Registries.FEATURE).ifPresent(entries::addAll);
         registries.lookup(Registries.PLACED_FEATURE).ifPresent(entries::addAll);
     }

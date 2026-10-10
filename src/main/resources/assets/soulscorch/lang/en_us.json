@@ -230,5 +230,8 @@
   "tag.item.soulscorch.seeping_sallow_stairs": "Seeping Sallow Stairs",
   "tag.item.soulscorch.seeping_sallow_trapdoors": "Seeping Sallow Trapdoors",
   "tag.item.soulscorch.sallow_logs": "Sallow Logs",
-  "tag.item.soulscorch.soulstuff": "Soul Stuff"
+  "tag.item.soulscorch.soulstuff": "Soul Stuff",
+
+  "command.soulscorch.samplebiome.failure": "Only works in noise-generated dimensions.",
+  "command.soulscorch.samplebiome.result": "=== Biome Sample @ %s %s %s ===\nBiome:           %s\nTemperature:     %s\nHumidity:        %s\nContinentalness: %s\nErosion:         %s\nDepth:           %s\nWeirdness:       %s"
 }

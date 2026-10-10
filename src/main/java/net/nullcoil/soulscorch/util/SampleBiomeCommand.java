@@ -25,7 +25,7 @@ public class SampleBiomeCommand {
                     BlockPos pos = BlockPos.containing(source.getPosition());
 
                     if (!(level.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator)) {
-                        source.sendFailure(Component.literal("Only works in noise-generated dimensions."));
+                        source.sendFailure(Component.translatable(TranslationKeys.SAMPLE_BIOME_FAILURE));
                         return 0;
                     }
 
@@ -53,17 +53,17 @@ public class SampleBiomeCommand {
                             .map(ResourceKey::identifier)
                             .orElse(Identifier.withDefaultNamespace("unknown"));
 
-                    source.sendSuccess(() -> Component.literal(
-                            "=== Biome Sample @ " + x + " " + y + " " + z + " ===\n" +
-                                    "Biome:           " + biomeKey + "\n" +
-                                    "Temperature:     " + String.format("%.4f", temperature) + "\n" +
-                                    "Humidity:        " + String.format("%.4f", humidity) + "\n" +
-                                    "Continentalness: " + String.format("%.4f", continentalness) + "\n" +
-                                    "Erosion:         " + String.format("%.4f", erosion) + "\n" +
-                                    "Depth:           " + String.format("%.4f", depth) + "\n" +
-                                    "Weirdness:       " + String.format("%.4f", weirdness)
+                    source.sendSuccess(() -> Component.translatable(
+                            TranslationKeys.SAMPLE_BIOME_RESULT,
+                            x, y, z,
+                            biomeKey.toString(),
+                            String.format("%.4f", temperature),
+                            String.format("%.4f", humidity),
+                            String.format("%.4f", continentalness),
+                            String.format("%.4f", erosion),
+                            String.format("%.4f", depth),
+                            String.format("%.4f", weirdness)
                     ), false);
-
                     return 1;
                 })
         );
