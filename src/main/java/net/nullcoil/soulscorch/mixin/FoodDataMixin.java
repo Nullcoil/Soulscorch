@@ -18,23 +18,17 @@ public abstract class FoodDataMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isHurt()Z")
     )
     private boolean soulscorch$stopHealingPastCorruption(ServerPlayer player, Operation<Boolean> original) {
-        // Find out what vanilla thinks first
-        boolean vanillaThinksWeAreHurt = original.call(player);
+        boolean isHurt = original.call(player); // see if vanilla thinks the player is hurt
 
-        if (vanillaThinksWeAreHurt) {
+        if (isHurt) {
             AttributeInstance corruptionAttr = player.getAttribute(ModAttributes.CORRUPTION);
 
             if (corruptionAttr != null && corruptionAttr.getValue() > 0) {
                 float safeHealth = player.getMaxHealth() - (float) corruptionAttr.getValue();
-
-                // If our health is sitting exactly at our safe limit, we are "full"
-                if (player.getHealth() >= safeHealth) {
-                    return false; // Trick the stomach into thinking we are completely unhurt!
-                }
+                if (player.getHealth() >= safeHealth) return false;
             }
         }
 
-        // Otherwise, return the normal vanilla answer
-        return vanillaThinksWeAreHurt;
+        return isHurt;
     }
 }
