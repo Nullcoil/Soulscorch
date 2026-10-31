@@ -110,7 +110,7 @@ public class ModItems {
     // 2. The completed helper method
     private static Item registerItem(String name, Function<Item.Properties, Item> factory, Item.Properties properties) {
         // Build the Identifier
-        Identifier id = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
 
         Item item = factory.apply(properties.setId(itemKey));
@@ -118,7 +118,7 @@ public class ModItems {
     }
 
     private static Item registerItem(String name, Block block, BiFunction<Block, Item.Properties, Item> factory, Item.Properties properties) {
-        Identifier id = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
 
         // Applies both the block and the modified properties to the constructor
@@ -151,7 +151,7 @@ public class ModItems {
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(entries -> {
             entries.insertAfter(Items.BREWING_STAND, ModBlocks.SOUL_BREWING_STAND);
-            entries.insertBefore(Items.COPPER_BULB, ModBlocks.IRON_BULB_BLOCK);
+            entries.insertBefore(Items.COPPER_BULB.weathering().unaffected(), ModBlocks.IRON_BULB_BLOCK);
             entries.insertAfter(Items.PEARLESCENT_FROGLIGHT, ModBlocks.CERULEAN_FROGLIGHT);
             entries.insertAfter(Items.WARPED_HANGING_SIGN,
                     SEEPING_SIGN,
@@ -160,7 +160,7 @@ public class ModItems {
                     SALLOW_HANGING_SIGN);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.REDSTONE_BLOCKS).register(entries -> {
-            entries.insertBefore(Items.WAXED_COPPER_BULB, ModBlocks.IRON_BULB_BLOCK);
+            entries.insertBefore(Items.COPPER_BULB.waxed().unaffected(), ModBlocks.IRON_BULB_BLOCK);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(entries -> {
             entries.insertAfter(Items.PEARLESCENT_FROGLIGHT, ModBlocks.CERULEAN_FROGLIGHT);

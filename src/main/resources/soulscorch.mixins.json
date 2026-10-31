@@ -1,32 +1,33 @@
 {
-  "required": true,
-  "package": "net.nullcoil.soulscorch.mixin",
-  "compatibilityLevel": "JAVA_25",
-  "mixins": [
-    "FoodDataMixin",
-    "NetherBoatLavaMixin",
-    "PlayerDamageMixin",
-    "cat.CatEntityMixin",
-    "cat.CatInvoker",
-    "livingentity.LivingEntityMixin",
-    "livingentity.NetherBoatPassengerIsInLavaMixin",
-    "livingentity.NetherBoatPassengerLavaIgniteMixin",
-    "livingentity.NetherBoatPassengerMixin",
-    "piglin.PiglinBrainMixin",
-    "piglin.PiglinSpawnMixin",
-    "wolf.WolfEntityMixin",
-    "wolf.WolfInvoker"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
-  },
-  "client": [
-    "GuiMixin",
-    "boat.AbstractBoatRendererMixin",
-    "boat.BoatRendererLavaMaskMixin",
-    "boat.BoatRenderStateMixin"
-  ]
+	"required": true,
+	"package": "net.nullcoil.soulscorch.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"BaseFireBlockMixin",
+		"FoodDataMixin",
+		"NetherBoatLavaMixin",
+		"PlayerDamageMixin",
+		"cat.CatEntityMixin",
+		"cat.CatInvoker",
+		"livingentity.LivingEntityMixin",
+		"livingentity.NetherBoatPassengerIsInLavaMixin",
+		"livingentity.NetherBoatPassengerLavaIgniteMixin",
+		"livingentity.NetherBoatPassengerMixin",
+		"piglin.PiglinBrainMixin",
+		"piglin.PiglinSpawnMixin",
+		"wolf.WolfEntityMixin",
+		"wolf.WolfInvoker"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	},
+	"client": [
+		"GuiMixin",
+		"boat.AbstractBoatRendererMixin",
+		"boat.BoatRendererLavaMaskMixin",
+		"boat.BoatRenderStateMixin"
+	]
 }

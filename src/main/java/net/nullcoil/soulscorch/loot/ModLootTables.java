@@ -24,17 +24,17 @@ public class ModLootTables {
             if(bastions.contains(key)) {
                 builder.withPool(LootPool.lootPool().add(
                         NestedLootTable.lootTableReference(
-                                ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "inject/bastion_enchants"))
+                                ResourceKey.create(Registries.LOOT_TABLE, Soulscorch.id("inject/bastion_enchants"))
                         )
                 ));
                 builder.withPool(LootPool.lootPool().add(
                         NestedLootTable.lootTableReference(
-                                ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "inject/bastion_items"))
+                                ResourceKey.create(Registries.LOOT_TABLE, Soulscorch.id("inject/bastion_items"))
                         )
                 ));
                 builder.withPool(LootPool.lootPool().add(
                         NestedLootTable.lootTableReference(
-                                ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "inject/bastion_peasantries"))
+                                ResourceKey.create(Registries.LOOT_TABLE, Soulscorch.id("inject/bastion_peasantries"))
                         )
                 ));
             }
@@ -44,7 +44,7 @@ public class ModLootTables {
             if(key.equals(BuiltInLootTables.BASTION_HOGLIN_STABLE)) {
                 builder.withPool(LootPool.lootPool().add(
                         NestedLootTable.lootTableReference(
-                                ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "inject/bastion_peasantries"))
+                                ResourceKey.create(Registries.LOOT_TABLE, Soulscorch.id("inject/bastion_peasantries"))
                         )
                 ));
             }

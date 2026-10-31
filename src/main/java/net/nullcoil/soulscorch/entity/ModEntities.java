@@ -16,7 +16,7 @@ public class ModEntities {
 
     public static final EntityType<BlaztEntity> BLAZT = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "blazt"),
+            Soulscorch.id("blazt"),
             EntityType.Builder.of(BlaztEntity::new, MobCategory.MONSTER)
                     .sized(3.0f, 3.0f)
                     .clientTrackingRange(10)
@@ -25,7 +25,7 @@ public class ModEntities {
 
     public static final EntityType<SoulChargeProjectile> SOUL_CHARGE_PROJECTILE = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soul_charge_projectile"),
+            Soulscorch.id("soul_charge_projectile"),
             EntityType.Builder.<SoulChargeProjectile>of(SoulChargeProjectile::new, MobCategory.MISC)
                     .sized(0.3125F, 0.3125F) // Standard fireball hitbox
                     .clientTrackingRange(4)
@@ -35,7 +35,7 @@ public class ModEntities {
 
     public static final EntityType<SoullessEntity> SOULLESS = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulless"),
+            Soulscorch.id("soulless"),
             EntityType.Builder.of(SoullessEntity::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.95f)
                     .clientTrackingRange(10)
@@ -44,7 +44,7 @@ public class ModEntities {
 
     public static final EntityType<RestlessEntity> RESTLESS = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "restless"),
+            Soulscorch.id("restless"),
             EntityType.Builder.of(RestlessEntity::new, MobCategory.MONSTER)
                     .sized(1.6f, 1.4f)
                     .clientTrackingRange(10)
@@ -53,7 +53,7 @@ public class ModEntities {
 
     public static final EntityType<HytodomEntity> HYTODOM = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "hytodom"),
+            Soulscorch.id("hytodom"),
             EntityType.Builder.of(HytodomEntity::new, MobCategory.CREATURE)
                     .sized(0.95f, 2.25f)
                     .clientTrackingRange(10)
@@ -62,21 +62,21 @@ public class ModEntities {
 
     public static final EntityType<SoulborneCatEntity> SOULBORNE_CAT = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulborne_cat"),
+            Soulscorch.id("soulborne_cat"),
             EntityType.Builder.of(SoulborneCatEntity::new, MobCategory.CREATURE)
                     .sized(0.6F, 0.7F)
                     .build(key("soulborne_cat"))
     );
     public static final EntityType<SoulborneWolfEntity> SOULBORNE_WOLF = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soulborne_wolf"),
+            Soulscorch.id("soulborne_wolf"),
             EntityType.Builder.of(SoulborneWolfEntity::new, MobCategory.CREATURE)
                     .sized(0.6F, 0.85F)
                     .build(key("soulborne_wolf"))
     );
 
     private static ResourceKey<EntityType<?>> key(String path) {
-        return ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, path));
+        return ResourceKey.create(Registries.ENTITY_TYPE, Soulscorch.id(path));
     }
 
     public static void registerAttributes() {

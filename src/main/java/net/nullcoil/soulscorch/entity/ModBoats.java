@@ -21,10 +21,10 @@ import net.nullcoil.soulscorch.entity.vehicle.SeepingChestBoat;
 import java.util.function.Supplier;
 
 public class ModBoats {
-    public static final Identifier SEEPING = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping");
-    public static final Identifier SALLOW = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow");
-    public static final Identifier CRIMSON = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "crimson");
-    public static final Identifier WARPED = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "warped");
+    public static final Identifier SEEPING = Soulscorch.id("seeping");
+    public static final Identifier SALLOW = Soulscorch.id("sallow");
+    public static final Identifier CRIMSON = Soulscorch.id("crimson");
+    public static final Identifier WARPED = Soulscorch.id("warped");
 
     public static final BoatItem SALLOW_BOAT = registerCustomBoat(SALLOW, false, false);
     public static final BoatItem SALLOW_CHEST_BOAT = registerCustomBoat(SALLOW, true, false);

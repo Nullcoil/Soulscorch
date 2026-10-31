@@ -18,7 +18,7 @@ public class ModEffects {
     public static final Holder<MobEffect> SOUL_RENDER = registerEffect("soul_render", new SoulRenderEffect(MobEffectCategory.BENEFICIAL, 0x00ff88));
 
     private static Holder<MobEffect> registerEffect(String string, MobEffect mobEffect) {
-        return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, string), mobEffect);
+        return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Soulscorch.id(string), mobEffect);
     }
 
     public static void register() {

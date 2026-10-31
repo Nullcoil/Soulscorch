@@ -11,7 +11,7 @@ import net.nullcoil.soulscorch.Soulscorch;
 public class ModAttributes {
     public static final Holder<Attribute> CORRUPTION = Registry.registerForHolder(
             BuiltInRegistries.ATTRIBUTE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "corruption"),
+            Soulscorch.id("corruption"),
             new RangedAttribute("attribute.name.soulscorch.corruption", 0.0D, 0.0D, 1024.0D).setSyncable(true)
     );
 

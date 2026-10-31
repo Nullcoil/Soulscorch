@@ -28,7 +28,7 @@ public class ModSounds {
     public static final SoundEvent ETHEL_SPIN = registerSoundEvent("ethel_spin");
 
     private static SoundEvent registerSoundEvent(String name) {
-        Identifier id = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 

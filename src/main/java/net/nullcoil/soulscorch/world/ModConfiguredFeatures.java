@@ -17,7 +17,7 @@ public class ModConfiguredFeatures {
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> GHOST_PEPPER_SHRUB =
             ResourceKey.create(Registries.CONFIGURED_FEATURE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "ghost_pepper_shrub"));
+                    Soulscorch.id("ghost_pepper_shrub"));
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         // Register exactly like CRIMSON_ROOTS in NetherFeatures
@@ -31,6 +31,6 @@ public class ModConfiguredFeatures {
     // Optional helper if you want to keep registerKey style
     private static ResourceKey<ConfiguredFeature<?, ?>> createKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE,
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name));
+                Soulscorch.id(name));
     }
 }

@@ -9,7 +9,7 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/soulscorch",
-		"sources": "https://github.com/Nullcoil/soulscorch-1.21.11"
+		"sources": "https://github.com/Nullcoil/soulscorch-26.1"
 	},
 	"license": "ARR",
 	"icon": "assets/soulscorch/icon.png",
@@ -31,7 +31,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
-		"minecraft": "~26.1",
+		"minecraft": ">=26.2",
 		"java": ">=25",
 		"fabric-api": "*"
 	}

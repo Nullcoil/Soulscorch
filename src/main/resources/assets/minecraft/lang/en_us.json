@@ -13,8 +13,5 @@
   "item.minecraft.tipped_arrow.effect.soul_rendering_strong": "Tipped Arrow of Soul Rendering II",
   "item.minecraft.potion.effect.soul_rendering_strong": "Potion of Soul Rendering II",
   "item.minecraft.splash_potion.effect.soul_rendering_strong": "Splash Potion of Soul Rendering II",
-  "item.minecraft.lingering_potion.effect.soul_rendering_strong": "Lingering Potion of Soul Rendering II",
-
-  "enchantment.minecraft.soul_fire_aspect": "Soul Fire Aspect",
-  "enchantment.minecraft.soul_flame": "Soul Flame"
+  "item.minecraft.lingering_potion.effect.soul_rendering_strong": "Lingering Potion of Soul Rendering II"
 }

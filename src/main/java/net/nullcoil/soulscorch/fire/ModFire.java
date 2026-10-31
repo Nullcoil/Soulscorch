@@ -1,5 +1,6 @@
 package net.nullcoil.soulscorch.fire;
 
+
 import it.crystalnest.prometheus.api.Fire;
 import it.crystalnest.prometheus.api.FireManager;
 import net.minecraft.core.particles.ParticleTypes;
@@ -44,6 +45,10 @@ public final class ModFire {
 
     private ModFire() {}
 
-    public static void register() { Soulscorch.LOGGER.info("Registering Fire Registry for " + Soulscorch.MOD_ID); }
+    public static void register() {
+        Soulscorch.LOGGER.info("Cannot register Soul Fire Registry for " + Soulscorch.MOD_ID);
+        Soulscorch.LOGGER.info("Prometheus does not exist for 26.2");
+    }
+
 
 }

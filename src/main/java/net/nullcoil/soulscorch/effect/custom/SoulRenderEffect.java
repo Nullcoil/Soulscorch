@@ -2,21 +2,23 @@ package net.nullcoil.soulscorch.effect.custom;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.InstantenousMobEffect;
+import net.minecraft.world.effect.InstantaneousMobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.attribute.ModAttributes;
 import org.jspecify.annotations.Nullable;
 
-public class SoulRenderEffect extends InstantenousMobEffect {
+public class SoulRenderEffect extends InstantaneousMobEffect {
     public SoulRenderEffect(MobEffectCategory mobEffectCategory, int color) {
         super(mobEffectCategory, color);
     }
 
     @Override
-    public void applyInstantenousEffect(ServerLevel serverLevel, @Nullable Entity source, @Nullable Entity indirectSource, LivingEntity livingEntity, int amplifier, double healthMultiplier) {
+    public void applyInstantaneousEffect(final ServerLevel level, final @Nullable Entity source, final @Nullable Entity owner, final LivingEntity livingEntity, final int amplifier, final double scale) {
+        Soulscorch.LOGGER.info("SoulRenderEffect.applyInstantenousEffect called! amplifier={}, entity={}", amplifier, livingEntity.getName().getString());
         AttributeInstance corruptionAttr = livingEntity.getAttribute(ModAttributes.CORRUPTION);
 
         if (corruptionAttr != null) {
@@ -48,6 +50,6 @@ public class SoulRenderEffect extends InstantenousMobEffect {
             }
         }
 
-        super.applyInstantenousEffect(serverLevel, source, indirectSource, livingEntity, amplifier, healthMultiplier);
+        super.applyInstantaneousEffect(level, source, owner, livingEntity, amplifier, scale);
     }
 }

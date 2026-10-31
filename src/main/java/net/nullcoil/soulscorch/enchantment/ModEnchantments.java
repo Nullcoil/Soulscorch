@@ -9,7 +9,7 @@ import net.nullcoil.soulscorch.Soulscorch;
 public class ModEnchantments {
     public static final ResourceKey<Enchantment> CATHARSIS = ResourceKey.create(
             Registries.ENCHANTMENT,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "catharsis")
+            Soulscorch.id("catharsis")
     );
 
     public static void register() {

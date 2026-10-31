@@ -16,14 +16,14 @@ public class ModBlockEntities {
     public static final BlockEntityType<SoulBrewingStandBlockEntity> SOUL_BREWING_STAND =
             Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soul_brewing_stand"),
+                    Soulscorch.id("soul_brewing_stand"),
                     FabricBlockEntityTypeBuilder.create(SoulBrewingStandBlockEntity::new, ModBlocks.SOUL_BREWING_STAND).build()
             );
 
     public static final BlockEntityType<SignBlockEntity> SEEPING_SIGN =
             Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_sign"),
+                    Soulscorch.id("seeping_sign"),
                     FabricBlockEntityTypeBuilder.create(
                             (pos, state) -> new SignBlockEntity(ModBlockEntities.SEEPING_SIGN, pos, state),
                             SeepingBlocks.SEEPING_SIGN, SeepingBlocks.SEEPING_WALL_SIGN
@@ -33,7 +33,7 @@ public class ModBlockEntities {
     public static final BlockEntityType<SeepingHangingSignBlockEntity> SEEPING_HANGING_SIGN =
             Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_hanging_sign"),
+                    Soulscorch.id("seeping_hanging_sign"),
                     FabricBlockEntityTypeBuilder.create(
                             SeepingHangingSignBlockEntity::new,
                             SeepingBlocks.SEEPING_HANGING_SIGN, SeepingBlocks.SEEPING_WALL_HANGING_SIGN
@@ -43,7 +43,7 @@ public class ModBlockEntities {
     public static final BlockEntityType<SignBlockEntity> SALLOW_SIGN =
             Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "sallow_sign"),
+                    Soulscorch.id("sallow_sign"),
                     FabricBlockEntityTypeBuilder.create(
                             (pos, state) -> new SignBlockEntity(ModBlockEntities.SALLOW_SIGN, pos, state),
                             SallowBlocks.SALLOW_SIGN, SallowBlocks.SALLOW_WALL_SIGN
@@ -53,7 +53,7 @@ public class ModBlockEntities {
     public static final BlockEntityType<HangingSignBlockEntity> SALLOW_WALL_HANGING_SIGN =
             Registry.register(
                     BuiltInRegistries.BLOCK_ENTITY_TYPE,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "seeping_wall_hanging_sign"),
+                    Soulscorch.id("seeping_wall_hanging_sign"),
                     FabricBlockEntityTypeBuilder.create(
                             HangingSignBlockEntity::new,
                             SallowBlocks.SALLOW_HANGING_SIGN, SallowBlocks.SALLOW_WALL_HANGING_SIGN

@@ -10,7 +10,7 @@ public class ModScreenHandlers {
     public static final MenuType<SoulBrewingStandMenu> SOUL_BREWING_STAND =
             Registry.register(
                     net.minecraft.core.registries.BuiltInRegistries.MENU,
-                    Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "soul_brewing_stand_screen_handler"),
+                    Soulscorch.id("soul_brewing_stand_screen_handler"),
                     new MenuType<>(SoulBrewingStandMenu::new, FeatureFlags.VANILLA_SET));
 
     public static void register() {

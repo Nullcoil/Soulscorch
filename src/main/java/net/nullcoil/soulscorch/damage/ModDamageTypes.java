@@ -9,6 +9,6 @@ import net.nullcoil.soulscorch.Soulscorch;
 public class ModDamageTypes {
     public static final ResourceKey<DamageType> CORRUPTION_DEATH = ResourceKey.create(
             Registries.DAMAGE_TYPE,
-            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "corruption")
+            Soulscorch.id("corruption")
     );
 }

@@ -16,7 +16,7 @@ public class ModParticles {
 
     private static SimpleParticleType register(String name) {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE,
-                Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, name),
+                Soulscorch.id(name),
                 FabricParticleTypes.simple());
     }
 
