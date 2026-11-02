@@ -41,7 +41,8 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	implementation "it.crystalnest:prometheus-common:$minecraft_version-$prometheus_version"
+	implementation "it.crystalnest:prometheus-fabric:$minecraft_version-$prometheus_version"
+	implementation "it.crystalnest:cobweb-fabric:$minecraft_version-$cobweb_version"
 }
 
 loom {

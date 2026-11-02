@@ -24,8 +24,18 @@ import net.nullcoil.soulscorch.item.ModItems;
 import java.util.Optional;
 
 public class SoulBrewingStandMenu extends AbstractContainerMenu {
-    static final Identifier EMPTY_SLOT_FUEL = Soulscorch.id("container/slot/brewing_fuel");
+    static final Identifier EMPTY_SLOT_FUEL = Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "container/slot/brewing_fuel");
     static final Identifier EMPTY_SLOT_POTION = Identifier.withDefaultNamespace("container/slot/potion");
+    private static final int BOTTLE_SLOT_START = 0;
+    private static final int BOTTLE_SLOT_END = 2;
+    private static final int INGREDIENT_SLOT = 3;
+    private static final int FUEL_SLOT = 4;
+    private static final int SLOT_COUNT = 5;
+    private static final int DATA_COUNT = 2;
+    private static final int INV_SLOT_START = 5;
+    private static final int INV_SLOT_END = 32;
+    private static final int USE_ROW_SLOT_START = 32;
+    private static final int USE_ROW_SLOT_END = 41;
     private final Container brewingStand;
     private final ContainerData brewingStandData;
     private final Slot ingredientSlot;

@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.screen;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.nullcoil.soulscorch.Soulscorch;

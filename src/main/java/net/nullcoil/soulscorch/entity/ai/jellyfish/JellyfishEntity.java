@@ -9,6 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.frog.Frog;
@@ -39,9 +40,7 @@ public class JellyfishEntity extends Monster {
     public JellyfishEntity(EntityType<? extends JellyfishEntity> type, Level level) {
         super(type, level);
         this.moveControl = new JellyfishMoveControl(this);
-
-        // Disables standard AI head-snapping completely
-        this.lookControl = new net.minecraft.world.entity.ai.control.LookControl(this) {
+        this.lookControl = new LookControl(this) {
             @Override
             public void tick() {}
         };

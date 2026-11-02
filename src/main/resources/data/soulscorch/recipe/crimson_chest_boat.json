@@ -1,11 +1,11 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "soulscorch:crimson_raft",
+    "soulscorch:crimson_boat",
     "minecraft:chest"
   ],
   "result": {
-    "id": "soulscorch:crimson_chest_raft",
+    "id": "soulscorch:crimson_chest_boat",
     "count": 1
   }
 }

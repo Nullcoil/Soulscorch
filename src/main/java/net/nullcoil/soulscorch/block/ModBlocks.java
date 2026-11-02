@@ -93,7 +93,7 @@ public class ModBlocks {
     }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties, boolean buildItem) {
-        Identifier id = Identifier.tryBuild(Soulscorch.MOD_ID, name);
+        Identifier id = Soulscorch.id(name);
 
         ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, id);
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);

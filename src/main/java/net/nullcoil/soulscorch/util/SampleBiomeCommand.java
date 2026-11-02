@@ -22,39 +22,42 @@ public class SampleBiomeCommand {
                     ServerLevel level = source.getLevel();
                     BlockPos pos = BlockPos.containing(source.getPosition());
 
-                    if (!(level.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator generator)) {
-                        source.sendFailure(Component.literal("Only works in noise-generated dimensions."));
+                    if (!(level.getChunkSource().getGenerator() instanceof NoiseBasedChunkGenerator)) {
+                        source.sendFailure(Component.translatable(TranslationKeys.SAMPLE_BIOME_FAILURE));
                         return 0;
                     }
 
                     RandomState randomState = level.getChunkSource().randomState();
                     NoiseRouter router = randomState.router();
 
-                    DensityFunction.SinglePointContext ctx2 = new DensityFunction.SinglePointContext(pos.getX(), pos.getY(), pos.getZ());
+                    int x = pos.getX();
+                    int y = pos.getY();
+                    int z = pos.getZ();
+                    DensityFunction.SinglePointContext point = new DensityFunction.SinglePointContext(x, y, z);
 
-                    double temperature      = router.temperature().compute(ctx2);
-                    double humidity        = router.vegetation().compute(ctx2);
-                    double continentalness = router.continents().compute(ctx2);
-                    double erosion         = router.erosion().compute(ctx2);
-                    double depth           = router.depth().compute(ctx2);
-                    double weirdness       = router.ridges().compute(ctx2);
+                    double temperature     = router.temperature().compute(point);
+                    double humidity        = router.vegetation().compute(point);
+                    double continentalness = router.continents().compute(point);
+                    double erosion         = router.erosion().compute(point);
+                    double depth           = router.depth().compute(point);
+                    double weirdness       = router.ridges().compute(point);
 
                     Identifier biomeKey = level.getBiome(pos)
                             .unwrapKey()
                             .map(ResourceKey::identifier)
                             .orElse(Identifier.withDefaultNamespace("unknown"));
 
-                    source.sendSuccess(() -> Component.literal(
-                            "=== Biome Sample @ " + pos.getX() + " " + pos.getY() + " " + pos.getZ() + " ===\n" +
-                                    "Biome:           " + biomeKey + "\n" +
-                                    "Temperature:     " + String.format("%.4f", temperature) + "\n" +
-                                    "Humidity:        " + String.format("%.4f", humidity) + "\n" +
-                                    "Continentalness: " + String.format("%.4f", continentalness) + "\n" +
-                                    "Erosion:         " + String.format("%.4f", erosion) + "\n" +
-                                    "Depth:           " + String.format("%.4f", depth) + "\n" +
-                                    "Weirdness:       " + String.format("%.4f", weirdness)
+                    source.sendSuccess(() -> Component.translatable(
+                            TranslationKeys.SAMPLE_BIOME_RESULT,
+                            x, y, z,
+                            biomeKey.toString(),
+                            String.format("%.4f", temperature),
+                            String.format("%.4f", humidity),
+                            String.format("%.4f", continentalness),
+                            String.format("%.4f", erosion),
+                            String.format("%.4f", depth),
+                            String.format("%.4f", weirdness)
                     ), false);
-
                     return 1;
                 })
         );

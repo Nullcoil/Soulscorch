@@ -46,8 +46,7 @@ public final class ModFire {
     private ModFire() {}
 
     public static void register() {
-        Soulscorch.LOGGER.info("Cannot register Soul Fire Registry for " + Soulscorch.MOD_ID);
-        Soulscorch.LOGGER.info("Prometheus does not exist for 26.2");
+        Soulscorch.LOGGER.info("Skipping registering ModFire for " + Soulscorch.MOD_ID);
     }
 
 

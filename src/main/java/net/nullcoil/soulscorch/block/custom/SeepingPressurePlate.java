@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
+import net.nullcoil.soulscorch.sound.ModSounds;
 
 public class SeepingPressurePlate extends PressurePlateBlock {
     public SeepingPressurePlate(BlockSetType blockSetType, Properties properties) {
@@ -57,7 +58,7 @@ public class SeepingPressurePlate extends PressurePlateBlock {
                     level.addParticle(ModParticles.SEEPING_DRIP_HANG,
                             pos.getX() + d, pos.getY() + e, pos.getZ() + f,
                             0d, 0d, 0d);
-                    level.playLocalSound(pos, SoundEvents.BEEHIVE_DRIP,
+                    level.playLocalSound(pos, ModSounds.SOUL_DRIP,
                             SoundSource.BLOCKS, 1.0F, 0.8F, false);
                 }
             }

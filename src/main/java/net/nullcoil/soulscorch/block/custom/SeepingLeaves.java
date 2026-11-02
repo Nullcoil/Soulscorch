@@ -3,7 +3,6 @@ package net.nullcoil.soulscorch.block.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -11,10 +10,11 @@ import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
+import net.nullcoil.soulscorch.sound.ModSounds;
 
 public class SeepingLeaves extends UntintedParticleLeavesBlock {
-    public SeepingLeaves(float f, ParticleOptions particle, Properties properties) {
-        super(f, particle, properties);
+    public SeepingLeaves(float chance, ParticleOptions particle, Properties properties) {
+        super(chance, particle, properties);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SeepingLeaves extends UntintedParticleLeavesBlock {
                     level.addParticle(ModParticles.SEEPING_DRIP_HANG,
                             pos.getX() + d, pos.getY() + e, pos.getZ() + f,
                             0d, 0d, 0d);
-                    level.playLocalSound(pos, SoundEvents.BEEHIVE_DRIP,
+                    level.playLocalSound(pos, ModSounds.SOUL_DRIP,
                             SoundSource.BLOCKS, 1.0F, 0.8F, false);
                 }
             }

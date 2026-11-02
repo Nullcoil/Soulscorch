@@ -108,7 +108,7 @@ public class RestlessEntity extends Monster implements Enemy, HoglinBase {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        if(!getAwakened()) return SoundEvents.SOUL_ESCAPE.value();
+        if(!getAwakened()) return ModSounds.RESTLESS_WHISPER.value();
         return SoundEvents.FIRE_AMBIENT;
     }
 

@@ -19,7 +19,7 @@ public class ModAlchemy {
     public static final Holder<Potion> SOUL_RENDERING_STRONG;
 
     private static Holder<Potion> register(String path, Potion potion) {
-        return Registry.registerForHolder(BuiltInRegistries.POTION, Soulscorch.id(path), potion);
+        return Registry.registerForHolder(BuiltInRegistries.POTION, Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, path), potion);
     }
 
     static {

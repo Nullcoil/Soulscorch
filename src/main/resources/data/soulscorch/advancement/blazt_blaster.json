@@ -1,14 +1,9 @@
 {
   "display": {
-    "icon": {
-      "id": "soulscorch:soul_charge"
-    },
-    "title": {
-      "translate": "Return to--wait a minute..."
-    },
-    "description": {
-      "translate": "You really thought that would work."
-    },
+    "icon": { "id": "soulscorch:soul_charge" },
+    "title": { "translate": "Return to--wait a minute..." },
+    "description": { "translate": "You really thought that would work." },
+    "background": "minecraft:gui/advancements/backgrounds/nether",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

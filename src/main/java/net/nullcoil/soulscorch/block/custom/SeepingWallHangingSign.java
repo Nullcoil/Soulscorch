@@ -18,6 +18,7 @@ import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.block.entity.SeepingHangingSignBlockEntity;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import org.jetbrains.annotations.Nullable;
+import net.nullcoil.soulscorch.sound.ModSounds;
 
 public class SeepingWallHangingSign extends WallHangingSignBlock {
     public SeepingWallHangingSign(WoodType woodType, Properties properties) {
@@ -75,7 +76,7 @@ public class SeepingWallHangingSign extends WallHangingSignBlock {
                     level.addParticle(ModParticles.SEEPING_DRIP_HANG,
                             pos.getX() + d, pos.getY() + e, pos.getZ() + f,
                             0d, 0d, 0d);
-                    level.playLocalSound(pos, SoundEvents.BEEHIVE_DRIP,
+                    level.playLocalSound(pos, ModSounds.SOUL_DRIP,
                             SoundSource.BLOCKS, 1.0F, 0.8F, false);
                 }
             }

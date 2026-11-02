@@ -36,9 +36,9 @@ public class JellyfishEmissiveLayer extends RenderLayer<JellyfishRenderState, Je
                 poseStack,
                 RenderTypes.entityTranslucentEmissive(GLOWEY_BITS),
                 15728880,
-                LivingEntityRenderer.getOverlayCoords(state, 0.0F),
+                LivingEntityRenderer.getOverlayCoords(state, 0f),
                 state.outlineColor,
-                (ModelFeatureRenderer.CrumblingOverlay)null
+                (ModelFeatureRenderer.CrumblingOverlay) null
         );
     }
 }

@@ -18,6 +18,8 @@ import net.nullcoil.soulscorch.entity.ai.SoulborneCatEntity;
 public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatRenderState, AbstractFelineModel<CatRenderState>> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/midnight.png");
+    private static final Identifier BABY =
+            Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/soulkitten.png");
 
     public SoulCatRenderer(EntityRendererProvider.Context context) {
         super(context, new AdultCatModel(context.bakeLayer(ModelLayers.CAT)), new BabyCatModel(context.bakeLayer(ModelLayers.CAT_BABY)), .4f);
@@ -26,7 +28,7 @@ public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatR
 
     @Override
     public Identifier getTextureLocation(CatRenderState state) {
-        return TEXTURE;
+        return state.isBaby ? BABY : TEXTURE;
     }
 
     @Override

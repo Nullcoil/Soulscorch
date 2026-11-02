@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -116,9 +118,9 @@ public class RestlessManeLayer extends RenderLayer<RestlessRenderState, Restless
                 emissiveLight,
                 LivingEntityRenderer.getOverlayCoords(state, 0.0F),
                 argb,
-                (net.minecraft.client.renderer.texture.TextureAtlasSprite) null, // Explicit cast to fix the ambiguous null
+                (TextureAtlasSprite) null,
                 state.outlineColor,
-                (net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay) null // Explicit cast to fix the ambiguous null
+                (ModelFeatureRenderer.CrumblingOverlay) null
         );
     }
 }
