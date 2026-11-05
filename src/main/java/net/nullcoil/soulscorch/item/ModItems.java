@@ -109,6 +109,9 @@ public class ModItems {
     }
 
     public static void addToCreativeMenu() {
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register(entries -> {
+            entries.accept(ModBlocks.SOUL_STONE);
+        });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries -> {
             entries.insertAfter(Items.BLAZE_POWDER, BLAZT_POWDER);
             entries.insertAfter(Items.BLAZE_ROD, BLAZT_ROD);

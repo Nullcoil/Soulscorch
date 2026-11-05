@@ -21,75 +21,100 @@ import net.nullcoil.soulscorch.block.custom.*;
 import java.util.function.Function;
 
 public class ModBlocks {
-    public static final Block SOUL_BREWING_STAND = registerBlock(
-            "soul_brewing_stand",
-            SoulBrewingStandBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.METAL)
-                    .strength(0.5F)
-                    .lightLevel(state -> 1)
-                    .noOcclusion()
-    );
+    public static final Block SOUL_BREWING_STAND;
+    public static final Block IRON_BULB_BLOCK;
+    public static final Block CERULEAN_FROGLIGHT;
+    public static final Block SOUL_SLAG_BLOCK;
+    public static final Block GHOST_PEPPER_SHRUB;
+    public static final Block SEEPING_SALLOW_SAPLING;
+    public static final Block SOUL_STONE;
 
-    public static final Block IRON_BULB_BLOCK = registerBlock(
-            "iron_bulb",
-            IronBulbBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(Blocks.IRON_BLOCK.defaultMapColor())
-                    .strength(3f,6f)
-                    .sound(SoundType.COPPER_BULB)
-                    .requiresCorrectToolForDrops()
-                    .isRedstoneConductor(Blocks::never)
-                    .lightLevel(Blocks.litBlockEmission(10))
-    );
+    static {
+        SOUL_BREWING_STAND = registerBlock(
+                "soul_brewing_stand",
+                SoulBrewingStandBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.METAL)
+                        .strength(0.5F)
+                        .lightLevel(state -> 1)
+                        .noOcclusion()
+        );
 
-    public static final Block CERULEAN_FROGLIGHT = registerBlock(
-            "cerulean_froglight",
-            RotatedPillarBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(Blocks.SOUL_FIRE.defaultMapColor())
-                    .strength(0.3f)
-                    .lightLevel(blockStatex -> 15)
-                    .sound(SoundType.FROGLIGHT)
-    );
+        IRON_BULB_BLOCK = registerBlock(
+                "iron_bulb",
+                IronBulbBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(Blocks.IRON_BLOCK.defaultMapColor())
+                        .strength(3f, 6f)
+                        .sound(SoundType.COPPER_BULB)
+                        .requiresCorrectToolForDrops()
+                        .isRedstoneConductor(Blocks::never)
+                        .lightLevel(Blocks.litBlockEmission(10))
+        );
 
-    public static final Block SOUL_SLAG_BLOCK = registerBlock(
-            "soul_slag",
-            SoulSlagBlock::new,
-            BlockBehaviour.Properties.of()
-                    .mapColor(Blocks.SOUL_FIRE.defaultMapColor())
-                    .instrument(NoteBlockInstrument.BASEDRUM)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 2)
-                    .strength(.5f)
-                    .isValidSpawn((state, getter, pos, type)-> type.fireImmune())
-                    .postProcess(Blocks::postProcessAbove)
-    );
+        CERULEAN_FROGLIGHT = registerBlock(
+                "cerulean_froglight",
+                RotatedPillarBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(Blocks.SOUL_FIRE.defaultMapColor())
+                        .strength(0.3f)
+                        .lightLevel(state -> 15)
+                        .sound(SoundType.FROGLIGHT)
+        );
 
-    public static final Block GHOST_PEPPER_SHRUB = registerBlock("ghost_pepper_shrub",
-            GhostPepperShrubBlock::new, BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_RED)
-                    .noCollision()
-                    .instabreak()
-                    .randomTicks()
-                    .sound(SoundType.SWEET_BERRY_BUSH)
-                    .pushReaction(PushReaction.DESTROY) // Pistons will break it
-                    .isRedstoneConductor(Blocks::never),
-            false
-            );
+        SOUL_SLAG_BLOCK = registerBlock(
+                "soul_slag",
+                SoulSlagBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(Blocks.SOUL_FIRE.defaultMapColor())
+                        .instrument(NoteBlockInstrument.BASEDRUM)
+                        .requiresCorrectToolForDrops()
+                        .lightLevel(state -> 2)
+                        .strength(.5f)
+                        .isValidSpawn((state, getter, pos, type) -> type.fireImmune())
+                        .postProcess(Blocks::postProcessAbove)
+        );
 
-    public static final Block SEEPING_SALLOW_SAPLING = registerBlock("seeping_sallow_sapling",
-            SeepingSallowSapling::new, BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_BLACK)
-                    .noCollision()
-                    .instabreak()
-                    .randomTicks()
-                    .sound(SoundType.CHERRY_SAPLING)
-                    .pushReaction(PushReaction.DESTROY)
-                    .isRedstoneConductor(Blocks::never));
+        GHOST_PEPPER_SHRUB = registerBlock(
+                "ghost_pepper_shrub",
+                GhostPepperShrubBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_RED)
+                        .noCollision()
+                        .instabreak()
+                        .randomTicks()
+                        .sound(SoundType.SWEET_BERRY_BUSH)
+                        .pushReaction(PushReaction.DESTROY) // Pistons will break it
+                        .isRedstoneConductor(Blocks::never),
+                false
+        );
+
+        SEEPING_SALLOW_SAPLING = registerBlock(
+                "seeping_sallow_sapling",
+                SeepingSallowSapling::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_BLACK)
+                        .noCollision()
+                        .instabreak()
+                        .randomTicks()
+                        .sound(SoundType.CHERRY_SAPLING)
+                        .pushReaction(PushReaction.DESTROY)
+                        .isRedstoneConductor(Blocks::never)
+        );
+
+        SOUL_STONE = registerBlock(
+                "soul_stone",
+                Block::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(Blocks.SOUL_SOIL.defaultMapColor())
+                        .instrument(NoteBlockInstrument.BASEDRUM)
+                        .requiresCorrectToolForDrops()
+                        .strength(1.5F, 6.0F)
+        );
+    }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
-        return registerBlock(name,factory,properties, true);
+        return registerBlock(name, factory, properties, true);
     }
 
     private static Block registerBlock(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties, boolean buildItem) {
@@ -99,7 +124,7 @@ public class ModBlocks {
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, id);
 
         Block block = factory.apply(properties.setId(blockKey));
-        if(buildItem) {
+        if (buildItem) {
             Registry.register(BuiltInRegistries.ITEM, itemKey, new BlockItem(block, new Item.Properties().setId(itemKey)));
         }
 

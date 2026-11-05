@@ -9,7 +9,7 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/soulscorch",
-		"sources": "https://github.com/Nullcoil/soulscorch-1.21.11"
+		"sources": "https://github.com/Nullcoil/Soulscorch"
 	},
 	"license": "ARR",
 	"icon": "assets/soulscorch/icon.png",
