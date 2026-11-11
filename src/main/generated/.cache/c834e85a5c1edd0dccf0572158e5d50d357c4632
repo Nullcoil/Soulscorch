@@ -1,4 +1,5 @@
 // 26.2	-999999999-01-01T00:00:00	Soulscorch/Soulscorch World Gen
 028a6e396b4a13a21daa975149db70b978ebd7bd data/soulscorch/worldgen/biome/soulvore_caverns.json
+028a6e396b4a13a21daa975149db70b978ebd7bd data/soulscorch/worldgen/biome/soulvore_crags.json
 07eb96b308cee41fc5293a12a04af834a5a480e4 data/soulscorch/worldgen/configured_feature/ghost_pepper_shrub.json
 ece3d5f738e351c9f02c32de5e6ac44efbb6e812 data/soulscorch/worldgen/placed_feature/ghost_pepper_patch.json

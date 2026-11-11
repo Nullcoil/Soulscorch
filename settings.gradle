@@ -9,5 +9,11 @@ pluginManagement {
 	}
 }
 
+includeBuild('../nidalib') {
+	dependencySubstitution {
+		substitute module('maven.modrinth:nidalib') using project(':')
+	}
+}
+
 // Should match your modid
 rootProject.name = 'soulscorch'
