@@ -18,6 +18,7 @@ public class ModWorldGenProvider extends FabricDynamicRegistryProvider {
         // This avoids the 'RegistryLookup' vs 'Reference' type variable mismatch
         registries.lookup(Registries.CONFIGURED_FEATURE).ifPresent(entries::addAll);
         registries.lookup(Registries.PLACED_FEATURE).ifPresent(entries::addAll);
+        entries.addAll(registries.lookupOrThrow(Registries.BIOME));
     }
 
     @Override

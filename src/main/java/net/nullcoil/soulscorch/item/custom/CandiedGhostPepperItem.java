@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import org.jspecify.annotations.NonNull;
 

@@ -23,6 +23,18 @@ repositories {
 		}
 	}
 
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+
 	maven {
 		name = 'TerraformersMC'
 		url = 'https://maven.terraformersmc.com/'
@@ -43,6 +55,8 @@ dependencies {
 
 	implementation "it.crystalnest:prometheus-fabric:$minecraft_version-$prometheus_version"
 	implementation "it.crystalnest:cobweb-fabric:$minecraft_version-$cobweb_version"
+
+	implementation "maven.modrinth:nidalib:${project.nidalib_version}"
 }
 
 loom {

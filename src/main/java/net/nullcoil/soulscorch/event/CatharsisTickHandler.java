@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.enchantment.ModEnchantments;
 
 public class CatharsisTickHandler {

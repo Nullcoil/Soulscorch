@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
 import net.nullcoil.soulscorch.entity.ai.*;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.projectile.SoulChargeProjectile;

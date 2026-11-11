@@ -4,9 +4,10 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "BaseFireBlockMixin",
-    "FoodDataMixin",
     "NetherBoatLavaMixin",
+    "NoiseBasedChunkGeneratorMixin",
     "PlayerDamageMixin",
+    "WorldGenRegionMixin",
     "cat.CatEntityMixin",
     "cat.CatInvoker",
     "livingentity.LivingEntityMixin",
@@ -26,7 +27,6 @@
     "requireAnnotations": true
   },
   "client": [
-    "FluidStateModelSetMixin",
-    "GuiMixin"
+    "FluidStateModelSetMixin"
   ]
 }

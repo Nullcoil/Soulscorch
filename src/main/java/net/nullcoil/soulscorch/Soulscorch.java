@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.advancement.ModCriteriaTriggers;
 import net.nullcoil.soulscorch.alchemy.ModAlchemy;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
 import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.ModWoodTypes;
@@ -19,6 +18,7 @@ import net.nullcoil.soulscorch.loot.ModLootTables;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.sound.ModSounds;
 import net.nullcoil.soulscorch.util.SampleBiomeCommand;
+import net.nullcoil.soulscorch.world.biome.ModBiomes;
 import net.nullcoil.soulscorch.world.gen.ModEntitySpawns;
 import net.nullcoil.soulscorch.world.gen.ModWorldGen;
 import org.slf4j.Logger;
@@ -30,7 +30,6 @@ public class Soulscorch implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModAttributes.register();
 		ModWoodTypes.register();
 		ModItems.register();
 		ModBlocks.register();
@@ -47,6 +46,7 @@ public class Soulscorch implements ModInitializer {
 		ModParticles.register();
 		ModCriteriaTriggers.register();
 		ModWorldGen.generate();
+		ModBiomes.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
 				SampleBiomeCommand.register(dispatcher));

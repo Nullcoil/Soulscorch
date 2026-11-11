@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.damage.ModDamageTypes;
 
 public class ModEvents {

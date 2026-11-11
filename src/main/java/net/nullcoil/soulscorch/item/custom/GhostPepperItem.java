@@ -8,7 +8,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import org.jspecify.annotations.NonNull;
 
 public class GhostPepperItem extends BlockItem {

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.item.ModItems;
 

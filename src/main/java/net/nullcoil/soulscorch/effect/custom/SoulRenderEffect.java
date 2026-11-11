@@ -7,8 +7,8 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.attribute.ModAttributes;
 import org.jspecify.annotations.Nullable;
 
 public class SoulRenderEffect extends InstantaneousMobEffect {

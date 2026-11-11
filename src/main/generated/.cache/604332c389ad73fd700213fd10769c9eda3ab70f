@@ -1,0 +1,3 @@
+// 26.2	-999999999-01-01T00:00:00	Soulscorch/Tags for minecraft:block
+fcd948f7a649e73d5155f73236c0cd9482c4c22a data/minecraft/tags/block/mineable/pickaxe.json
+1dc1ce3a695d818f354d498a9a67f3f17518feeb data/minecraft/tags/block/needs_stone_tool.json

@@ -1,4 +1,4 @@
-// 26.3	-999999999-01-01T00:00:00	Soulscorch/Soulscorch World Gen
-4e586e651ed258f033ec5f5f9fbb2a610eb0515d data/soulscorch/worldgen/feature/ghost_pepper_shrub.json
-1018808e03a94316fe21b9ad53378244080b0798 data/soulscorch/worldgen/feature/seeping_sallow.json
-78e441a5cabfd6d300736b82d6fa8d62c54de7a0 data/soulscorch/worldgen/placed_feature/ghost_pepper_patch.json
+// 26.2	-999999999-01-01T00:00:00	Soulscorch/Soulscorch World Gen
+028a6e396b4a13a21daa975149db70b978ebd7bd data/soulscorch/worldgen/biome/soulvore_caverns.json
+07eb96b308cee41fc5293a12a04af834a5a480e4 data/soulscorch/worldgen/configured_feature/ghost_pepper_shrub.json
+ece3d5f738e351c9f02c32de5e6ac44efbb6e812 data/soulscorch/worldgen/placed_feature/ghost_pepper_patch.json
