@@ -12,11 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.blockentity.StandingSignRenderer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
-import net.nullcoil.nidalib.lava.LavaHeat;
-import net.nullcoil.nidalib.lava.LavaStage;
 import net.nullcoil.soulscorch.block.ModBlockEntities;
-import net.minecraft.world.level.biome.Biomes;
-import net.nullcoil.soulscorch.world.biome.ModBiomes;
 import net.nullcoil.soulscorch.entity.ModBoats;
 import net.nullcoil.soulscorch.entity.ModEntities;
 import net.nullcoil.soulscorch.entity.client.blazt.BlaztModel;
@@ -41,14 +37,6 @@ import net.nullcoil.soulscorch.screen.SoulBrewingStandScreen;
 public class SoulscorchClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // Lava colors per biome (drawn by Nidalib)
-        LavaHeat.set(Biomes.CRIMSON_FOREST, LavaStage.RED);
-        LavaHeat.set(Biomes.BASALT_DELTAS, LavaStage.VANILLA);
-        LavaHeat.set(Biomes.NETHER_WASTES, LavaStage.VANILLA);
-        LavaHeat.set(Biomes.WARPED_FOREST, LavaStage.YELLOW);
-        LavaHeat.set(Biomes.SOUL_SAND_VALLEY, LavaStage.SOUL);
-        LavaHeat.set(ModBiomes.SOULVORE_CRAGS, LavaStage.SOUL);
-        LavaHeat.set(ModBiomes.SOULVORE_CAVERNS, LavaStage.SOUL);
 
         MenuScreens.register(ModScreenHandlers.SOUL_BREWING_STAND, SoulBrewingStandScreen::new);
 
