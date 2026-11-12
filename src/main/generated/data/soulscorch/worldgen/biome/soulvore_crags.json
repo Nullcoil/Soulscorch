@@ -15,7 +15,9 @@
     [
       "soulscorch:soulvore_delta",
       "soulscorch:small_soul_stone_columns",
-      "soulscorch:large_soul_stone_columns"
+      "soulscorch:large_soul_stone_columns",
+      "soulscorch:small_hanging_soul_stone_columns",
+      "soulscorch:large_hanging_soul_stone_columns"
     ]
   ],
   "has_precipitation": false,

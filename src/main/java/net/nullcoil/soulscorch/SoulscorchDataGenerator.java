@@ -7,6 +7,7 @@ import net.minecraft.core.registries.Registries;
 import net.nullcoil.soulscorch.datagen.ModBlockLootTableProvider;
 import net.nullcoil.soulscorch.datagen.ModBlockTagProvider;
 import net.nullcoil.soulscorch.datagen.ModWorldGenProvider;
+import net.nullcoil.soulscorch.world.ModCarvers;
 import net.nullcoil.soulscorch.world.ModConfiguredFeatures;
 import net.nullcoil.soulscorch.world.ModPlacedFeatures;
 import net.nullcoil.soulscorch.world.biome.ModBiomes;
@@ -22,6 +23,7 @@ public class SoulscorchDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
 	public void buildRegistry(RegistrySetBuilder registryBuilder) {
+		registryBuilder.add(Registries.CONFIGURED_CARVER, ModCarvers::bootstrap);
 		registryBuilder.add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);
 		registryBuilder.add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
 		registryBuilder.add(Registries.BIOME, ModBiomes::bootstrap);

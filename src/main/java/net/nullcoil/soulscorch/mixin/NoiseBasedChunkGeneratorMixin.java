@@ -19,14 +19,21 @@ public abstract class NoiseBasedChunkGeneratorMixin {
     @Shadow @Final private Holder<NoiseGeneratorSettings> settings;
 
     /**
-     * Runs right after carvers, so everything the noise, surface and carver
-     * steps left behind inside Soulvore Caverns gets filled back in.
+     * Before carvers: Soulvore Caverns becomes solid Soul Stone, so its own carver
+     * (the only one allowed to cut Soul Stone) carves it from scratch.
      * Limited to the dimension's generation height so the Nether's
      * open space above the bedrock roof stays empty.
      */
-    @Inject(method = "applyCarvers", at = @At("TAIL"))
-    private void soulscorch$fillSoulvore(CallbackInfo ci, @Local(argsOnly = true) ChunkAccess chunk) {
+    @Inject(method = "applyCarvers", at = @At("HEAD"))
+    private void soulscorch$fillCaverns(CallbackInfo ci, @Local(argsOnly = true) ChunkAccess chunk) {
         NoiseSettings noise = this.settings.value().noiseSettings();
-        SoulvoreFill.fill(chunk, noise.minY(), noise.minY() + noise.height());
+        SoulvoreFill.fillCaverns(chunk, noise.minY(), noise.minY() + noise.height());
+    }
+
+    /** After carvers: rock layers for both Soulvore biomes, on the carved terrain. */
+    @Inject(method = "applyCarvers", at = @At("TAIL"))
+    private void soulscorch$layerSoulvore(CallbackInfo ci, @Local(argsOnly = true) ChunkAccess chunk) {
+        NoiseSettings noise = this.settings.value().noiseSettings();
+        SoulvoreFill.layer(chunk, noise.minY(), noise.minY() + noise.height());
     }
 }

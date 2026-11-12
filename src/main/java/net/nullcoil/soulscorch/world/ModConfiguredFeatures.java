@@ -4,6 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.Identifier;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -30,6 +31,8 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> SOULVORE_DELTA = createKey("soulvore_delta");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SMALL_SOUL_STONE_COLUMNS = createKey("small_soul_stone_columns");
     public static final ResourceKey<ConfiguredFeature<?, ?>> LARGE_SOUL_STONE_COLUMNS = createKey("large_soul_stone_columns");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SMALL_HANGING_SOUL_STONE_COLUMNS = createKey("small_hanging_soul_stone_columns");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> LARGE_HANGING_SOUL_STONE_COLUMNS = createKey("large_hanging_soul_stone_columns");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         BlockState soulStone = ModBlocks.SOUL_STONE.defaultBlockState();
@@ -45,6 +48,12 @@ public class ModConfiguredFeatures {
                 new BlockColumnConfiguration(soulStone, ConstantInt.of(1), UniformInt.of(1, 4)));
         FeatureUtils.register(context, LARGE_SOUL_STONE_COLUMNS, ModFeatures.BLOCK_COLUMNS,
                 new BlockColumnConfiguration(soulStone, UniformInt.of(2, 3), UniformInt.of(5, 10)));
+
+        // The same columns hanging from the ceiling
+        FeatureUtils.register(context, SMALL_HANGING_SOUL_STONE_COLUMNS, ModFeatures.BLOCK_COLUMNS,
+                new BlockColumnConfiguration(soulStone, ConstantInt.of(1), UniformInt.of(1, 4), Direction.DOWN));
+        FeatureUtils.register(context, LARGE_HANGING_SOUL_STONE_COLUMNS, ModFeatures.BLOCK_COLUMNS,
+                new BlockColumnConfiguration(soulStone, UniformInt.of(2, 3), UniformInt.of(5, 10), Direction.DOWN));
 
 
         // Register exactly like CRIMSON_ROOTS in NetherFeatures

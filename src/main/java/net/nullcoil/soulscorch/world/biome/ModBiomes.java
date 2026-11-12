@@ -14,6 +14,7 @@ import net.nullcoil.nidalib.lava.LavaStage;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomeRule;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomes;
 import net.nullcoil.soulscorch.Soulscorch;
+import net.nullcoil.soulscorch.world.ModCarvers;
 import net.nullcoil.soulscorch.world.ModPlacedFeatures;
 
 public class ModBiomes {
@@ -44,6 +45,8 @@ public class ModBiomes {
         generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.SOULVORE_DELTA);
         generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.SMALL_SOUL_STONE_COLUMNS);
         generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.LARGE_SOUL_STONE_COLUMNS);
+        generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.SMALL_HANGING_SOUL_STONE_COLUMNS);
+        generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.LARGE_HANGING_SOUL_STONE_COLUMNS);
 
         return baseBiome(new MobSpawnSettings.Builder(), generation);
     }
@@ -52,7 +55,10 @@ public class ModBiomes {
                                          HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         BiomeGenerationSettings.Builder generation =
                 new BiomeGenerationSettings.Builder(placedFeatures, carvers);
-        // Carver, Soul Soil floors and Seeping Sallow trees come in the caverns step
+        // The only carver that can cut Soul Stone; SoulvoreFill fills the biome solid before it
+        // runs and lays down the Soul Soil floors and rock layers after
+        generation.addCarver(ModCarvers.SOULVORE_CAVE);
+        // Seeping Sallow trees come next
 
         return baseBiome(new MobSpawnSettings.Builder(), generation);
     }
@@ -76,9 +82,9 @@ public class ModBiomes {
         // Both are nested inside Soul Sand Valley, judged by how deep into the valley a spot is.
         // Rules nest, so the inner threshold must be lower than the outer one:
         //   ratio 0.0 - 0.4  -> Soulvore Caverns (center)
-        //   ratio 0.4 - 0.7  -> Soulvore Crags (ring)
-        //   ratio 0.7 - 1.0  -> Soul Sand Valley (outer edge, unchanged)
-        SubBiomes.add(Biomes.SOUL_SAND_VALLEY, SOULVORE_CRAGS, SubBiomeRule.core(0.7));
+        //   ratio 0.4 - 0.55 -> Soulvore Crags (ring)
+        //   ratio 0.55 - 1.0 -> Soul Sand Valley (outer edge, unchanged)
+        SubBiomes.add(Biomes.SOUL_SAND_VALLEY, SOULVORE_CRAGS, SubBiomeRule.core(0.55));
         SubBiomes.add(SOULVORE_CRAGS, SOULVORE_CAVERNS, SubBiomeRule.core(0.4));
 
         // Lava colors per biome (lava, and fire caught from it; drawn by Nidalib).

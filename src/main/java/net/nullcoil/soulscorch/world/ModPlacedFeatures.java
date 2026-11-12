@@ -26,6 +26,8 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SOULVORE_DELTA = createKey("soulvore_delta");
     public static final ResourceKey<PlacedFeature> SMALL_SOUL_STONE_COLUMNS = createKey("small_soul_stone_columns");
     public static final ResourceKey<PlacedFeature> LARGE_SOUL_STONE_COLUMNS = createKey("large_soul_stone_columns");
+    public static final ResourceKey<PlacedFeature> SMALL_HANGING_SOUL_STONE_COLUMNS = createKey("small_hanging_soul_stone_columns");
+    public static final ResourceKey<PlacedFeature> LARGE_HANGING_SOUL_STONE_COLUMNS = createKey("large_hanging_soul_stone_columns");
 
     private static ResourceKey<PlacedFeature> createKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, Soulscorch.id(name));
@@ -46,6 +48,13 @@ public class ModPlacedFeatures {
                 CountOnEveryLayerPlacement.of(4), BiomeFilter.biome());
         PlacementUtils.register(context, LARGE_SOUL_STONE_COLUMNS,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.LARGE_SOUL_STONE_COLUMNS),
+                CountOnEveryLayerPlacement.of(2), BiomeFilter.biome());
+        // Hanging versions: placed on each floor layer, they climb to the ceiling above it
+        PlacementUtils.register(context, SMALL_HANGING_SOUL_STONE_COLUMNS,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SMALL_HANGING_SOUL_STONE_COLUMNS),
+                CountOnEveryLayerPlacement.of(4), BiomeFilter.biome());
+        PlacementUtils.register(context, LARGE_HANGING_SOUL_STONE_COLUMNS,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.LARGE_HANGING_SOUL_STONE_COLUMNS),
                 CountOnEveryLayerPlacement.of(2), BiomeFilter.biome());
     }
 }
