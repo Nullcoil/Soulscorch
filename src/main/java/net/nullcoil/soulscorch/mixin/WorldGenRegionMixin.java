@@ -3,10 +3,12 @@ package net.nullcoil.soulscorch.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.core.QuartPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.util.ModTags;
 import net.nullcoil.soulscorch.world.biome.SoulvoreFill;
@@ -20,14 +22,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class WorldGenRegionMixin {
     /**
      * Features and structures place blocks through WorldGenRegion. Refusing
-     * every write inside Soulvore Caverns keeps neighboring biomes' features
+     * writes inside Soulvore Caverns keeps neighboring biomes' features
      * (fortresses, bastions, glowstone, basalt, etc.) from cutting into it.
+     * Soulscorch's own blocks (Seeping Sallow trees, ...) and Soul Soil
+     * (trees set it under their trunk) are let through.
      */
     @Inject(method = "setBlock", at = @At("HEAD"), cancellable = true)
     private void soulscorch$protectSoulvore(CallbackInfoReturnable<Boolean> cir,
                                             @Local(argsOnly = true) BlockPos pos,
                                             @Local(argsOnly = true) BlockState state) {
-        if (state.is(ModBlocks.SOUL_STONE)) return;
+        if (state.is(ModBlocks.SOUL_STONE) || state.is(Blocks.SOUL_SOIL)) return;
+        if (BuiltInRegistries.BLOCK.getKey(state.getBlock()).getNamespace().equals(Soulscorch.MOD_ID)) return;
 
         WorldGenRegion self = (WorldGenRegion) (Object) this;
         int chunkX = SectionPos.blockToSectionCoord(pos.getX());

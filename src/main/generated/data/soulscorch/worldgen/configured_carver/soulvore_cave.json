@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:cave",
+  "type": "soulscorch:soulvore_cave",
   "config": {
     "floor_level": -0.7,
     "horizontal_radius_multiplier": {

@@ -28,6 +28,10 @@ public class ModBiomes {
 
     private static final int SOULVORE_FOG = 0x352922;
 
+    /** Edge ratios (Nidalib) where the Caverns and Crags end, measured inside Soul Sand Valley. */
+    public static final double CAVERNS_CORE = 0.4;
+    public static final double CRAGS_CORE = 0.55;
+
     public static void bootstrap(BootstrapContext<Biome> context) {
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carvers = context.lookup(Registries.CONFIGURED_CARVER);
@@ -84,8 +88,8 @@ public class ModBiomes {
         //   ratio 0.0 - 0.4  -> Soulvore Caverns (center)
         //   ratio 0.4 - 0.55 -> Soulvore Crags (ring)
         //   ratio 0.55 - 1.0 -> Soul Sand Valley (outer edge, unchanged)
-        SubBiomes.add(Biomes.SOUL_SAND_VALLEY, SOULVORE_CRAGS, SubBiomeRule.core(0.55));
-        SubBiomes.add(SOULVORE_CRAGS, SOULVORE_CAVERNS, SubBiomeRule.core(0.4));
+        SubBiomes.add(Biomes.SOUL_SAND_VALLEY, SOULVORE_CRAGS, SubBiomeRule.core(CRAGS_CORE));
+        SubBiomes.add(SOULVORE_CRAGS, SOULVORE_CAVERNS, SubBiomeRule.core(CAVERNS_CORE));
 
         // Lava colors per biome (lava, and fire caught from it; drawn by Nidalib).
         // Soul-stage fire is left to SoulLavaIgniteMixin's Prometheus soul fire.

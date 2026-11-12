@@ -1,7 +1,7 @@
 // 26.2	-999999999-01-01T00:00:00	Soulscorch/Soulscorch World Gen
 33e0fc1684b498d6e5ea7f093d1ef7fbf80b1c83 data/soulscorch/worldgen/biome/soulvore_caverns.json
 b3f83963b916b4a0b7a95ee86d4c477c3830e621 data/soulscorch/worldgen/biome/soulvore_crags.json
-177e513536b322962594676c1a3820c4dd4b0c7b data/soulscorch/worldgen/configured_carver/soulvore_cave.json
+7319b42d069a4c144714c6fd732e85cc2717d864 data/soulscorch/worldgen/configured_carver/soulvore_cave.json
 07eb96b308cee41fc5293a12a04af834a5a480e4 data/soulscorch/worldgen/configured_feature/ghost_pepper_shrub.json
 7d7b537f093698faf9ccaf66fb5c058b9ec691c9 data/soulscorch/worldgen/configured_feature/large_hanging_soul_stone_columns.json
 6b20c1a8633e0da99c3c09dac30c640a48b65935 data/soulscorch/worldgen/configured_feature/large_soul_stone_columns.json
