@@ -3,7 +3,8 @@ package net.nullcoil.soulscorch.mixin;
 import it.crystalnest.prometheus.api.FireManager;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import net.nullcoil.soulscorch.util.ModTags;
+import net.nullcoil.nidalib.lava.LavaFire;
+import net.nullcoil.nidalib.lava.LavaHeat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Lava in a soul biome sets things on soul fire instead of regular fire.
+ * Fully soul-colored lava sets things on soul fire instead of regular fire.
  *
  * <p>Two parts:
  * <ol>
@@ -43,7 +44,9 @@ public abstract class SoulLavaIgniteMixin {
     private void soulscorch$markSoulLava(CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
         // Runs on both sides on purpose: see the class comment
-        if (self.level().getBiome(self.blockPosition()).is(ModTags.Biomes.SOUL_BIOMES)) {
+        // Soul fire exactly where the lava is 100% soul-colored (Nidalib's faded heat),
+        // so lava fire never turns blue while the lava still looks white or pale blue
+        if (LavaFire.isSoul(LavaHeat.faded(self.level(), self.blockPosition()))) {
             soulscorch$soulLavaTick = self.level().getGameTime();
         }
     }

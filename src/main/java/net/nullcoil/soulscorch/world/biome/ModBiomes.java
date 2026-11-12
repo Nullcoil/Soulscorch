@@ -9,6 +9,8 @@ import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.nullcoil.nidalib.lava.LavaHeat;
+import net.nullcoil.nidalib.lava.LavaStage;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomeRule;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomes;
 import net.nullcoil.soulscorch.Soulscorch;
@@ -78,5 +80,15 @@ public class ModBiomes {
         //   ratio 0.7 - 1.0  -> Soul Sand Valley (outer edge, unchanged)
         SubBiomes.add(Biomes.SOUL_SAND_VALLEY, SOULVORE_CRAGS, SubBiomeRule.core(0.7));
         SubBiomes.add(SOULVORE_CRAGS, SOULVORE_CAVERNS, SubBiomeRule.core(0.4));
+
+        // Lava colors per biome (lava, and fire caught from it; drawn by Nidalib).
+        // Soul-stage fire is left to SoulLavaIgniteMixin's Prometheus soul fire.
+        LavaHeat.set(Biomes.CRIMSON_FOREST, LavaStage.RED);
+        LavaHeat.set(Biomes.BASALT_DELTAS, LavaStage.VANILLA);
+        LavaHeat.set(Biomes.NETHER_WASTES, LavaStage.VANILLA);
+        LavaHeat.set(Biomes.WARPED_FOREST, LavaStage.YELLOW);
+        LavaHeat.set(Biomes.SOUL_SAND_VALLEY, LavaStage.SOUL);
+        LavaHeat.set(SOULVORE_CRAGS, LavaStage.SOUL);
+        LavaHeat.set(SOULVORE_CAVERNS, LavaStage.SOUL);
     }
 }
