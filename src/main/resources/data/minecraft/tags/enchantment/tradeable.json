@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "minecraft:soul_flame",
-    "minecraft:soul_fire_aspect"
+    "minecraft:soul_fire_aspect",
+    "soulscorch:catharsis"
   ]
 }

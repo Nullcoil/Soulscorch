@@ -8,6 +8,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biomes;
 import net.nullcoil.soulscorch.entity.ModEntities;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
+import net.nullcoil.soulscorch.util.ModTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +24,7 @@ public class PiglinBruteSpawnMixin {
                 && spawnReason != EntitySpawnReason.CHUNK_GENERATION) {
             return;
         }
-        if (!level.getBiome(brute.blockPosition()).is(Biomes.SOUL_SAND_VALLEY)) return;
+        if (!level.getBiome(brute.blockPosition()).is(ModTags.Biomes.SOUL_BIOMES)) return;
 
         HeedlessEntity heedless = ModEntities.HEEDLESS.create(level.getLevel(), spawnReason);
         if (heedless == null) return;

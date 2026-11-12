@@ -14,6 +14,36 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:enchanted_book",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:soul_fire_aspect": {
+                  "type": "minecraft:uniform",
+                  "min": 1,
+                  "max": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:soul_flame": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
           "weight": 10,
           "functions": [
             {
@@ -30,7 +60,7 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 90
+          "weight": 60
         }
       ]
     }
