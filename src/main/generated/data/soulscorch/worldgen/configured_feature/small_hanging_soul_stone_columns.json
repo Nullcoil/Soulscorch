@@ -1,0 +1,15 @@
+{
+  "type": "soulscorch:block_columns",
+  "config": {
+    "direction": "down",
+    "height": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 4,
+      "min_inclusive": 1
+    },
+    "reach": 1,
+    "state": {
+      "Name": "soulscorch:soul_stone"
+    }
+  }
+}
