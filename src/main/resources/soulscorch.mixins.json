@@ -27,8 +27,5 @@
   "overwrites": {
     "requireAnnotations": true
   },
-  "client": [
-    "FluidStateModelSetMixin",
-    "LavaFluidRendererMixin"
-  ]
+  "client": []
 }
