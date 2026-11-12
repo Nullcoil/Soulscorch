@@ -7,6 +7,7 @@
     "NetherBoatLavaMixin",
     "NoiseBasedChunkGeneratorMixin",
     "PlayerDamageMixin",
+    "SoulLavaIgniteMixin",
     "WorldGenRegionMixin",
     "cat.CatEntityMixin",
     "cat.CatInvoker",
@@ -27,6 +28,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "FluidStateModelSetMixin"
+    "FluidStateModelSetMixin",
+    "LavaFluidRendererMixin"
   ]
 }

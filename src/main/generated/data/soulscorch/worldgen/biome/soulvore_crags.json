@@ -7,7 +7,17 @@
   "effects": {
     "water_color": "#3f76e4"
   },
-  "features": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "soulscorch:soulvore_delta",
+      "soulscorch:small_soul_stone_columns",
+      "soulscorch:large_soul_stone_columns"
+    ]
+  ],
   "has_precipitation": false,
   "spawn_costs": {},
   "spawners": {

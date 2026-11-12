@@ -6,11 +6,13 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomeRule;
 import net.nullcoil.nidalib.worldgen.biome.SubBiomes;
 import net.nullcoil.soulscorch.Soulscorch;
+import net.nullcoil.soulscorch.world.ModPlacedFeatures;
 
 public class ModBiomes {
     /** Outer ring: craggy Soul Stone, Basalt Delta-style. Placed inside Soul Sand Valleys by Nidalib. */
@@ -35,7 +37,11 @@ public class ModBiomes {
                                        HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         BiomeGenerationSettings.Builder generation =
                 new BiomeGenerationSettings.Builder(placedFeatures, carvers);
-        // Crag features (columns, deltas) come in the crags step
+        // Mirrors vanilla Basalt Deltas: lava deltas and columns shape the surface.
+        // Layering (Soul Stone, Blackstone, Netherrack) is done by SoulvoreFill.
+        generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.SOULVORE_DELTA);
+        generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.SMALL_SOUL_STONE_COLUMNS);
+        generation.addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ModPlacedFeatures.LARGE_SOUL_STONE_COLUMNS);
 
         return baseBiome(new MobSpawnSettings.Builder(), generation);
     }

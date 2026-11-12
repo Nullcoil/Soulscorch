@@ -2,6 +2,7 @@ package net.nullcoil.soulscorch.mixin;
 
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.FluidStateModelSet;
+import net.nullcoil.soulscorch.client.lava.LavaHeat;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -18,13 +19,18 @@ public class FluidStateModelSetMixin {
     @Mutable
     private static FluidModel.Unbaked LAVA_MODEL;
 
+    /**
+     * Lava keeps vanilla's textures here (the renderer swaps in heat stages per block),
+     * stays translucent so the crossfade layer can blend, and gets the tint source that
+     * carries the crossfade's opacity.
+     */
     @Inject(method = "<clinit>", at = @At("TAIL"))
-    private static void soulscorch$lavaTranslucent(CallbackInfo ci) {
+    private static void soulscorch$lavaModel(CallbackInfo ci) {
         LAVA_MODEL = new FluidModel.Unbaked(
                 LAVA_MODEL.stillMaterial().withForceTranslucent(true),
                 LAVA_MODEL.flowingMaterial().withForceTranslucent(true),
                 LAVA_MODEL.overlayMaterial(),
-                LAVA_MODEL.tintSource()
+                LavaHeat.TINT_SOURCE
         );
     }
 }

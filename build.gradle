@@ -57,6 +57,7 @@ dependencies {
 	implementation "it.crystalnest:cobweb-fabric:$minecraft_version-$cobweb_version"
 
 	implementation "maven.modrinth:nidalib:${project.nidalib_version}"
+	implementation "maven.modrinth:big-water:1.2.0-fabric+mc26.2"
 }
 
 loom {

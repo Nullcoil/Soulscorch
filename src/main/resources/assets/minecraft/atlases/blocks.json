@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "type": "soulscorch:lava_stages",
+      "sources": ["bigwater:block/lava_still", "minecraft:block/lava_still"],
+      "kind": "still"
+    },
+    {
+      "type": "soulscorch:lava_stages",
+      "sources": ["bigwater:block/lava_flow", "minecraft:block/lava_flow"],
+      "kind": "flow"
+    }
+  ]
+}

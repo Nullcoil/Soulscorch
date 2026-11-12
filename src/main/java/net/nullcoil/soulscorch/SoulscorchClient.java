@@ -37,6 +37,7 @@ import net.nullcoil.soulscorch.screen.SoulBrewingStandScreen;
 public class SoulscorchClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+
         MenuScreens.register(ModScreenHandlers.SOUL_BREWING_STAND, SoulBrewingStandScreen::new);
 
         BlockEntityRenderers.register(ModBlockEntities.SEEPING_SIGN, StandingSignRenderer::new);
