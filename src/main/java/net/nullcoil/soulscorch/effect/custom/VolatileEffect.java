@@ -1,23 +1,13 @@
 package net.nullcoil.soulscorch.effect.custom;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.event.AftermathTickHandler;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class VolatileEffect extends MobEffect {
 

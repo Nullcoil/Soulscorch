@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.item.Items;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.effect.custom.VolatileEffect;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -48,8 +47,6 @@ public class AftermathTickHandler {
             ServerPlayer player = entry.getKey();
             Aftermath aftermath = entry.getValue();
 
-            // Two independent totem signals: the mixin (any death-protection item), and
-            // vanilla's totem stat as a backup in case the mixin never sees the pop
             boolean usedTotem = aftermath.totemPopped || totemsUsed(player) > aftermath.totemsUsedBefore;
 
             // Died, logged out, or a totem saved them: no advancement

@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.nullcoil.nidalib.attribute.ModAttributes;
-import net.nullcoil.soulscorch.effect.custom.VolatileEffect;
 
 public class ModEvents {
 
