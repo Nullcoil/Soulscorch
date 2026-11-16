@@ -9,5 +9,8 @@ public class ModCriteriaTriggers {
     public static final PlayerTrigger OIIA_OIIA =
             CriteriaTriggers.register("soulscorch:oiia_oiia", new PlayerTrigger());
 
+    public static final PlayerTrigger TIME_BOMB =
+            CriteriaTriggers.register("soulscorch:time_bomb", new PlayerTrigger());
+
     public static void register() {} // called in mod init to classload
 }

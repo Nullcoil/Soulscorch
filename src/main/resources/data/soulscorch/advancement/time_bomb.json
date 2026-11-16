@@ -1,0 +1,17 @@
+{
+  "display": {
+    "icon": { "id": "soulscorch:volatile_extract" },
+    "title": { "translate": "advancements.soulscorch.time_bomb.title" },
+    "description": { "translate": "advancements.soulscorch.time_bomb.description" },
+    "background": "minecraft:gui/advancements/backgrounds/nether",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "kaboom": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

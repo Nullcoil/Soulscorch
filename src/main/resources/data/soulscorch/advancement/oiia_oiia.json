@@ -1,10 +1,10 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:soul_sand"
+      "id": "soulscorch:soulcat_spawn_egg"
     },
-    "title": { "text": "oiia oiia" },
-    "description": { "text": "Breed two tamed cats in the Soul Sand Valley" },
+    "title": { "text": "advancements.soulscorch.oiia_oiia.title" },
+    "description": { "text": "advancements.soulscorch.oiia_oiia.description" },
     "frame": "challenge",
     "announce_to_chat": true,
     "show_toast": true

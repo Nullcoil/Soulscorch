@@ -11,6 +11,7 @@
     "WorldGenRegionMixin",
     "cat.CatEntityMixin",
     "cat.CatInvoker",
+    "livingentity.LivingEntityMixin",
     "livingentity.NetherBoatPassengerIsInLavaMixin",
     "livingentity.NetherBoatPassengerLavaIgniteMixin",
     "livingentity.NetherBoatPassengerMixin",

@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": { "id": "soulscorch:soul_charge" },
-    "title": { "translate": "Return to--wait a minute..." },
-    "description": { "translate": "You really thought that would work." },
+    "title": { "translate": "advancements.soulscorch.blazt_blaster.title" },
+    "description": { "translate": "advancements.soulscorch.blazt_blaster.description" },
     "background": "minecraft:gui/advancements/backgrounds/nether",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": false
+    "hidden": true
   },
   "criteria": {
     "hit_blazt": {
