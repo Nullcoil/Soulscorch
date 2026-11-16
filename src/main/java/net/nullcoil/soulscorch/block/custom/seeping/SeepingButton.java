@@ -1,20 +1,20 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.ShelfBlock;
+import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingShelf extends ShelfBlock {
-    public SeepingShelf(Properties properties) {
-        super(properties);
+public class SeepingButton extends ButtonBlock {
+    public SeepingButton(BlockSetType blockSetType, int i, Properties properties) {
+        super(blockSetType, i, properties);
     }
 
     @Override

@@ -1,20 +1,19 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingStairs extends StairBlock {
-    public SeepingStairs(BlockState blockState, Properties properties) {
-        super(blockState, properties);
+public class SeepingSlab extends SlabBlock {
+    public SeepingSlab(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -39,8 +38,6 @@ public class SeepingStairs extends StairBlock {
                     double minZ = shape.min(Direction.Axis.Z);
                     double maxZ = shape.max(Direction.Axis.Z);
 
-                    // For the axis the direction travels along, pin to the face edge.
-                    // For the other two axes, randomize within the shape's bounds.
                     double d = switch (direction.getAxis()) {
                         case X -> direction.getStepX() > 0 ? maxX : minX;
                         default -> minX + random.nextDouble() * (maxX - minX);

@@ -23,6 +23,8 @@ public class ModEntities {
     public static final EntityType<SoulborneWolfEntity> SOULBORNE_WOLF;
     public static final EntityType<HeedlessEntity> HEEDLESS;
 
+    public static final EntityType<ResidentEntity> RESIDENT;
+
     private static ResourceKey<EntityType<?>> key(String path) {
         return ResourceKey.create(Registries.ENTITY_TYPE, Soulscorch.id(path));
     }
@@ -90,6 +92,13 @@ public class ModEntities {
                         .sized(0.8f, 2f)
                         .build(key("heedless"))
         );
+        RESIDENT = Registry.register(
+                BuiltInRegistries.ENTITY_TYPE,
+                Soulscorch.id("resident"),
+                EntityType.Builder.of(ResidentEntity::new, MobCategory.MONSTER)
+                        .sized(2.37f, 3.95f)
+                        .build(key("resident"))
+        );
     }
 
     public static void registerAttributes() {
@@ -100,6 +109,7 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(HYTODOM, HytodomEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SOULBORNE_CAT, SoulborneCatEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SOULBORNE_WOLF, SoulborneWolfEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(RESIDENT, ResidentEntity.createAttributes());
     }
 
     public static void register() {

@@ -1,5 +1,5 @@
 {
-  "replace": "false",
+  "replace": false,
   "values": [
     "soulscorch:soulvore_caverns",
     "soulscorch:soulvore_crags"

@@ -28,8 +28,12 @@ public class BlockColumnFeature extends Feature<BlockColumnConfiguration> {
             Blocks.NETHER_BRICKS, Blocks.NETHER_BRICK_FENCE, Blocks.NETHER_BRICK_STAIRS,
             Blocks.NETHER_WART, Blocks.CHEST, Blocks.SPAWNER);
 
-    /** How far up a hanging cluster looks for a ceiling from where it was placed. */
-    private static final int CEILING_SEARCH = 32;
+    /**
+     * How far up a hanging cluster looks for a ceiling from the floor it was placed on.
+     * Covers the Nether's full height: Nether caverns are often much taller than 32 blocks,
+     * and a shorter search would leave their ceilings bare while their floors get columns.
+     */
+    private static final int CEILING_SEARCH = 128;
 
     public BlockColumnFeature(Codec<BlockColumnConfiguration> codec) {
         super(codec);

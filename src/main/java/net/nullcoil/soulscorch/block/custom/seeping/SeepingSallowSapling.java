@@ -1,4 +1,4 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

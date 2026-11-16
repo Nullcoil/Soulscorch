@@ -11,14 +11,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.block.custom.*;
+import net.nullcoil.soulscorch.block.custom.seeping.*;
 import net.nullcoil.soulscorch.particles.ModParticles;
 
 import java.util.function.Function;

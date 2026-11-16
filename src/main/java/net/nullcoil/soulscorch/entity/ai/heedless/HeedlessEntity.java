@@ -13,7 +13,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
@@ -25,7 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
-import net.nullcoil.nidalib.attribute.ModAttributes;
+import net.nullcoil.nidalib.attribute.Corruption;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.item.ModItems;
 import net.nullcoil.soulscorch.particles.ModParticles;
@@ -164,9 +163,7 @@ public class HeedlessEntity extends Monster implements Enemy {
             if(living.is(ModTags.Entities.SOULSCORCH_ENTITIES) && !(living.hasEffect(ModEffects.CAT_BUFF) || living.hasEffect(ModEffects.DOG_BUFF))) continue;
             if(living.distanceTo(this) > radius) continue;
 
-            AttributeInstance corruption = living.getAttribute(ModAttributes.CORRUPTION);
-            if (corruption == null) continue;
-            corruption.setBaseValue(corruption.getBaseValue() + 3d);
+            Corruption.add(living, 3d);
         }
     }
 

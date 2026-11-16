@@ -52,7 +52,8 @@ public class Soulscorch implements ModInitializer {
 		ModWorldCarvers.register();
 		ModBiomes.register();
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+		CommandRegistrationCallback.EVENT.register((dispatcher,
+													registryAccess, environment) ->
 				SampleBiomeCommand.register(dispatcher));
 
 		LOGGER.info("Soulscorch initialized successfully");

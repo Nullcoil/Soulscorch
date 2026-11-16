@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.nullcoil.nidalib.attribute.Corruption;
 import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.Soulscorch;
 import org.jspecify.annotations.Nullable;
@@ -18,36 +19,19 @@ public class SoulRenderEffect extends InstantaneousMobEffect {
 
     @Override
     public void applyInstantaneousEffect(final ServerLevel level, final @Nullable Entity source, final @Nullable Entity owner, final LivingEntity livingEntity, final int amplifier, final double scale) {
-        Soulscorch.LOGGER.info("SoulRenderEffect.applyInstantenousEffect called! amplifier={}, entity={}", amplifier, livingEntity.getName().getString());
-        AttributeInstance corruptionAttr = livingEntity.getAttribute(ModAttributes.CORRUPTION);
+        float corruptionBefore = (float) Corruption.get(livingEntity);
 
-        if (corruptionAttr != null) {
-            float currentCorruption = (float) corruptionAttr.getBaseValue();
+        if (corruptionBefore > 0.0F) {
+            float maxHealth = livingEntity.getMaxHealth();
 
-            if (currentCorruption > 0.0F) {
-                float currentHealth = livingEntity.getHealth();
-                float trueMaxHealth = livingEntity.getMaxHealth();
+            // Their effective max HP before the cleanse, and how full it is
+            float effectiveMaxBefore = Math.max(1.0F, maxHealth - corruptionBefore); // avoid divide by zero
+            float ratio = livingEntity.getHealth() / effectiveMaxBefore;
 
-                // Amplifier 0 (Tier I) = 10 cleanse. Amplifier 1 (Tier II) = 20 cleanse.
-                float cleanseAmount = (amplifier + 1) * 10.0F;
-                float newCorruption = Math.max(0.0F, currentCorruption - cleanseAmount);
+            Corruption.remove(livingEntity, (amplifier + 1) * 10.0D);
 
-                // Their "Max HP" prior to the cleanse
-                float effectiveMaxHealthBefore = trueMaxHealth - currentCorruption;
-                if (effectiveMaxHealthBefore <= 0.0F) {
-                    effectiveMaxHealthBefore = 1.0F; // Prevent divide by zero
-                }
-
-                // Calculate the ratio: CurrHP / EffectiveMaxHP
-                float ratio = currentHealth / effectiveMaxHealthBefore;
-
-                // 1. Apply the partial or full cleanse
-                corruptionAttr.setBaseValue((double) newCorruption);
-
-                // 2. The Ratio Heal based on their NEW effective max health
-                float effectiveMaxHealthAfter = trueMaxHealth - newCorruption;
-                livingEntity.setHealth(Mth.ceil(effectiveMaxHealthAfter * ratio));
-            }
+            float effectiveMaxAfter = maxHealth - (float) Corruption.get(livingEntity);
+            livingEntity.setHealth(effectiveMaxAfter * ratio);
         }
 
         super.applyInstantaneousEffect(level, source, owner, livingEntity, amplifier, scale);

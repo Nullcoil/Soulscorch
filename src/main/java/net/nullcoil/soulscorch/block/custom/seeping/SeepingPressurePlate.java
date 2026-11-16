@@ -1,39 +1,20 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.CeilingHangingSignBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.nullcoil.soulscorch.block.ModBlockEntities;
-import net.nullcoil.soulscorch.block.entity.SeepingHangingSignBlockEntity;
 import net.nullcoil.soulscorch.particles.ModParticles;
-import org.jetbrains.annotations.Nullable;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingHangingSign extends CeilingHangingSignBlock {
-    public SeepingHangingSign(WoodType woodType, Properties properties) {
-        super(woodType, properties);
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SeepingHangingSignBlockEntity(pos, state);
-    }
-
-    @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(
-            Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModBlockEntities.SEEPING_HANGING_SIGN, SignBlockEntity::tick);
+public class SeepingPressurePlate extends PressurePlateBlock {
+    public SeepingPressurePlate(BlockSetType blockSetType, Properties properties) {
+        super(blockSetType, properties);
     }
 
     @Override

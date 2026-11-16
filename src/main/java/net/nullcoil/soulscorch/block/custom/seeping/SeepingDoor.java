@@ -1,20 +1,19 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingPressurePlate extends PressurePlateBlock {
-    public SeepingPressurePlate(BlockSetType blockSetType, Properties properties) {
+public class SeepingDoor extends DoorBlock {
+    public SeepingDoor(BlockSetType blockSetType, Properties properties) {
         super(blockSetType, properties);
     }
 

@@ -46,8 +46,6 @@
 
   "container.soul_brewing_stand": "Soul Brewing Stand",
 
-  "death.attack.soulscorch.corruption": "%1$s lost themselves",
-  "death.attack.soulscorch.corruption.player": "%1$s lost themselves fighting %2$s",
   "death.attack.soulscorch.mania": "%1$s thought themselves to death",
   "death.attack.soulscorch.mania.player": "%1$s thought themselves to death whilst trying to escape %2$s",
 

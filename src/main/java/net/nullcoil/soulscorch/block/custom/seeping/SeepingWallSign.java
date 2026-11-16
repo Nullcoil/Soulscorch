@@ -1,20 +1,29 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.particles.ModParticles;
+import org.jspecify.annotations.NonNull;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingFence extends FenceBlock {
-    public SeepingFence(Properties properties) {
-        super(properties);
+public class SeepingWallSign extends WallSignBlock {
+    public SeepingWallSign(WoodType woodType, Properties properties) {
+        super(woodType, properties);
+    }
+
+    @Override
+    public @NonNull BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new SignBlockEntity(ModBlockEntities.SEEPING_SIGN, pos, state);
     }
 
     @Override

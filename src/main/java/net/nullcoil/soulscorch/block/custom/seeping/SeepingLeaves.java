@@ -1,35 +1,32 @@
-package net.nullcoil.soulscorch.block.custom;
+package net.nullcoil.soulscorch.block.custom.seeping;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.UntintedParticleLeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.sound.ModSounds;
-import net.nullcoil.soulscorch.sound.ModSounds;
 
-public class SeepingDoor extends DoorBlock {
-    public SeepingDoor(BlockSetType blockSetType, Properties properties) {
-        super(blockSetType, properties);
+public class SeepingLeaves extends UntintedParticleLeavesBlock {
+    public SeepingLeaves(float chance, ParticleOptions particle, Properties properties) {
+        super(chance, particle, properties);
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         super.animateTick(state, level, pos, random);
-        if (random.nextInt(5) == 0) {
+        if (random.nextInt(10) == 0) {
             Direction direction = Direction.getRandom(random);
             if (direction != Direction.UP) {
                 BlockPos neighborPos = pos.relative(direction);
                 BlockState neighborState = level.getBlockState(neighborPos);
 
-                // Only spawn if the neighbor isn't covering this face
-                if (!neighborState.isFaceSturdy(level, neighborPos, direction.getOpposite())) {
+                if (!state.canOcclude() || !neighborState.isFaceSturdy(level, neighborPos, direction.getOpposite())) {
 
                     VoxelShape shape = state.getShape(level, pos);
                     if (shape.isEmpty()) return;
@@ -41,8 +38,6 @@ public class SeepingDoor extends DoorBlock {
                     double minZ = shape.min(Direction.Axis.Z);
                     double maxZ = shape.max(Direction.Axis.Z);
 
-                    // For the axis the direction travels along, pin to the face edge.
-                    // For the other two axes, randomize within the shape's bounds.
                     double d = switch (direction.getAxis()) {
                         case X -> direction.getStepX() > 0 ? maxX : minX;
                         default -> minX + random.nextDouble() * (maxX - minX);

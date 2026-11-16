@@ -33,6 +33,11 @@ public class ModPlacedFeatures {
         return ResourceKey.create(Registries.PLACED_FEATURE, Soulscorch.id(name));
     }
 
+    // Soulvore Crags column density, per chunk per layer. Floor and ceiling use the same
+    // counts so they come out even on average. (Vanilla Basalt Deltas: 4 small, 2 large.)
+    private static final int SMALL_COLUMNS = 8;
+    private static final int LARGE_COLUMNS = 4;
+
     @SuppressWarnings("deprecation") // CountOnEveryLayerPlacement is what vanilla's deltas still use
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         var configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -45,16 +50,16 @@ public class ModPlacedFeatures {
                 CountOnEveryLayerPlacement.of(40), BiomeFilter.biome());
         PlacementUtils.register(context, SMALL_SOUL_STONE_COLUMNS,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SMALL_SOUL_STONE_COLUMNS),
-                CountOnEveryLayerPlacement.of(4), BiomeFilter.biome());
+                CountOnEveryLayerPlacement.of(SMALL_COLUMNS), BiomeFilter.biome());
         PlacementUtils.register(context, LARGE_SOUL_STONE_COLUMNS,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.LARGE_SOUL_STONE_COLUMNS),
-                CountOnEveryLayerPlacement.of(2), BiomeFilter.biome());
+                CountOnEveryLayerPlacement.of(LARGE_COLUMNS), BiomeFilter.biome());
         // Hanging versions: placed on each floor layer, they climb to the ceiling above it
         PlacementUtils.register(context, SMALL_HANGING_SOUL_STONE_COLUMNS,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SMALL_HANGING_SOUL_STONE_COLUMNS),
-                CountOnEveryLayerPlacement.of(4), BiomeFilter.biome());
+                CountOnEveryLayerPlacement.of(SMALL_COLUMNS), BiomeFilter.biome());
         PlacementUtils.register(context, LARGE_HANGING_SOUL_STONE_COLUMNS,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.LARGE_HANGING_SOUL_STONE_COLUMNS),
-                CountOnEveryLayerPlacement.of(2), BiomeFilter.biome());
+                CountOnEveryLayerPlacement.of(LARGE_COLUMNS), BiomeFilter.biome());
     }
 }

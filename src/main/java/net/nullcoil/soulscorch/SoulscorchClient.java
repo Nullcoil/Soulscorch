@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.object.boat.BoatModel;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.entity.ModBoats;
 import net.nullcoil.soulscorch.entity.ModEntities;
+import net.nullcoil.soulscorch.entity.ai.ResidentEntity;
 import net.nullcoil.soulscorch.entity.client.blazt.BlaztModel;
 import net.nullcoil.soulscorch.entity.client.blazt.BlaztRenderer;
 import net.nullcoil.soulscorch.entity.client.companion.SoulCatRenderer;
@@ -23,6 +25,8 @@ import net.nullcoil.soulscorch.entity.client.heedless.HeedlessModel;
 import net.nullcoil.soulscorch.entity.client.heedless.HeedlessRenderer;
 import net.nullcoil.soulscorch.entity.client.jellyfish.JellyfishModel;
 import net.nullcoil.soulscorch.entity.client.jellyfish.JellyfishRenderer;
+import net.nullcoil.soulscorch.entity.client.resident.ResidentModel;
+import net.nullcoil.soulscorch.entity.client.resident.ResidentRenderer;
 import net.nullcoil.soulscorch.entity.client.restless.RestlessManeModel;
 import net.nullcoil.soulscorch.entity.client.restless.RestlessModel;
 import net.nullcoil.soulscorch.entity.client.restless.RestlessRenderer;
@@ -64,6 +68,9 @@ public class SoulscorchClient implements ClientModInitializer {
 
         ModelLayerRegistry.registerModelLayer(HeedlessModel.HEEDLESS, HeedlessModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.HEEDLESS, HeedlessRenderer::new);
+
+        ModelLayerRegistry.registerModelLayer(ResidentModel.RESIDENT, ResidentModel::createBodyLayer);
+        EntityRendererRegistry.register(ModEntities.RESIDENT, ResidentRenderer::new);
 
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_HANG, SeepingDripParticle.HangProvider::new);
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_FALL, SeepingDripParticle.FallProvider::new);

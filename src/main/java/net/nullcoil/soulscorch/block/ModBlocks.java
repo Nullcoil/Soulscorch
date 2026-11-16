@@ -17,6 +17,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.block.custom.*;
+import net.nullcoil.soulscorch.block.custom.seeping.SeepingSallowSapling;
 
 import java.util.function.Function;
 
