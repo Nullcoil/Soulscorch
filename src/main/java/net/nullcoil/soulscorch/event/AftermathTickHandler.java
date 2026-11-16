@@ -13,28 +13,19 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class AftermathTickHandler {
-    public static final int AFTERMATH_TICKS = 40;
+    private static final int AFTERMATH_TICKS = 40;
 
-    public static final Map<ServerPlayer, Aftermath> AFTERMATH = new WeakHashMap<>();
+    private record Aftermath(long endTick, int totemsUsedBefore) {}
 
-    public static final class Aftermath {
-        final long endTick;
-        final int totemsUsedBefore;
-        boolean totemPopped;
-
-        public Aftermath(long endTick, int totemsUsedBefore) {
-            this.endTick = endTick;
-            this.totemsUsedBefore = totemsUsedBefore;
-        }
-    }
-
-    /** Vanilla's own count of Totems of Undying this player has used. */
-    public static int totemsUsed(ServerPlayer player) {
-        return player.getStats().getValue(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING));
-    }
+    private static final Map<ServerPlayer, Aftermath> AFTERMATH = new WeakHashMap<>();
 
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(AftermathTickHandler::tickAftermath);
+    }
+
+    public static void watch(ServerPlayer player) {
+        int now = player.level().getServer().getTickCount();
+        AFTERMATH.put(player, new Aftermath(now + AFTERMATH_TICKS, totemsUsed(player)));
     }
 
     private static void tickAftermath(MinecraftServer server) {
@@ -47,23 +38,20 @@ public class AftermathTickHandler {
             ServerPlayer player = entry.getKey();
             Aftermath aftermath = entry.getValue();
 
-            boolean usedTotem = aftermath.totemPopped || totemsUsed(player) > aftermath.totemsUsedBefore;
-
             // Died, logged out, or a totem saved them: no advancement
-            if (!player.isAlive() || player.isRemoved() || usedTotem) {
-                if (usedTotem) {
-                    Soulscorch.LOGGER.info("[time_bomb] {}: totem used (mixin={}, stat={}), no advancement",
-                            player.getName().getString(), aftermath.totemPopped,
-                            totemsUsed(player) > aftermath.totemsUsedBefore);
-                }
+            if (!player.isAlive() || player.isRemoved() || totemsUsed(player) > aftermath.totemsUsedBefore()) {
                 it.remove();
                 continue;
             }
-            if (now < aftermath.endTick) continue;
+            if (now < aftermath.endTick()) continue;
 
             it.remove();
             award(server, player);
         }
+    }
+
+    private static int totemsUsed(ServerPlayer player) {
+        return player.getStats().getValue(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING));
     }
 
     private static void award(MinecraftServer server, ServerPlayer player) {

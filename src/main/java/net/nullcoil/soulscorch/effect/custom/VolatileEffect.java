@@ -9,8 +9,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.nullcoil.soulscorch.event.AftermathTickHandler;
 
-public class VolatileEffect extends MobEffect {
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
+public class VolatileEffect extends MobEffect {
+    /**
+     * Entities whose Volatile explosion is going off right now. A Totem of Undying clears all
+     * effects while saving you, which can call onEffectRemoved again from inside the blast;
+     * this stops that from setting off a second explosion (and restarting the aftermath watch).
+     */
+    private static final Set<LivingEntity> EXPLODING = Collections.newSetFromMap(new IdentityHashMap<>());
 
     public VolatileEffect(MobEffectCategory category, int color) {
         super(category, color);
@@ -20,17 +29,22 @@ public class VolatileEffect extends MobEffect {
     public void onEffectRemoved(MobEffectInstance instance, LivingEntity entity) {
         if (instance.getDuration() > 0 || instance.isInfiniteDuration()) return;
         if (!(entity.level() instanceof ServerLevel level) || entity.isRemoved()) return;
+        if (!EXPLODING.add(entity)) return; // already exploding: this is the totem's effect clear
 
         // Start watching before the blast, so a totem popped by the blast itself counts
         if (entity instanceof ServerPlayer player) {
-            AftermathTickHandler.AFTERMATH.put(player, new AftermathTickHandler.Aftermath(level.getServer().getTickCount() + AftermathTickHandler.AFTERMATH_TICKS, AftermathTickHandler.totemsUsed(player)));
+            AftermathTickHandler.watch(player);
         }
 
         float radius = 2f + instance.getAmplifier() + 1;
-        level.explode(
-                null,
-                entity.getX(), entity.getY(), entity.getZ(),
-                radius, Level.ExplosionInteraction.MOB
-        );
+        try {
+            level.explode(
+                    null,
+                    entity.getX(), entity.getY(), entity.getZ(),
+                    radius, Level.ExplosionInteraction.MOB
+            );
+        } finally {
+            EXPLODING.remove(entity);
+        }
     }
 }
