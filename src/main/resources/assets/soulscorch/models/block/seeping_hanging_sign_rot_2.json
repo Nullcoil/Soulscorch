@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_hanging_sign_rot_2",
+  "textures": {
+    "all": "soulscorch:block/seeping_hanging_sign",
+    "particle": "soulscorch:block/stripped_seeping_log"
+  }
+}

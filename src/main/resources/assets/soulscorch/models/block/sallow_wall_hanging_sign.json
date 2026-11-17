@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_wall_hanging_sign",
+  "textures": {
+    "all": "soulscorch:block/sallow_hanging_sign",
+    "particle": "soulscorch:block/stripped_seeping_log"
+  }
+}

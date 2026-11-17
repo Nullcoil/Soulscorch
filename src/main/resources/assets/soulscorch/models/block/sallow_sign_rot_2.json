@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_sign_rot_2",
+  "textures": {
+    "all": "soulscorch:block/sallow_sign",
+    "particle": "soulscorch:block/seeping_planks"
+  }
+}

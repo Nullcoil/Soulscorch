@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "soulscorch:block/seeping_sign"
+    "facing=east": {
+      "model": "soulscorch:block/seeping_wall_sign",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "soulscorch:block/seeping_wall_sign",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "soulscorch:block/seeping_wall_sign"
+    },
+    "facing=west": {
+      "model": "soulscorch:block/seeping_wall_sign",
+      "y": 90
     }
   }
 }
