@@ -22,8 +22,10 @@ public final class ModFire {
         FireManager.registerFire(
                 FireManager.fireBuilder(SOUL_FIRE_TYPE)
                         .setDefaultComponents()
-                        .setComponent(Fire.Component.FLAME_PARTICLE, BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.SOUL_FIRE_FLAME))
-                        .setComponent(Fire.Component.FIRE_CHARGE_ITEM, BuiltInRegistries.ITEM.getKey(ModItems.SOUL_CHARGE))
+                        .setComponent(Fire.Component.FLAME_PARTICLE,
+                                BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.SOUL_FIRE_FLAME))
+                        .setComponent(Fire.Component.FIRE_CHARGE_ITEM,
+                                BuiltInRegistries.ITEM.getKey(ModItems.SOUL_CHARGE))
                         .setLight(10)
                         .setDamage(2)
                         .setBehavior(entity -> {
