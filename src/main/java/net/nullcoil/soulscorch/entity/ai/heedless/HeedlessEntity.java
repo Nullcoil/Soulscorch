@@ -1,9 +1,6 @@
 package net.nullcoil.soulscorch.entity.ai.heedless;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -49,18 +46,19 @@ public class HeedlessEntity extends Monster implements Enemy {
             {3.75f, 22.00f, 0.75f}  // left leg
     };
 
-    public static final EntityDataAccessor<Integer> WARN_VARIANT =
-            SynchedEntityData.defineId(HeedlessEntity.class, EntityDataSerializers.INT);
+    // Entity events 100-102: "warn with twitch variant 0/1/2". An event reaches the client
+    // every time, even when the same variant is picked twice in a row, and carries the
+    // variant with it (a synced data value would only send changes, and could arrive a tick
+    // after the event).
+    private static final byte WARN_EVENT = 100;
+    private static final int WARN_VARIANTS = 3;
+
     public final AnimationState warnAnimation = new AnimationState();
+    // Client-side: the twitch the current warning plays (-1 = none yet)
+    private int warnVariant = -1;
 
     public HeedlessEntity(EntityType<? extends Monster> type, Level level) {
         super(type, level);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-        builder.define(WARN_VARIANT, -1);
     }
 
     @Override
@@ -130,9 +128,25 @@ public class HeedlessEntity extends Monster implements Enemy {
     private void attemptWarn() {
         if (this.cooldown > 0) return;
         this.playSound(ModSounds.HEEDLESS_WAKE);
-        this.entityData.set(WARN_VARIANT, this.random.nextInt(3));
-        this.warnAnimation.start(this.tickCount);
+        // Animations only play on the client; tell every nearby client to twitch
+        this.level().broadcastEntityEvent(this, (byte) (WARN_EVENT + this.random.nextInt(WARN_VARIANTS)));
         this.cooldown = this.maxCooldown;
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        if (id >= WARN_EVENT && id < WARN_EVENT + WARN_VARIANTS) {
+            this.warnVariant = id - WARN_EVENT;
+            // start(), not startIfStopped(): restarts the twitch from frame 0 on every warning
+            this.warnAnimation.start(this.tickCount);
+            return;
+        }
+        super.handleEntityEvent(id);
+    }
+
+    /** Which twitch the current warning plays (0-2), or -1 before the first warning. Client-side. */
+    public int getWarnVariant() {
+        return this.warnVariant;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

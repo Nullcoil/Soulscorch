@@ -11,7 +11,6 @@ import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessProximity;
 import org.jspecify.annotations.NonNull;
 
-import static net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity.WARN_VARIANT;
 
 public class HeedlessRenderer extends MobRenderer<HeedlessEntity, HeedlessRenderState, HeedlessModel> {
     private static final Identifier TEXTURE =
@@ -33,7 +32,7 @@ public class HeedlessRenderer extends MobRenderer<HeedlessEntity, HeedlessRender
                 (float) (Mth.square(state.x - cam.x) + Mth.square(state.y - cam.y) + Mth.square(state.z - cam.z))
         );
         state.cystGlow = HeedlessProximity.glow(dist);
-        state.warnVariant = entity.getEntityData().get(WARN_VARIANT);
+        state.warnVariant = entity.getWarnVariant();
         state.warnAnimation.copyFrom(entity.warnAnimation);
     }
 
