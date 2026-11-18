@@ -14,7 +14,6 @@ public class ModEffects {
     public static final Holder<MobEffect> SOULSCORCH = registerEffect("soulscorch", new SoulscorchEffect(MobEffectCategory.HARMFUL, 0x00ffff));
     public static final Holder<MobEffect> SOUL_RENDER = registerEffect("soul_render", new SoulRenderEffect(MobEffectCategory.BENEFICIAL, 0x00ff88));
     public static final Holder<MobEffect> VOLATILE = registerEffect("volatile", new VolatileEffect(MobEffectCategory.HARMFUL, 0x4287f5));
-    // TODO: Make Volatile effect icon a bomb.
     public static final Holder<MobEffect> MANIA = registerEffect("mania", new ManiaEffect(MobEffectCategory.HARMFUL, 0));
 
     private static Holder<MobEffect> registerEffect(String string, MobEffect mobEffect) {
