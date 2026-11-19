@@ -54,6 +54,7 @@ public class ModItems {
 
     public static final Item VOLATILE_EXTRACT;
     public static final Item GHAZE_SPAWN_EGG;
+    public static final Item GHAZE_TEAR;
 
     static {
         BLAZT_POWDER = registerItem("blazt_powder", Item::new, new Item.Properties());
@@ -90,6 +91,7 @@ public class ModItems {
         VOLATILE_EXTRACT = registerItem("volatile_extract", Item::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(
                 ModFoods.VOLATILE_EXTRACT, ModConsumables.VOLATILE_EXTRACT).usingConvertsTo(Items.GLASS_BOTTLE).stacksTo(16));
         GHAZE_SPAWN_EGG = registerItem("ghaze_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntities.GHAZE));
+        GHAZE_TEAR = registerItem("ghaze_tear", Item::new, new Item.Properties());
     }
 
     // 2. The completed helper method
@@ -145,6 +147,9 @@ public class ModItems {
                     SEEPING_HANGING_SIGN,
                     SALLOW_SIGN,
                     SALLOW_HANGING_SIGN);
+        });
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries -> {
+            entries.insertAfter(Items.GHAST_TEAR, GHAZE_TEAR);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.REDSTONE_BLOCKS).register(entries -> {
             entries.insertBefore(Items.COPPER_BULB.waxed().unaffected(), ModBlocks.IRON_BULB_BLOCK);
