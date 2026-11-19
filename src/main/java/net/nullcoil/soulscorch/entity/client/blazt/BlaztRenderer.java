@@ -20,6 +20,7 @@ public class BlaztRenderer extends MobRenderer<BlaztEntity, BlaztRenderState, Bl
     public BlaztRenderer(EntityRendererProvider.Context context) {
         // context.getPart -> context.bakeLayer
         super(context, new BlaztModel(context.bakeLayer(BlaztModel.BLAZT)), 1.5F);
+        this.addLayer(new BlaztEmissiveLayer(this));
     }
 
     @Override

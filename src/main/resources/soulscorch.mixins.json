@@ -26,5 +26,7 @@
   "overwrites": {
     "requireAnnotations": true
   },
-  "client": []
+  "client": [
+    "GhazeGazeMouseMixin"
+  ]
 }

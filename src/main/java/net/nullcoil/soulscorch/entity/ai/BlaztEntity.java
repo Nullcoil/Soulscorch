@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
@@ -94,7 +95,9 @@ public class BlaztEntity extends Mob implements Enemy {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 22.0D)
-                .add(Attributes.FLYING_SPEED, 0.45D)
+                // The ghast move control pushes it FLYING_SPEED * 5/3 every few ticks; 0.06 is the
+                // push the Blazt always had (0.1), and the same speed as a vanilla ghast
+                .add(Attributes.FLYING_SPEED, 0.06D)
                 .add(Attributes.MOVEMENT_SPEED, 0.45D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D)
                 .add(Attributes.ATTACK_DAMAGE, 10.0D);
@@ -227,45 +230,17 @@ public class BlaztEntity extends Mob implements Enemy {
         }
     }
 
-    // --- Custom Move Control (Hovering logic) ---
-    static class BlaztMoveControl extends MoveControl {
-        private final BlaztEntity blazt;
-        private int floatDuration;
-
+    // --- Move Control: vanilla's ghast movement, paused while stunned ---
+    static class BlaztMoveControl extends Ghast.GhastMoveControl<BlaztEntity> {
         public BlaztMoveControl(BlaztEntity blazt) {
-            super(blazt);
-            this.blazt = blazt;
+            super(blazt, false, () -> false);
         }
 
         @Override
         public void tick() {
-            if (this.blazt.isStunned()) return;
-
-            if (this.operation == Operation.MOVE_TO) {
-                if (this.floatDuration-- <= 0) {
-                    this.floatDuration += this.blazt.getRandom().nextInt(5) + 2;
-                    Vec3 vec3 = new Vec3(this.wantedX - this.blazt.getX(), this.wantedY - this.blazt.getY(), this.wantedZ - this.blazt.getZ());
-                    double d0 = vec3.length();
-                    vec3 = vec3.normalize();
-                    if (this.canReach(vec3, Math.ceil(d0))) {
-                        // Just apply momentum, NO rotation math here!
-                        this.blazt.setDeltaMovement(this.blazt.getDeltaMovement().add(vec3.scale(0.1D)));
-                    } else {
-                        this.operation = Operation.WAIT;
-                    }
-                }
-            }
-        }
-
-        private boolean canReach(Vec3 vec3, double d) {
-            AABB aabb = this.blazt.getBoundingBox();
-            for(int i = 1; i < d; ++i) {
-                aabb = aabb.move(vec3);
-                if (!this.blazt.level().noCollision(this.blazt, aabb)) {
-                    return false;
-                }
-            }
-            return true;
+            // Stunned: gravity and friction take over (see travel), so don't push it around
+            if (this.mob.isStunned()) return;
+            super.tick();
         }
     }
 
