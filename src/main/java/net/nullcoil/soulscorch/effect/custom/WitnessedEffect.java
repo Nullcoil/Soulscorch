@@ -1,5 +1,6 @@
 package net.nullcoil.soulscorch.effect.custom;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -14,7 +15,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.nullcoil.soulscorch.Soulscorch;
+import net.nullcoil.soulscorch.block.ModBlocks;
+import net.nullcoil.soulscorch.block.custom.PlayerStatueBlock;
+import net.nullcoil.soulscorch.block.entity.PlayerStatueBlockEntity;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
 
@@ -27,7 +35,7 @@ import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
  *
  * <p>The higher it is, the slower you move (and jump), down to a standstill at
  * {@link #PETRIFY_TICKS}. At that point you're petrified: you die, and a grayscale statue of
- * you is left where you stood.
+ * you ({@link PlayerStatueBlock}) is left where you stood.
  */
 public class WitnessedEffect extends MobEffect {
     /** Build-up at which you're fully petrified: 12 seconds of one Ghaze watching. */
@@ -114,10 +122,39 @@ public class WitnessedEffect extends MobEffect {
         entity.hurtServer(level, source, Float.MAX_VALUE);
 
         if (entity.isDeadOrDying() && entity instanceof Player player) {
-            // TODO statue: place the grayscale statue block of this player where they stood
-            //  (see the reply this came with: needs a few vanilla classes first)
-            Soulscorch.LOGGER.debug("{} was petrified at {}", player.getName().getString(), player.blockPosition());
+            placeStatue(level, player);
         }
+    }
+
+    /**
+     * Leaves a statue of the player where they stood, facing the way they faced. Needs two
+     * free (replaceable) blocks; tries their spot, then up to two blocks higher (e.g. if they
+     * died standing in tall grass under a ledge). If none fits, there's no statue.
+     */
+    private static void placeStatue(ServerLevel level, Player player) {
+        BlockPos feet = player.blockPosition();
+        for (int up = 0; up <= 2; up++) {
+            BlockPos lower = feet.above(up);
+            BlockPos upper = lower.above();
+            if (!fits(level, lower) || !fits(level, upper)) continue;
+
+            BlockState lowerState = ModBlocks.PLAYER_STATUE.defaultBlockState()
+                    .setValue(PlayerStatueBlock.FACING, player.getDirection())
+                    .setValue(PlayerStatueBlock.WATERLOGGED, level.getFluidState(lower).is(Fluids.WATER));
+            level.setBlock(lower, lowerState, Block.UPDATE_ALL);
+            level.setBlock(upper, PlayerStatueBlock.upperHalf(lowerState, level.getFluidState(upper).is(Fluids.WATER)), Block.UPDATE_ALL);
+
+            if (level.getBlockEntity(lower) instanceof PlayerStatueBlockEntity statue) {
+                statue.setOwner(ResolvableProfile.createResolved(player.getGameProfile()));
+            }
+            return;
+        }
+    }
+
+    private static boolean fits(ServerLevel level, BlockPos pos) {
+        if (!level.isInWorldBounds(pos)) return false;
+        BlockState state = level.getBlockState(pos);
+        return state.canBeReplaced() && !state.is(ModBlocks.PLAYER_STATUE);
     }
 
     /** The closest agitated Ghaze glaring at this entity, for the death message. */

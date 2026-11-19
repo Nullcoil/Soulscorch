@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 public class ModBlocks {
     public static final Block SOUL_BREWING_STAND;
+    public static final Block PLAYER_STATUE;
     public static final Block IRON_BULB_BLOCK;
     public static final Block CERULEAN_FROGLIGHT;
     public static final Block SOUL_SLAG_BLOCK;
@@ -39,6 +40,18 @@ public class ModBlocks {
                         .strength(0.5F)
                         .lightLevel(state -> 1)
                         .noOcclusion()
+        );
+        PLAYER_STATUE = registerBlock(
+                "player_statue",
+                PlayerStatueBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.STONE)
+                        .instrument(NoteBlockInstrument.BASEDRUM)
+                        .requiresCorrectToolForDrops()
+                        .strength(1.5F, 6.0F)
+                        .sound(SoundType.STONE)
+                        .noOcclusion()
+                        .pushReaction(PushReaction.BLOCK)
         );
 
         IRON_BULB_BLOCK = registerBlock(

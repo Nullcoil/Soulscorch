@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.nullcoil.soulscorch.Soulscorch;
+import net.nullcoil.soulscorch.block.entity.PlayerStatueBlockEntity;
 import net.nullcoil.soulscorch.block.entity.SeepingHangingSignBlockEntity;
 import net.nullcoil.soulscorch.block.entity.SoulBrewingStandBlockEntity;
 
@@ -57,6 +58,13 @@ public class ModBlockEntities {
                             HangingSignBlockEntity::new,
                             SallowBlocks.SALLOW_HANGING_SIGN, SallowBlocks.SALLOW_WALL_HANGING_SIGN
                     ).build()
+            );
+
+    public static final BlockEntityType<PlayerStatueBlockEntity> PLAYER_STATUE =
+            Registry.register(
+                    BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                    Soulscorch.id("player_statue"),
+                    FabricBlockEntityTypeBuilder.create(PlayerStatueBlockEntity::new, ModBlocks.PLAYER_STATUE).build()
             );
 
     public static void register() {
