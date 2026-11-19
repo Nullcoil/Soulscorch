@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.nullcoil.soulscorch.effect.custom.WitnessedEffect;
 
 import java.util.EnumSet;
 
@@ -169,6 +170,11 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             boolean agitated = target != null;
             this.entityData.set(DATA_AGITATED, agitated);
             this.entityData.set(DATA_GAZE_TARGET, agitated ? target.getId() : -1);
+
+            // Every tick it can see its target, their Witnessed builds up (they turn to stone)
+            if (agitated && this.getSensing().hasLineOfSight(target)) {
+                WitnessedEffect.witness(target);
+            }
 
         } else {
             this.tickTentacles();

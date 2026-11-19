@@ -58,6 +58,8 @@
 
   "container.soul_brewing_stand": "Soul Brewing Stand",
 
+  "death.attack.soulscorch.petrified": "%1$s was turned to stone",
+  "death.attack.soulscorch.petrified.player": "%1$s was turned to stone by %2$s's gaze",
   "death.attack.soulscorch.mania": "%1$s thought themselves to death",
   "death.attack.soulscorch.mania.player": "%1$s thought themselves to death whilst trying to escape %2$s",
 
@@ -67,6 +69,7 @@
   "effect.soulscorch.soul_render": "Soul Render",
   "effect.soulscorch.soulscorch": "Soulscorched",
   "effect.soulscorch.volatile": "Volatile",
+  "effect.soulscorch.witnessed": "Witnessed",
 
   "enchantment.soulscorch.catharsis": "Catharsis",
 
