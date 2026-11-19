@@ -23,8 +23,8 @@ import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
 public final class GhazeGaze {
     private GhazeGaze() {}
 
-    /** Only Ghazes this close (blocks) can pull. */
-    private static final double RANGE = 32.0;
+    /** Only Ghazes this close (blocks) can pull: as far as they watch. */
+    private static final double RANGE = GhazeEntity.WATCH_RADIUS;
     /** Share of the way to the Ghaze's face the camera turns per second (subtle). */
     private static final float PULL_PER_SECOND = 0.6F;
     /** Fastest the pull turns the camera, in degrees per second. */

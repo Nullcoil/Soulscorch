@@ -34,6 +34,13 @@ public class ModSounds {
     public static final SoundEvent RESTLESS_DEATH = registerSoundEvent("restless_death");
     public static final SoundEvent RESTLESS_HURT = registerSoundEvent("restless_hurt");
 
+    public static final SoundEvent GHAZE_AMBIENT = registerSoundEvent("ghaze_ambient");
+    public static final SoundEvent GHAZE_WATCH = registerSoundEvent("ghaze_watch");
+    public static final SoundEvent GHAZE_SEARCH = registerSoundEvent("ghaze_search");
+    public static final SoundEvent GHAZE_HURT = registerSoundEvent("ghaze_hurt");
+    public static final SoundEvent GHAZE_DEATH = registerSoundEvent("ghaze_death");
+    public static final SoundEvent WITNESSED_CRACK = registerSoundEvent("witnessed_crack");
+
     public static final SoundEvent ETHEL_SPIN = registerSoundEvent("ethel_spin");
     public static final SoundEvent SOUL_DRIP = registerSoundEvent("soul_drip");
 

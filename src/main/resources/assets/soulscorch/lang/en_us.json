@@ -191,6 +191,11 @@
   "sounds.soulscorch.blazt_shooting": "Blazt primes projectile",
   "sounds.soulscorch.blazt_soul_charge": "Blazt shoots",
   "sounds.soulscorch.ethel_spin": "oiia oiia",
+  "sounds.soulscorch.ghaze_ambient": "Ghaze breathes",
+  "sounds.soulscorch.ghaze_death": "Ghaze dies",
+  "sounds.soulscorch.ghaze_hurt": "Ghaze hurts",
+  "sounds.soulscorch.ghaze_search": "Ghaze searches",
+  "sounds.soulscorch.ghaze_watch": "Ghaze watches",
   "sounds.soulscorch.heedless_death": "Heedless dies",
   "sounds.soulscorch.heedless_hurt": "Heedless hurts",
   "sounds.soulscorch.heedless_wake": "Heedless wakes",
@@ -206,6 +211,7 @@
   "sounds.soulscorch.soulless_hurt": "Soulless hurts",
   "sounds.soulscorch.soulless_wake": "Soulless wakes",
   "sounds.soulscorch.soulless_whisper": "Soulless whispers",
+  "sounds.soulscorch.witnessed_crack": "Stone cracks",
 
   "tag.biome.soulscorch.soul_biomes": "Soul Biomes",
 

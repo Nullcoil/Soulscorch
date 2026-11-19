@@ -7,6 +7,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.effect.custom.WitnessedEffect;
+import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.EnumSet;
 
@@ -37,8 +42,17 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
     /** Height of the head's pivot (its center) above the Ghaze's feet: 15 pixels. */
     public static final double HEAD_HEIGHT = 15.0 / 16.0;
-    /** Loses interest in a target farther away than this many blocks. */
-    private static final double FORGET_DISTANCE = 48.0;
+    /** How far it watches: loses interest in a target farther away than this many blocks,
+     *  and only takes notice of players this close. */
+    public static final double WATCH_RADIUS = 24.0;
+    /** While watching, it tries to stay this close to its target (3/4 of the watch radius). */
+    private static final double KEEP_DISTANCE = WATCH_RADIUS * 0.75;
+    /** Shortest gap between "watches" / "searches" cues when sight comes and goes (1 second). */
+    private static final int SIGHT_CUE_COOLDOWN = 20;
+
+    /** Server only: whether it could see its target last tick, to cue the sight sounds. */
+    private boolean seesTarget;
+    private int sightCueCooldown;
 
     // ---- Tentacles (client only; see tickTentacles) ----
     /** How long one full turn takes, in ticks (2 seconds). */
@@ -160,9 +174,10 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
         if (!this.level().isClientSide()) {
             LivingEntity target = this.getTarget();
-            // Lets go of targets that died, went into creative, or got away
-            if (target != null && (!target.isAlive() || !this.canAttack(target)
-                    || this.distanceToSqr(target) > FORGET_DISTANCE * FORGET_DISTANCE)) {
+            // Lets go of targets that died, went into creative, got away, or that it can't see
+            // anymore because it's blind
+            if (target != null && (!target.isAlive() || !this.canAttack(target) || this.isBlind()
+                    || this.distanceToSqr(target) > WATCH_RADIUS * WATCH_RADIUS)) {
                 this.setTarget(null);
                 target = null;
             }
@@ -172,9 +187,11 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             this.entityData.set(DATA_GAZE_TARGET, agitated ? target.getId() : -1);
 
             // Every tick it can see its target, their Witnessed builds up (they turn to stone)
-            if (agitated && this.getSensing().hasLineOfSight(target)) {
-                WitnessedEffect.witness(target);
+            boolean sees = agitated && this.getSensing().hasLineOfSight(target);
+            if (sees) {
+                WitnessedEffect.witness(target, this);
             }
+            this.tickSightCues(agitated, sees);
 
         } else {
             this.tickTentacles();
@@ -242,13 +259,70 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         this.agitation += ((agitated ? 1.0F : 0.0F) - this.agitation) * AGITATION_FADE;
     }
 
+    /** Blind, it can't see anyone: it can't become agitated, and loses whoever it was watching. */
+    public boolean isBlind() {
+        return this.hasEffect(MobEffects.BLINDNESS);
+    }
+
     /** A Soulless nearby turned hostile: if it turned on a player, the Ghaze takes notice of them too. */
     @Override
     public void onSoulAlarm(LivingEntity source, LivingEntity target) {
         if (!(target instanceof Player)) return;
         if (this.getTarget() != null && this.getTarget().isAlive()) return; // already watching someone
-        if (!this.canAttack(target)) return; // creative, spectator, peaceful...
+        if (this.isBlind() || !this.canAttack(target)) return; // blind, creative, spectator, peaceful...
+        if (this.distanceToSqr(target) > WATCH_RADIUS * WATCH_RADIUS) return; // too far to watch
         this.setTarget(target);
+    }
+
+    /** Hit by a player: it turns its gaze on them (even if it was watching someone else). */
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        boolean hurt = super.hurtServer(level, source, damage);
+        if (hurt && this.isAlive() && !this.isBlind()
+                && source.getEntity() instanceof Player attacker && this.canAttack(attacker)
+                && this.distanceToSqr(attacker) <= WATCH_RADIUS * WATCH_RADIUS) {
+            this.setTarget(attacker);
+        }
+        return hurt;
+    }
+
+    /**
+     * "Ghaze watches" the moment it gets sight of its target, "Ghaze searches" the moment it
+     * loses it, so you can hear when you've broken line of sight (and when you haven't).
+     */
+    private void tickSightCues(boolean agitated, boolean sees) {
+        if (this.sightCueCooldown > 0) this.sightCueCooldown--;
+        if (sees != this.seesTarget && this.sightCueCooldown <= 0) {
+            // Gaining sight always counts; losing it only while still hunting (not when it calms down)
+            if (sees || agitated) {
+                this.playSound(sees ? ModSounds.GHAZE_WATCH : ModSounds.GHAZE_SEARCH, this.getSoundVolume(), this.getVoicePitch());
+                this.sightCueCooldown = SIGHT_CUE_COOLDOWN;
+            }
+        }
+        this.seesTarget = sees;
+    }
+
+    /** Calm: breathes. Agitated: watches while it can see its target, searches while it can't. */
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if (!this.isAgitated()) return ModSounds.GHAZE_AMBIENT;
+        return this.seesTarget ? ModSounds.GHAZE_WATCH : ModSounds.GHAZE_SEARCH;
+    }
+
+    /** Twice as chatty while agitated, so the cue keeps reminding you what it's doing. */
+    @Override
+    public int getAmbientSoundInterval() {
+        return this.isAgitated() ? 40 : 80;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSounds.GHAZE_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.GHAZE_DEATH;
     }
 
     @Override
@@ -345,10 +419,10 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     }
 
     /**
-     * Agitated: watch the target. While it can see them it stays put and stares (and their
-     * camera gets pulled toward its face, client side). Once they break line of sight, it moves
-     * to get it back: to a nearby spot with a clear view of them, or straight toward them if it
-     * can't find one.
+     * Agitated: watch the target. While it can see them from within {@link #KEEP_DISTANCE} it
+     * stays put and stares (and their camera gets pulled toward its face, client side). If they
+     * break line of sight, or get farther than that, it moves: to a nearby spot that has a clear
+     * view of them and is within that distance, or straight toward them if it can't find one.
      */
     static class WatchGoal extends Goal {
         /** How often it picks a new spot while it can't see them (1 second). */
@@ -397,7 +471,8 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             this.ghaze.getLookControl().setLookAt(target, 30.0F, 30.0F);
             Ghast.faceMovementDirection(this.ghaze);
 
-            if (this.ghaze.getSensing().hasLineOfSight(target)) {
+            boolean close = this.ghaze.distanceToSqr(target) <= KEEP_DISTANCE * KEEP_DISTANCE;
+            if (close && this.ghaze.getSensing().hasLineOfSight(target)) {
                 if (this.repositioning) {
                     ((GhazeMoveControl) this.ghaze.getMoveControl()).stop();
                     this.repositioning = false;
@@ -418,10 +493,14 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             this.repositioning = true;
         }
 
-        /** The closest open spot nearby that it fits in and can see the target from; or null. */
+        /**
+         * The closest open spot nearby that it fits in, that's within {@link #KEEP_DISTANCE} of
+         * the target, and that it can see the target from; or null.
+         */
         private Vec3 findSpotWithView(LivingEntity target) {
             Vec3 here = this.ghaze.position();
             Vec3 targetEyes = target.getEyePosition();
+            double keepSqr = KEEP_DISTANCE * KEEP_DISTANCE;
             AABB box = this.ghaze.getBoundingBox().deflate(1.0E-3);
             Vec3 best = null;
             double bestDistance = Double.MAX_VALUE;
@@ -433,6 +512,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
                         (this.ghaze.getRandom().nextDouble() * 2 - 1) * SEARCH_RADIUS);
                 double distance = spot.distanceToSqr(here);
                 if (distance >= bestDistance) continue;
+                if (spot.distanceToSqr(target.position()) > keepSqr) continue;
                 if (!this.ghaze.level().noCollision(this.ghaze, box.move(spot.subtract(here)))) continue;
 
                 Vec3 head = spot.add(0.0, HEAD_HEIGHT, 0.0);

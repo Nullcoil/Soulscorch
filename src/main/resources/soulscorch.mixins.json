@@ -27,6 +27,9 @@
     "requireAnnotations": true
   },
   "client": [
-    "GhazeGazeMouseMixin"
+    "GhazeGazeMouseMixin",
+    "client.GameRendererMixin",
+    "client.PostChainAccessor",
+    "client.PostPassAccessor"
   ]
 }

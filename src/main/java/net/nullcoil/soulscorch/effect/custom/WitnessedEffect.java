@@ -1,10 +1,12 @@
 package net.nullcoil.soulscorch.effect.custom;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
@@ -19,12 +21,17 @@ import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.custom.PlayerStatueBlock;
 import net.nullcoil.soulscorch.block.entity.PlayerStatueBlockEntity;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.sound.ModSounds;
+
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Witnessed: being watched by a Ghaze turns you to stone.
@@ -33,35 +40,89 @@ import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
  * see you, it keeps adding to it ({@link #witness}), faster than it runs down, so it climbs.
  * Out of every Ghaze's sight it runs down like any effect, and wears off at 0.
  *
+ * <p>Only the <b>closest</b> Ghaze that can see you adds to it, so a crowd of them is no faster
+ * than one. Looking back at that Ghaze makes it build faster ({@link #LOOKING_PER_TICK}).
+ * While it climbs, your skin cracks: a stone-cracking sound that gets louder and more frequent.
+ *
  * <p>The higher it is, the slower you move (and jump), down to a standstill at
  * {@link #PETRIFY_TICKS}. At that point you're petrified: you die, and a grayscale statue of
  * you ({@link PlayerStatueBlock}) is left where you stood.
  */
 public class WitnessedEffect extends MobEffect {
-    /** Build-up at which you're fully petrified: 12 seconds of one Ghaze watching. */
+    /** Build-up at which you're fully petrified. */
     public static final int PETRIFY_TICKS = 240;
-    /** Each tick a Ghaze sees you it adds this much; the effect itself drains 1 a tick, so one
-     *  Ghaze nets +1 a tick, and every extra Ghaze watching adds 2 more. */
+    /**
+     * Added each tick the closest Ghaze sees you. The effect itself drains 1 a tick, so these net
+     * +1 (12 seconds to petrify) while you look away, and +2 (6 seconds) while you look at it.
+     */
     private static final int WITNESS_PER_TICK = 2;
+    private static final int LOOKING_PER_TICK = 3;
+    /** Cosine of how far off-center the Ghaze's head can be and still count as looked at (25 degrees). */
+    private static final double LOOKING_COS = Math.cos(Math.toRadians(25.0));
 
     private static final Identifier SLOW_ID = Soulscorch.id("witnessed_slowness");
     public static final ResourceKey<DamageType> PETRIFIED =
             ResourceKey.create(Registries.DAMAGE_TYPE, Soulscorch.id("petrified"));
     /** How far to look for the Ghaze to credit for a petrification (death message). */
-    private static final double CREDIT_RANGE = 48.0;
+    private static final double CREDIT_RANGE = GhazeEntity.WATCH_RADIUS;
 
     public WitnessedEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
-    /** A Ghaze sees {@code target} this tick: build up their Witnessed. */
-    public static void witness(LivingEntity target) {
+    /** This tick's closest Ghaze that can see each target. Server thread only; cleared every tick. */
+    private static final Map<LivingEntity, GhazeEntity> WATCHERS = new WeakHashMap<>();
+
+    /** Applies the build-up once a tick, after every Ghaze has had its turn. */
+    public static void register() {
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (WATCHERS.isEmpty()) return;
+            WATCHERS.forEach(WitnessedEffect::buildUp);
+            WATCHERS.clear();
+        });
+    }
+
+    /**
+     * {@code ghaze} can see {@code target} this tick. Only the closest Ghaze that sees them
+     * counts; the build-up itself happens at the end of the tick.
+     */
+    public static void witness(LivingEntity target, GhazeEntity ghaze) {
         if (target.level().isClientSide()) return;
+        WATCHERS.merge(target, ghaze, (current, candidate) ->
+                candidate.distanceToSqr(target) < current.distanceToSqr(target) ? candidate : current);
+    }
+
+    private static void buildUp(LivingEntity target, GhazeEntity ghaze) {
+        if (!target.isAlive() || target.isRemoved()) return;
+
         MobEffectInstance current = target.getEffect(ModEffects.WITNESSED);
         int buildUp = current != null ? current.getDuration() : 0;
-        int next = Math.min(buildUp + WITNESS_PER_TICK, PETRIFY_TICKS);
+        int add = isLookingAt(target, ghaze) ? LOOKING_PER_TICK : WITNESS_PER_TICK;
+        int next = Math.min(buildUp + add, PETRIFY_TICKS);
         // No particles, but shows its icon so the player knows what's happening
         target.addEffect(new MobEffectInstance(ModEffects.WITNESSED, next, 0, false, false, true));
+
+        crack(target, petrification(next));
+    }
+
+    /** Whether {@code target} is looking at the Ghaze's head (within {@link #LOOKING_COS}). */
+    private static boolean isLookingAt(LivingEntity target, GhazeEntity ghaze) {
+        Vec3 toHead = ghaze.getHeadPosition(1.0F).subtract(target.getEyePosition());
+        if (toHead.lengthSqr() < 1.0E-6) return true;
+        return target.getViewVector(1.0F).dot(toHead.normalize()) > LOOKING_COS;
+    }
+
+    /**
+     * Stone cracking, heard by everyone nearby: rare and quiet at first, then louder, lower and
+     * more frequent as you stiffen (on average every 2 seconds at first, every 4 ticks at the end).
+     * Only while it's climbing, so silence means you got away.
+     */
+    private static void crack(LivingEntity target, float stone) {
+        if (target.getRandom().nextFloat() >= 0.025F + 0.225F * stone) return;
+        float volume = 0.2F + 0.8F * stone;
+        float pitch = 1.2F - 0.5F * stone + (target.getRandom().nextFloat() - 0.5F) * 0.1F;
+        target.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                ModSounds.WITNESSED_CRACK, SoundSource.PLAYERS, volume, pitch);
     }
 
     /** How petrified a build-up is: 0 (fine) to 1 (stone). */

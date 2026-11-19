@@ -156,5 +156,58 @@
     "sounds": [
       { "name": "minecraft:block.beehive.drip", "type": "event" }
     ]
+  },
+  "ghaze_ambient": {
+    "subtitle": "sounds.soulscorch.ghaze_ambient",
+    "sounds": [
+      {"name": "minecraft:mob/blaze/breathe1", "pitch": 0.7},
+      {"name": "minecraft:mob/blaze/breathe2", "pitch": 0.7},
+      {"name": "minecraft:mob/blaze/breathe3", "pitch": 0.7},
+      {"name": "minecraft:mob/blaze/breathe4", "pitch": 0.7}
+    ]
+  },
+  "ghaze_watch": {
+    "subtitle": "sounds.soulscorch.ghaze_watch",
+    "sounds": [
+      {"name": "minecraft:mob/warden/listening_1", "pitch": 1.4},
+      {"name": "minecraft:mob/warden/listening_2", "pitch": 1.4},
+      {"name": "minecraft:mob/warden/listening_3", "pitch": 1.4},
+      {"name": "minecraft:mob/warden/listening_4", "pitch": 1.4},
+      {"name": "minecraft:mob/warden/listening_5", "pitch": 1.4}
+    ]
+  },
+  "ghaze_search": {
+    "subtitle": "sounds.soulscorch.ghaze_search",
+    "sounds": [
+      {"name": "minecraft:mob/warden/sniff_1", "pitch": 1.3, "volume": 0.75},
+      {"name": "minecraft:mob/warden/sniff_2", "pitch": 1.3, "volume": 0.75},
+      {"name": "minecraft:mob/warden/sniff_3", "pitch": 1.3, "volume": 0.75},
+      {"name": "minecraft:mob/warden/sniff_4", "pitch": 1.3, "volume": 0.75}
+    ]
+  },
+  "ghaze_hurt": {
+    "subtitle": "sounds.soulscorch.ghaze_hurt",
+    "sounds": [
+      {"name": "minecraft:mob/blaze/hit1", "pitch": 1.3},
+      {"name": "minecraft:mob/blaze/hit2", "pitch": 1.3},
+      {"name": "minecraft:mob/blaze/hit3", "pitch": 1.3},
+      {"name": "minecraft:mob/blaze/hit4", "pitch": 1.3}
+    ]
+  },
+  "ghaze_death": {
+    "subtitle": "sounds.soulscorch.ghaze_death",
+    "sounds": [
+      {"name": "minecraft:mob/blaze/death", "pitch": 1.3}
+    ]
+  },
+  "witnessed_crack": {
+    "subtitle": "sounds.soulscorch.witnessed_crack",
+    "sounds": [
+      {"name": "minecraft:block/dripstone/break1", "pitch": 1.0},
+      {"name": "minecraft:block/dripstone/break2", "pitch": 1.0},
+      {"name": "minecraft:block/dripstone/break3", "pitch": 1.0},
+      {"name": "minecraft:block/dripstone/break4", "pitch": 1.0},
+      {"name": "minecraft:block/dripstone/break5", "pitch": 1.0}
+    ]
   }
 }
