@@ -132,6 +132,7 @@ public class SoullessEntity extends ZombifiedPiglin implements NeutralMob {
                 if (player != null) {
                     this.setTarget(player);
                     this.startPersistentAngerTimer();
+                    SoulAlarm.raise(this, player);
                 }
             }
             case HOSTILE -> {}
@@ -269,6 +270,9 @@ public class SoullessEntity extends ZombifiedPiglin implements NeutralMob {
                         buddy.startPersistentAngerTimer();
                     }
                 }
+
+                // 3. Everything else listening (like the Ghaze) hears it too
+                SoulAlarm.raise(this, player);
             }
         }
         return wasDamaged;
@@ -338,6 +342,7 @@ public class SoullessEntity extends ZombifiedPiglin implements NeutralMob {
             super.start();
             if (this.mob instanceof SoullessEntity soulless) {
                 soulless.setActivity(SoullessActivity.HOSTILE);
+                SoulAlarm.raise(soulless, soulless.getTarget());
             }
         }
     }
