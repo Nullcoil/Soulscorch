@@ -37,5 +37,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "minecraft:entities/blaze"
+  "random_sequence": "soulscorch:entities/ghaze"
 }
