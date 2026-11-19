@@ -22,6 +22,6 @@ public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, Gh
 
     @Override
     public @NonNull Identifier getTextureLocation(GhazeRenderState state) {
-        return TEXTURE;
+        return state.isAgitated ? AGITATED : TEXTURE;
     }
 }
