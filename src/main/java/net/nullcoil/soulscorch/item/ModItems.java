@@ -51,7 +51,9 @@ public class ModItems {
     public static final Item SALLOW_SIGN;
     public static final Item SALLOW_HANGING_SIGN;
     public static final Item AVALCOMB;
+
     public static final Item VOLATILE_EXTRACT;
+    public static final Item GHAZE_SPAWN_EGG;
 
     static {
         BLAZT_POWDER = registerItem("blazt_powder", Item::new, new Item.Properties());
@@ -87,6 +89,7 @@ public class ModItems {
 
         VOLATILE_EXTRACT = registerItem("volatile_extract", Item::new, new Item.Properties().craftRemainder(Items.GLASS_BOTTLE).food(
                 ModFoods.VOLATILE_EXTRACT, ModConsumables.VOLATILE_EXTRACT).usingConvertsTo(Items.GLASS_BOTTLE).stacksTo(16));
+        GHAZE_SPAWN_EGG = registerItem("ghaze_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntities.GHAZE));
     }
 
     // 2. The completed helper method
@@ -160,6 +163,8 @@ public class ModItems {
             entries.accept(HYTODOM_SPAWN_EGG);
             entries.accept(SOULCAT_SPAWN_EGG);
             entries.accept(SOULWOLF_SPAWN_EGG);
+
+            entries.accept(GHAZE_SPAWN_EGG);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(entries -> {
             entries.insertAfter(Items.BEETROOT, GHOST_PEPPER, CANDIED_GHOST_PEPPER);

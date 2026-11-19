@@ -5,6 +5,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.nullcoil.soulscorch.Soulscorch;
@@ -23,82 +24,55 @@ public class ModEntities {
     public static final EntityType<SoulborneWolfEntity> SOULBORNE_WOLF;
     public static final EntityType<HeedlessEntity> HEEDLESS;
 
+    public static final EntityType<GhazeEntity> GHAZE;
+
     public static final EntityType<ResidentEntity> RESIDENT;
 
-    private static ResourceKey<EntityType<?>> key(String path) {
-        return ResourceKey.create(Registries.ENTITY_TYPE, Soulscorch.id(path));
+    /** Registers an entity type under soulscorch:{name}, using the same name for its key. */
+    private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
+        ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Soulscorch.id(name));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, builder.build(key));
     }
 
     static {
-        BLAZT = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("blazt"),
+        BLAZT = register("blazt",
                 EntityType.Builder.of(BlaztEntity::new, MobCategory.MONSTER)
                         .sized(3.0f, 3.0f)
-                        .clientTrackingRange(10)
-                        .build(key("blazt"))
-        );
-        SOUL_CHARGE_PROJECTILE = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("soul_charge_projectile"),
+                        .clientTrackingRange(10));
+        SOUL_CHARGE_PROJECTILE = register("soul_charge_projectile",
                 EntityType.Builder.<SoulChargeProjectile>of(SoulChargeProjectile::new, MobCategory.MISC)
                         .sized(0.3125F, 0.3125F)
                         .clientTrackingRange(4)
-                        .updateInterval(10)
-                        .build(key("soul_charge"))
-        );
-        SOULLESS = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("soulless"),
+                        .updateInterval(10));
+        SOULLESS = register("soulless",
                 EntityType.Builder.of(SoullessEntity::new, MobCategory.MONSTER)
                         .sized(0.6f, 1.95f)
-                        .clientTrackingRange(10)
-                        .build(key("soulless"))
-        );
-        RESTLESS = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("restless"),
+                        .clientTrackingRange(10));
+        RESTLESS = register("restless",
                 EntityType.Builder.of(RestlessEntity::new, MobCategory.MONSTER)
                         .sized(1.6f, 1.4f)
-                        .clientTrackingRange(10)
-                        .build(key("restless"))
-        );
-        HYTODOM = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("hytodom"),
+                        .clientTrackingRange(10));
+        HYTODOM = register("hytodom",
                 EntityType.Builder.of(HytodomEntity::new, MobCategory.CREATURE)
                         .sized(0.95f, 2.25f)
-                        .clientTrackingRange(10)
-                        .build(key("hytodom"))
-        );
-        SOULBORNE_CAT = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("soulborne_cat"),
+                        .clientTrackingRange(10));
+        SOULBORNE_CAT = register("soulborne_cat",
                 EntityType.Builder.of(SoulborneCatEntity::new, MobCategory.CREATURE)
-                        .sized(0.6F, 0.7F)
-                        .build(key("soulborne_cat"))
-        );
-        SOULBORNE_WOLF = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("soulborne_wolf"),
+                        .sized(0.6F, 0.7F));
+        SOULBORNE_WOLF = register("soulborne_wolf",
                 EntityType.Builder.of(SoulborneWolfEntity::new, MobCategory.CREATURE)
-                        .sized(0.6F, 0.85F)
-                        .build(key("soulborne_wolf"))
-        );
-        HEEDLESS = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("heedless"),
+                        .sized(0.6F, 0.85F));
+        HEEDLESS = register("heedless",
                 EntityType.Builder.of(HeedlessEntity::new, MobCategory.MONSTER)
-                        .sized(0.8f, 2f)
-                        .build(key("heedless"))
-        );
-        RESIDENT = Registry.register(
-                BuiltInRegistries.ENTITY_TYPE,
-                Soulscorch.id("resident"),
+                        .sized(0.8f, 2f));
+
+        GHAZE = register("ghaze",
+                EntityType.Builder.of(GhazeEntity::new, MobCategory.MONSTER)
+                        .sized(0.65f, 1.2f));
+
+        RESIDENT = register("resident",
                 EntityType.Builder.of(ResidentEntity::new, MobCategory.MONSTER)
-                        .sized(2.37f, 3.95f)
-                        .build(key("resident"))
-        );
+                        .sized(2.37f, 3.95f));
     }
 
     public static void registerAttributes() {
@@ -109,6 +83,7 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(HYTODOM, HytodomEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SOULBORNE_CAT, SoulborneCatEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SOULBORNE_WOLF, SoulborneWolfEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(GHAZE, GhazeEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(RESIDENT, ResidentEntity.createAttributes());
     }
 

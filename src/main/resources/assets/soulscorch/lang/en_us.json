@@ -79,7 +79,7 @@
   "entity.soulscorch.resident": "Resident",
   "entity.soulscorch.hytodom": "Hytodom",
   "entity.soulscorch.restless": "Restless",
-  "entity.soulscorch.soul_charge": "Soul Charge",
+  "entity.soulscorch.soul_charge_projectile": "Soul Charge",
   "entity.soulscorch.sallow_boat": "Sallow Boat",
   "entity.soulscorch.sallow_chest_boat": "Sallow Boat with Chest",
   "entity.soulscorch.sallow_chest_raft": "Sallow Raft with Chest",
@@ -176,6 +176,8 @@
   "item.soulscorch.warped_chest_boat": "Warped Boat with Chest",
   "item.soulscorch.warped_chest_raft": "Warped Raft with Chest",
   "item.soulscorch.warped_raft": "Warped Raft",
+
+  "item.soulscorch.ghaze_spawn_egg": "Ghaze Spawn Egg",
 
   "sounds.soulscorch.blazt_ambient": "Blazt bellows",
   "sounds.soulscorch.blazt_breathe_in": "Blazt breathes",

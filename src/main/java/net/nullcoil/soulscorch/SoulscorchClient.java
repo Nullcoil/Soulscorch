@@ -21,6 +21,8 @@ import net.nullcoil.soulscorch.entity.client.blazt.BlaztModel;
 import net.nullcoil.soulscorch.entity.client.blazt.BlaztRenderer;
 import net.nullcoil.soulscorch.entity.client.companion.SoulCatRenderer;
 import net.nullcoil.soulscorch.entity.client.companion.SoulWolfRenderer;
+import net.nullcoil.soulscorch.entity.client.ghaze.GhazeModel;
+import net.nullcoil.soulscorch.entity.client.ghaze.GhazeRenderer;
 import net.nullcoil.soulscorch.entity.client.heedless.HeedlessModel;
 import net.nullcoil.soulscorch.entity.client.heedless.HeedlessRenderer;
 import net.nullcoil.soulscorch.entity.client.jellyfish.JellyfishModel;
@@ -71,6 +73,9 @@ public class SoulscorchClient implements ClientModInitializer {
 
         ModelLayerRegistry.registerModelLayer(ResidentModel.RESIDENT, ResidentModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.RESIDENT, ResidentRenderer::new);
+
+        ModelLayerRegistry.registerModelLayer(GhazeModel.GHAZE, GhazeModel::createBodyLayer);
+        EntityRendererRegistry.register(ModEntities.GHAZE, GhazeRenderer::new);
 
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_HANG, SeepingDripParticle.HangProvider::new);
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_FALL, SeepingDripParticle.FallProvider::new);
