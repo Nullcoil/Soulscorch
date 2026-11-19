@@ -10,8 +10,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ModEntities;
 import net.nullcoil.soulscorch.entity.ai.BlaztEntity;
+import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
 import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
 import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.ai.jellyfish.JellyfishEntity;
 import net.nullcoil.soulscorch.util.ModTags;
 import net.nullcoil.soulscorch.world.biome.ModBiomes;
@@ -32,7 +34,7 @@ public class ModEntitySpawns {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.SOULLESS, 100, 2, 8);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.SOULLESS, 200, 4, 16);
+                MobCategory.MONSTER, ModEntities.SOULLESS, 250, 4, 16);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
                 MobCategory.MONSTER, ModEntities.HEEDLESS, 50, 1, 1);
@@ -40,7 +42,7 @@ public class ModEntitySpawns {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.RESTLESS, 20, 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.SOULLESS, 40, 1, 2);
+                MobCategory.MONSTER, ModEntities.RESTLESS, 40, 1, 2);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.HYTODOM, 1, 1, 3);
@@ -48,6 +50,9 @@ public class ModEntitySpawns {
                 MobCategory.MONSTER, ModEntities.HYTODOM, 5, 2, 5);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
                 MobCategory.MONSTER, ModEntities.HYTODOM, 10, 3, 8);
+
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
+                MobCategory.MONSTER, ModEntities.GHAZE, 20, 1 ,1);
 
 
         // =========================================
@@ -60,10 +65,16 @@ public class ModEntitySpawns {
         SpawnPlacements.register(ModEntities.SOULLESS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING, SoullessEntity::checkMobSpawnRules);
 
+        SpawnPlacements.register(ModEntities.HEEDLESS, SpawnPlacementTypes.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING, HeedlessEntity::checkMobSpawnRules);
+
         SpawnPlacements.register(ModEntities.RESTLESS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING, RestlessEntity::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntities.HYTODOM, SpawnPlacementTypes.NO_RESTRICTIONS,
                 Heightmap.Types.MOTION_BLOCKING, JellyfishEntity::checkJellyfishSpawnRules);
+
+        SpawnPlacements.register(ModEntities.GHAZE, SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GhazeEntity::checkMobSpawnRules);
     }
 }
