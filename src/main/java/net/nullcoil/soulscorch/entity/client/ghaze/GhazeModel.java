@@ -84,19 +84,13 @@ public class GhazeModel extends EntityModel<GhazeRenderState> {
 			tentacle.x = x;
 			tentacle.z = z;
 
-			// Rope physics, without bending: the pivot gets pulled along its circle at
-			// (z, -x) * swing, so the far end trails behind it, and spinning flings the end
-			// outward along (x, z). The result is how far the bottom sits off to the side.
 			float leanX = -z * swing * TRAIL + x * swing * swing * FLARE;
 			float leanZ = x * swing * TRAIL + z * swing * swing * FLARE;
 
-			// Each tentacle also sways on its own, like a wind chime: two out-of-step waves per
-			// direction, at different speeds per tentacle, so they never move in unison
 			float s = seed + i * 1.7F;
 			leanX += windX + gust * WIND * (Mth.sin(time * 0.11F + s) + 0.5F * Mth.sin(time * 0.23F + s * 2.3F));
 			leanZ += windZ + gust * WIND * (Mth.sin(time * 0.09F + s * 1.3F) + 0.5F * Mth.sin(time * 0.19F + s * 3.1F));
 
-			// Positive xRot swings the bottom toward +z; positive zRot swings it toward -x
 			float idleXRot = Mth.clamp(leanZ, -MAX_LEAN, MAX_LEAN);
 			float idleZRot = Mth.clamp(-leanX, -MAX_LEAN, MAX_LEAN);
 
