@@ -1,6 +1,9 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "soulscorch:item/player_statue"
+    "type": "minecraft:special",
+    "base": "soulscorch:item/player_statue",
+    "model": {
+      "type": "soulscorch:player_statue"
+    }
   }
 }

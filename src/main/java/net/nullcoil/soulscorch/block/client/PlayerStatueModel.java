@@ -1,5 +1,6 @@
 package net.nullcoil.soulscorch.block.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -12,6 +13,27 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
  */
 @Environment(EnvType.CLIENT)
 public class PlayerStatueModel extends PlayerModel {
+    /** A render state that shows every skin layer (hat, jacket, sleeves, pants); nothing else on it matters here. */
+    public static AvatarRenderState allLayers() {
+        AvatarRenderState state = new AvatarRenderState();
+        state.showHat = true;
+        state.showJacket = true;
+        state.showLeftSleeve = true;
+        state.showRightSleeve = true;
+        state.showLeftPants = true;
+        state.showRightPants = true;
+        return state;
+    }
+
+    /**
+     * From block space (0 to 1, facing north) into model space, the way a living entity is
+     * drawn: centered and flipped, with the feet (24 pixels down in the model) on the floor.
+     */
+    public static void toModelSpace(PoseStack poseStack) {
+        poseStack.translate(0.5F, 1.5F, 0.5F);
+        poseStack.scale(-1.0F, -1.0F, 1.0F);
+    }
+
     public PlayerStatueModel(ModelPart root, boolean slim) {
         super(root, slim);
     }

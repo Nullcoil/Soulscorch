@@ -11,10 +11,12 @@ import net.minecraft.client.model.object.boat.BoatModel;
 import net.minecraft.client.particle.FallingLeavesParticle;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.blockentity.StandingSignRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.block.client.PlayerStatueRenderer;
+import net.nullcoil.soulscorch.block.client.PlayerStatueSpecialRenderer;
 import net.nullcoil.soulscorch.entity.ModBoats;
 import net.nullcoil.soulscorch.entity.ModEntities;
 import net.nullcoil.soulscorch.entity.ai.ResidentEntity;
@@ -50,6 +52,7 @@ public class SoulscorchClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModBlockEntities.SEEPING_SIGN, StandingSignRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.SALLOW_SIGN, StandingSignRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.PLAYER_STATUE, PlayerStatueRenderer::new);
+        SpecialModelRenderers.ID_MAPPER.put(Soulscorch.id("player_statue"), PlayerStatueSpecialRenderer.Unbaked.MAP_CODEC);
 
         ModelLayerRegistry.registerModelLayer(BlaztModel.BLAZT, BlaztModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.BLAZT, BlaztRenderer::new);

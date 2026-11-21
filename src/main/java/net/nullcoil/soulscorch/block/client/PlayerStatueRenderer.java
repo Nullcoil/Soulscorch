@@ -33,20 +33,12 @@ public class PlayerStatueRenderer implements BlockEntityRenderer<PlayerStatueBlo
     private final PlayerSkinRenderCache playerSkinRenderCache;
     private final PlayerStatueModel wideModel;
     private final PlayerStatueModel slimModel;
-    /** Shows every skin layer (hat, jacket, sleeves, pants); nothing else on it matters here. */
-    private final AvatarRenderState modelState = new AvatarRenderState();
+    private final AvatarRenderState modelState = PlayerStatueModel.allLayers();
 
     public PlayerStatueRenderer(BlockEntityRendererProvider.Context context) {
         this.playerSkinRenderCache = context.playerSkinRenderCache();
         this.wideModel = new PlayerStatueModel(context.entityModelSet().bakeLayer(ModelLayers.PLAYER), false);
         this.slimModel = new PlayerStatueModel(context.entityModelSet().bakeLayer(ModelLayers.PLAYER_SLIM), true);
-
-        this.modelState.showHat = true;
-        this.modelState.showJacket = true;
-        this.modelState.showLeftSleeve = true;
-        this.modelState.showRightSleeve = true;
-        this.modelState.showLeftPants = true;
-        this.modelState.showRightPants = true;
     }
 
     @Override
@@ -72,11 +64,11 @@ public class PlayerStatueRenderer implements BlockEntityRenderer<PlayerStatueBlo
     @Override
     public void submit(PlayerStatueRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         poseStack.pushPose();
-        // Same setup as a living entity: centered, turned to face its direction, and flipped
-        // into model space, with the feet (24 pixels down in the model) on the block's floor
-        poseStack.translate(0.5F, 1.5F, 0.5F);
+        // Turned to face its direction (around the block's center), then into model space
+        poseStack.translate(0.5F, 0.0F, 0.5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - state.facing.toYRot()));
-        poseStack.scale(-1.0F, -1.0F, 1.0F);
+        poseStack.translate(-0.5F, 0.0F, -0.5F);
+        PlayerStatueModel.toModelSpace(poseStack);
 
         PlayerStatueModel model = state.slim ? this.slimModel : this.wideModel;
         submitNodeCollector.submitModel(model, this.modelState, poseStack, state.renderType,
