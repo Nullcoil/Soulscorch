@@ -44,7 +44,7 @@ import java.util.WeakHashMap;
  * than one. Looking back at that Ghaze makes it build faster ({@link #LOOKING_PER_TICK}).
  * While it climbs, your skin cracks: a stone-cracking sound that gets louder and more frequent.
  *
- * <p>The higher it is, the slower you move (and jump), down to a standstill at
+ * <p>The higher it is, the slower you move (jumping isn't affected), down to a standstill at
  * {@link #PETRIFY_TICKS}. At that point you're petrified: you die, and a grayscale statue of
  * you ({@link PlayerStatueBlock}) is left where you stood.
  */
@@ -155,10 +155,12 @@ public class WitnessedEffect extends MobEffect {
         slow(entity, 0.0F);
     }
 
-    /** Scales movement and jumping by (1 - stone): unaffected at 0, frozen at 1. */
+    /**
+     * Scales movement speed by (1 - stone): unaffected at 0, frozen at 1. Jumping is left
+     * alone, so you can still hop up a block to break line of sight and get away.
+     */
     private static void slow(LivingEntity entity, float stone) {
         setModifier(entity.getAttribute(Attributes.MOVEMENT_SPEED), stone);
-        setModifier(entity.getAttribute(Attributes.JUMP_STRENGTH), stone);
     }
 
     private static void setModifier(AttributeInstance attribute, float stone) {

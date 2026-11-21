@@ -17,6 +17,10 @@ public class GhazeModel extends EntityModel<GhazeRenderState> {
 	private static final float TRAIL = 0.6F;
 	/** Outward lean per pixel of distance from the center, per (radian per tick) squared of spin. */
 	private static final float FLARE = 2.0F;
+	/** How far the head wobbles, in radians (about 4 degrees; half that while agitated). */
+	private static final float WOBBLE = 0.07F;
+	/** How fast it wobbles: one sway about every 4 seconds. */
+	private static final float WOBBLE_SPEED = 0.08F;
 	/** How far the wind sways the tentacles, in radians (about 7 degrees, up to twice that in gusts). */
 	private static final float WIND = 0.12F;
 	/** Most a tentacle leans while spinning, in radians (about 57 degrees). */
@@ -60,6 +64,15 @@ public class GhazeModel extends EntityModel<GhazeRenderState> {
 		// Looks where it's facing, like the blaze's head
 		this.head.yRot = state.yRot * ((float) Math.PI / 180F);
 		this.head.xRot = state.xRot * ((float) Math.PI / 180F);
+
+		// A gentle wobble on top of the look: slow, out-of-step sways on all three axes, so it
+		// bobs like it's floating rather than nodding in a pattern. Each Ghaze is out of step
+		// with the others (windSeed), and it holds steadier while it's glaring (agitated).
+		float wobbleTime = state.ageInTicks * WOBBLE_SPEED + state.windSeed;
+		float wobble = WOBBLE * (1.0F - 0.5F * state.agitation);
+		this.head.zRot += wobble * Mth.sin(wobbleTime);
+		this.head.xRot += wobble * 0.6F * Mth.sin(wobbleTime * 0.77F + 1.3F);
+		this.head.yRot += wobble * 0.5F * Mth.sin(wobbleTime * 0.53F + 2.6F);
 
 		// The ghast wiggle, for blending in below
 		GhastModel.animateTentacles(state, this.tentacles);

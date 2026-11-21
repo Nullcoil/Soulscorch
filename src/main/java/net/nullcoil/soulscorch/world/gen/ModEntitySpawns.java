@@ -34,25 +34,25 @@ public class ModEntitySpawns {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.SOULLESS, 100, 2, 8);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.SOULLESS, 250, 4, 16);
+                MobCategory.MONSTER, ModEntities.SOULLESS, 120, 4, 16);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.HEEDLESS, 50, 1, 1);
+                MobCategory.MONSTER, ModEntities.HEEDLESS, 40, 1, 1);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.RESTLESS, 20, 1, 1);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.RESTLESS, 40, 1, 2);
+                MobCategory.MONSTER, ModEntities.RESTLESS, 60, 1, 2);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.SOUL_SAND_VALLEY),
                 MobCategory.MONSTER, ModEntities.HYTODOM, 1, 1, 3);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CRAGS),
                 MobCategory.MONSTER, ModEntities.HYTODOM, 5, 2, 5);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.HYTODOM, 10, 3, 8);
+                MobCategory.MONSTER, ModEntities.HYTODOM, 120, 3, 8);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
-                MobCategory.MONSTER, ModEntities.GHAZE, 20, 1 ,1);
+                MobCategory.MONSTER, ModEntities.GHAZE, 60, 1 ,1);
 
 
         // =========================================

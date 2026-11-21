@@ -23,7 +23,9 @@ public abstract class WorldGenRegionMixin {
     /**
      * Features and structures place blocks through WorldGenRegion. Refusing
      * writes inside Soulvore Caverns keeps neighboring biomes' features
-     * (fortresses, bastions, glowstone, basalt, etc.) from cutting into it.
+     * (glowstone, basalt, etc.) from cutting into it. Structures that would reach into the
+     * Caverns are thrown out before this (StructureCavernsMixin); this still catches
+     * anything that slips through.
      * Soulscorch's own blocks (Seeping Sallow trees, ...) and Soul Soil
      * (trees set it under their trunk) are let through.
      */

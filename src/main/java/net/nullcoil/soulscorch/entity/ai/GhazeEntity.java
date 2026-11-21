@@ -18,19 +18,25 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.effect.custom.WitnessedEffect;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.List;
 
 public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireTyped {
     /** Whether it has a target. Synced so the client can swap the texture and stop the idle spin. */
@@ -115,6 +121,14 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         super.defineSynchedData(builder);
         builder.define(DATA_AGITATED, false);
         builder.define(DATA_GAZE_TARGET, -1);
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(true);
+        return navigation;
     }
 
     @Override
@@ -385,7 +399,10 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
             Vec3 travel = new Vec3(this.wantedX - this.mob.getX(), this.wantedY - this.mob.getY(), this.wantedZ - this.mob.getZ());
             double distance = travel.length();
-            if (distance < ARRIVE_DISTANCE) this.brake();
+            // Following a path, the wanted spot is just the next point along it: only ease in
+            // near the end of the whole path, not at every point
+            double toStop = this.distanceToStop(distance);
+            if (toStop < ARRIVE_DISTANCE) this.brake();
 
             if (this.floatDuration-- > 0) return;
             this.floatDuration += this.mob.getRandom().nextInt(5) + 2;
@@ -393,7 +410,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             if (this.canReach(travel, distance)) {
                 // Full push until it's close, then less and less the closer it gets
                 double push = this.mob.getAttributeValue(Attributes.FLYING_SPEED) * 5.0 / 3.0
-                        * Math.min(1.0, distance / ARRIVE_DISTANCE);
+                        * Math.min(1.0, toStop / ARRIVE_DISTANCE);
                 this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(travel.normalize().scale(push)));
             } else {
                 this.stop();
@@ -402,6 +419,13 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
         private void brake() {
             this.mob.setDeltaMovement(this.mob.getDeltaMovement().scale(BRAKE));
+        }
+
+        /** How far it is from where it'll actually stop: the end of its path, if it's on one. */
+        private double distanceToStop(double distanceToWanted) {
+            PathNavigation navigation = this.mob.getNavigation();
+            BlockPos end = navigation.isInProgress() ? navigation.getTargetPos() : null;
+            return end != null ? Math.sqrt(this.mob.distanceToSqr(Vec3.atBottomCenterOf(end))) : distanceToWanted;
         }
 
         private boolean canReach(Vec3 travel, double distance) {
@@ -421,15 +445,19 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     /**
      * Agitated: watch the target. While it can see them from within {@link #KEEP_DISTANCE} it
      * stays put and stares (and their camera gets pulled toward its face, client side). If they
-     * break line of sight, or get farther than that, it moves: to a nearby spot that has a clear
-     * view of them and is within that distance, or straight toward them if it can't find one.
+     * break line of sight, or get farther than that, it goes after the view: it finds open spots
+     * that see them (around itself and around them), pathfinds to the nearest one it can
+     * actually reach, and if there's none, pathfinds toward them, which brings it around the
+     * corner they ducked behind. Paths go around terrain, so it no longer gets stuck on walls.
      */
     static class WatchGoal extends Goal {
-        /** How often it picks a new spot while it can't see them (1 second). */
+        /** How often it re-plans while it can't see them (1 second), or sooner if its path ends. */
         private static final int REPOSITION_INTERVAL = 20;
-        /** How far around itself it looks for a spot with a view, in blocks. */
+        /** How far around itself, and around the target, it looks for a spot with a view. */
         private static final double SEARCH_RADIUS = 8.0;
-        private static final int ATTEMPTS = 24;
+        private static final int ATTEMPTS = 32;
+        /** Only the nearest few candidates get a full path check (pathfinding isn't cheap). */
+        private static final int PATH_CHECKS = 4;
 
         private final GhazeEntity ghaze;
         private int repositionCooldown;
@@ -454,7 +482,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
         @Override
         public void stop() {
-            ((GhazeMoveControl) this.ghaze.getMoveControl()).stop();
+            this.halt();
         }
 
         @Override
@@ -474,45 +502,54 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             boolean close = this.ghaze.distanceToSqr(target) <= KEEP_DISTANCE * KEEP_DISTANCE;
             if (close && this.ghaze.getSensing().hasLineOfSight(target)) {
                 if (this.repositioning) {
-                    ((GhazeMoveControl) this.ghaze.getMoveControl()).stop();
+                    this.halt();
                     this.repositioning = false;
                 }
                 this.repositionCooldown = 0;
                 return;
             }
 
-            if (this.repositionCooldown-- > 0) return;
+            // Re-plan once a second, or right away if the last path ran out or got stuck
+            boolean pathing = this.ghaze.getNavigation().isInProgress();
+            if (this.repositionCooldown-- > 0 && pathing) return;
             this.repositionCooldown = REPOSITION_INTERVAL;
 
-            Vec3 spot = this.findSpotWithView(target);
-            if (spot == null) {
-                // No spot with a view nearby: head toward them
-                spot = target.position().add(0.0, 1.0, 0.0);
+            Path path = this.findPathToView(target);
+            if (path == null) {
+                // No reachable spot with a view: follow them (around whatever is in the way)
+                path = this.ghaze.getNavigation().createPath(target, 1);
             }
-            this.ghaze.getMoveControl().setWantedPosition(spot.x, spot.y, spot.z, 1.0);
-            this.repositioning = true;
+            if (path != null && this.ghaze.getNavigation().moveTo(path, 1.0)) {
+                this.repositioning = true;
+            }
+        }
+
+        private void halt() {
+            this.ghaze.getNavigation().stop();
+            ((GhazeMoveControl) this.ghaze.getMoveControl()).stop();
         }
 
         /**
-         * The closest open spot nearby that it fits in, that's within {@link #KEEP_DISTANCE} of
-         * the target, and that it can see the target from; or null.
+         * A path to the nearest open spot within {@link #KEEP_DISTANCE} of the target that it
+         * fits in and can see them from; or null. Spots are tried around itself (a short hop to
+         * a better angle) and around the target (the far side of what's blocking the view).
          */
-        private Vec3 findSpotWithView(LivingEntity target) {
+        private Path findPathToView(LivingEntity target) {
             Vec3 here = this.ghaze.position();
             Vec3 targetEyes = target.getEyePosition();
             double keepSqr = KEEP_DISTANCE * KEEP_DISTANCE;
             AABB box = this.ghaze.getBoundingBox().deflate(1.0E-3);
-            Vec3 best = null;
-            double bestDistance = Double.MAX_VALUE;
 
+            List<Vec3> candidates = new ArrayList<>();
             for (int i = 0; i < ATTEMPTS; i++) {
-                Vec3 spot = here.add(
+                // Half around itself, half around the target (and a bit above them)
+                Vec3 center = i % 2 == 0 ? here : target.position().add(0.0, 2.0, 0.0);
+                Vec3 spot = center.add(
                         (this.ghaze.getRandom().nextDouble() * 2 - 1) * SEARCH_RADIUS,
                         (this.ghaze.getRandom().nextDouble() * 2 - 1) * SEARCH_RADIUS / 2,
                         (this.ghaze.getRandom().nextDouble() * 2 - 1) * SEARCH_RADIUS);
-                double distance = spot.distanceToSqr(here);
-                if (distance >= bestDistance) continue;
                 if (spot.distanceToSqr(target.position()) > keepSqr) continue;
+                if (!this.ghaze.level().isInWorldBounds(BlockPos.containing(spot))) continue;
                 if (!this.ghaze.level().noCollision(this.ghaze, box.move(spot.subtract(here)))) continue;
 
                 Vec3 head = spot.add(0.0, HEAD_HEIGHT, 0.0);
@@ -520,10 +557,16 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
                         ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this.ghaze));
                 if (hit.getType() != HitResult.Type.MISS) continue;
 
-                best = spot;
-                bestDistance = distance;
+                candidates.add(spot);
             }
-            return best;
+
+            // Nearest first; the first one with a complete path wins
+            candidates.sort(Comparator.comparingDouble(spot -> spot.distanceToSqr(here)));
+            for (int i = 0; i < Math.min(PATH_CHECKS, candidates.size()); i++) {
+                Path path = this.ghaze.getNavigation().createPath(BlockPos.containing(candidates.get(i)), 0);
+                if (path != null && path.canReach()) return path;
+            }
+            return null;
         }
     }
 

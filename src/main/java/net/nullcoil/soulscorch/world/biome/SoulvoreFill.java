@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,6 +40,38 @@ public final class SoulvoreFill {
     /** True if the 4x4x4 biome cell containing this block is Soulvore Caverns. */
     public static boolean isSoulvore(ChunkAccess chunk, int x, int y, int z) {
         return biomeAt(chunk, x, y, z).is(ModBiomes.SOULVORE_CAVERNS);
+    }
+
+    /** How far apart (blocks) the biome is checked across a structure's outline. */
+    private static final int STRUCTURE_SAMPLE_STEP = 8;
+    /** Extra room around a structure's outline: the fill's rounded border reaches a few blocks
+     *  past the Caverns' biome cells, so a structure that close would still be cut. */
+    private static final int STRUCTURE_MARGIN = 4;
+
+    /**
+     * Whether a structure with this outline would reach into Soulvore Caverns. Checked when a
+     * structure's layout is first chosen (long before any terrain exists), straight from the
+     * biome source, so structures that would be cut off by the Caverns aren't placed at all.
+     */
+    public static boolean overlapsCaverns(BoundingBox box, BiomeSource biomes, Climate.Sampler sampler) {
+        int minX = box.minX() - STRUCTURE_MARGIN, maxX = box.maxX() + STRUCTURE_MARGIN;
+        int minY = box.minY() - STRUCTURE_MARGIN, maxY = box.maxY() + STRUCTURE_MARGIN;
+        int minZ = box.minZ() - STRUCTURE_MARGIN, maxZ = box.maxZ() + STRUCTURE_MARGIN;
+
+        for (int x = minX; ; x = Math.min(x + STRUCTURE_SAMPLE_STEP, maxX)) {
+            for (int z = minZ; ; z = Math.min(z + STRUCTURE_SAMPLE_STEP, maxZ)) {
+                for (int y = minY; ; y = Math.min(y + STRUCTURE_SAMPLE_STEP, maxY)) {
+                    if (biomes.getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z), sampler)
+                            .is(ModBiomes.SOULVORE_CAVERNS)) {
+                        return true;
+                    }
+                    if (y == maxY) break;
+                }
+                if (z == maxZ) break;
+            }
+            if (x == maxX) break;
+        }
+        return false;
     }
 
     // Border shape: instead of filling whole 4x4x4 biome cells, the Caverns' membership is
