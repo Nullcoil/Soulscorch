@@ -10,6 +10,8 @@
     "SoulLavaIgniteMixin",
     "StructureCavernsMixin",
     "WorldGenRegionMixin",
+    "VillagerInspiredPricesMixin",
+    "ZombieVillagerAccessor",
     "cat.CatEntityMixin",
     "cat.CatInvoker",
     "livingentity.NetherBoatPassengerIsInLavaMixin",
@@ -29,6 +31,7 @@
   },
   "client": [
     "GhazeGazeMouseMixin",
+    "client.ClairvoyanceGlowMixin",
     "client.GameRendererMixin",
     "client.PostChainAccessor",
     "client.PostPassAccessor"

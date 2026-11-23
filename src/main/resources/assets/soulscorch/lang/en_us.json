@@ -65,11 +65,15 @@
   "death.attack.soulscorch.mania": "%1$s thought themselves to death",
   "death.attack.soulscorch.mania.player": "%1$s thought themselves to death whilst trying to escape %2$s",
 
+  "effect.soulscorch.asclepiosis": "Asclepiosis",
   "effect.soulscorch.cat_buff": "Cat Buff",
+  "effect.soulscorch.clairvoyance": "Clairvoyance",
   "effect.soulscorch.dog_buff": "Dog Buff",
+  "effect.soulscorch.inspired": "Inspired",
   "effect.soulscorch.mania": "Mania",
   "effect.soulscorch.soul_render": "Soul Render",
   "effect.soulscorch.soulscorch": "Soulscorched",
+  "effect.soulscorch.thanatosis": "Thanatosis",
   "effect.soulscorch.volatile": "Volatile",
   "effect.soulscorch.witnessed": "Witnessed",
 

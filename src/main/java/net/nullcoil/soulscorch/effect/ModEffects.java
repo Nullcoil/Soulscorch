@@ -16,6 +16,10 @@ public class ModEffects {
     public static final Holder<MobEffect> VOLATILE = registerEffect("volatile", new VolatileEffect(MobEffectCategory.HARMFUL, 0x4287f5));
     public static final Holder<MobEffect> MANIA = registerEffect("mania", new ManiaEffect(MobEffectCategory.HARMFUL, 0));
     public static final Holder<MobEffect> WITNESSED = registerEffect("witnessed", new WitnessedEffect(MobEffectCategory.HARMFUL, 0));
+    public static final Holder<MobEffect> CLAIRVOYANCE = registerEffect("clairvoyance", new ClairvoyanceEffect(MobEffectCategory.BENEFICIAL, 0x9B7BE0));
+    public static final Holder<MobEffect> ASCLEPIOSIS = registerEffect("asclepiosis", new AsclepiosisEffect(MobEffectCategory.BENEFICIAL, 0xE8C14A));
+    public static final Holder<MobEffect> INSPIRED = registerEffect("inspired", new InspiredEffect(MobEffectCategory.BENEFICIAL, 0x7FCC5A));
+    public static final Holder<MobEffect> THANATOSIS = registerEffect("thanatosis", new ThanatosisEffect(MobEffectCategory.HARMFUL, 0x4E5B3A));
 
     private static Holder<MobEffect> registerEffect(String string, MobEffect mobEffect) {
         return Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Soulscorch.id(string), mobEffect);
