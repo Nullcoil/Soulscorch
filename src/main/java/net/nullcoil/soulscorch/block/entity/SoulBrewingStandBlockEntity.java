@@ -26,7 +26,6 @@ import net.nullcoil.soulscorch.screen.SoulBrewingStandMenu;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer {
     private static final int INGREDIENT_SLOT = 3;
@@ -175,8 +174,11 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
             nonNullList.set(i, SoulPotionBrewing.mix(level, itemStack, (ItemStack)nonNullList.get(i)));
         }
 
+        // Most ingredients have no remainder (getCraftingRemainder is null). Look it up before
+        // shrinking: once the last one is used up the stack is air, which has none either.
+        var remainder = itemStack.getItem().getCraftingRemainder();
         itemStack.shrink(1);
-        ItemStack itemStack2 = Objects.requireNonNull(itemStack.getItem().getCraftingRemainder()).create();
+        ItemStack itemStack2 = remainder != null ? remainder.create() : ItemStack.EMPTY;
         if (!itemStack2.isEmpty()) {
             if (itemStack.isEmpty()) {
                 itemStack = itemStack2;
