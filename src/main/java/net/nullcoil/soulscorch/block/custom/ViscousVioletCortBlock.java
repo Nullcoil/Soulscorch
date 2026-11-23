@@ -9,6 +9,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +26,7 @@ import net.nullcoil.soulscorch.particles.ModParticles;
  * Viscous Violet Cort: a mushroom that hangs from the underside of Soul Stone and drips pale
  * yellow goop. Two stages: young (age 0, drops 1) and grown (age 1, drops 1 or 2).
  */
-public class ViscousVioletCortBlock extends VegetationBlock {
+public class ViscousVioletCortBlock extends VegetationBlock implements BonemealableBlock {
     public static final MapCodec<ViscousVioletCortBlock> CODEC = simpleCodec(ViscousVioletCortBlock::new);
     public static final int MAX_AGE = 1;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_1;
@@ -98,5 +99,21 @@ public class ViscousVioletCortBlock extends VegetationBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AGE);
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
+        return state.getValue(AGE) < MAX_AGE;
+    }
+
+    @Override
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
+        int i = Math.min(MAX_AGE, state.getValue(AGE) + 1);
+        level.setBlock(pos, state.setValue(AGE, i), 2);
     }
 }
