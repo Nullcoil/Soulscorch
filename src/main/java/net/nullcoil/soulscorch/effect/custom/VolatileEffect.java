@@ -2,49 +2,31 @@ package net.nullcoil.soulscorch.effect.custom;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.nullcoil.nidalib.effect.CountdownEffect;
 import net.nullcoil.soulscorch.event.AftermathTickHandler;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Set;
-
-public class VolatileEffect extends MobEffect {
-    /**
-     * Entities whose Volatile explosion is going off right now. A Totem of Undying clears all
-     * effects while saving you, which can call onEffectRemoved again from inside the blast;
-     * this stops that from setting off a second explosion (and restarting the aftermath watch).
-     */
-    private static final Set<LivingEntity> EXPLODING = Collections.newSetFromMap(new IdentityHashMap<>());
-
+/** Explodes when it runs out. */
+public class VolatileEffect extends CountdownEffect {
     public VolatileEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 
     @Override
-    public void onEffectRemoved(MobEffectInstance instance, LivingEntity entity) {
-        if (instance.getDuration() > 0 || instance.isInfiniteDuration()) return;
-        if (!(entity.level() instanceof ServerLevel level) || entity.isRemoved()) return;
-        if (!EXPLODING.add(entity)) return; // already exploding: this is the totem's effect clear
-
+    protected void onPlayerCountdownEnd(ServerLevel level, ServerPlayer player, int amplifier) {
         // Start watching before the blast, so a totem popped by the blast itself counts
-        if (entity instanceof ServerPlayer player) {
-            AftermathTickHandler.watch(player);
-        }
+        AftermathTickHandler.watch(player);
+    }
 
-        float radius = 2f + instance.getAmplifier() + 1;
-        try {
-            level.explode(
-                    null,
-                    entity.getX(), entity.getY(), entity.getZ(),
-                    radius, Level.ExplosionInteraction.MOB
-            );
-        } finally {
-            EXPLODING.remove(entity);
-        }
+    @Override
+    protected void onCountdownEnd(ServerLevel level, LivingEntity entity, int amplifier) {
+        float radius = 2f + amplifier + 1;
+        level.explode(
+                null,
+                entity.getX(), entity.getY(), entity.getZ(),
+                radius, Level.ExplosionInteraction.MOB
+        );
     }
 }

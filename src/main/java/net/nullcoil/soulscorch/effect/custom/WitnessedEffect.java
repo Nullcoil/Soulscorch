@@ -9,9 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -22,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.nullcoil.nidalib.effect.BuildupEffect;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.custom.PlayerStatueBlock;
@@ -36,9 +35,8 @@ import java.util.WeakHashMap;
 /**
  * Witnessed: being watched by a Ghaze turns you to stone.
  *
- * <p>Unlike other effects, its duration is a <b>build-up</b>, not a timer. While a Ghaze can
- * see you, it keeps adding to it ({@link #witness}), faster than it runs down, so it climbs.
- * Out of every Ghaze's sight it runs down like any effect, and wears off at 0.
+ * <p>A {@link BuildupEffect}: while a Ghaze can see you, it builds up ({@link #witness}), faster
+ * than it drains, so it climbs. Out of every Ghaze's sight it drains, and wears off at 0.
  *
  * <p>Only the <b>closest</b> Ghaze that can see you adds to it, so a crowd of them is no faster
  * than one. Looking back at that Ghaze makes it build faster ({@link #LOOKING_PER_TICK}).
@@ -48,7 +46,7 @@ import java.util.WeakHashMap;
  * {@link #PETRIFY_TICKS}. At that point you're petrified: you die, and a grayscale statue of
  * you ({@link PlayerStatueBlock}) is left where you stood.
  */
-public class WitnessedEffect extends MobEffect {
+public class WitnessedEffect extends BuildupEffect {
     /** Build-up at which you're fully petrified. */
     public static final int PETRIFY_TICKS = 240;
     /**
@@ -67,7 +65,7 @@ public class WitnessedEffect extends MobEffect {
     private static final double CREDIT_RANGE = GhazeEntity.WATCH_RADIUS;
 
     public WitnessedEffect(MobEffectCategory category, int color) {
-        super(category, color);
+        super(category, color, PETRIFY_TICKS);
     }
 
     /** This tick's closest Ghaze that can see each target. Server thread only; cleared every tick. */
@@ -77,7 +75,9 @@ public class WitnessedEffect extends MobEffect {
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (WATCHERS.isEmpty()) return;
-            WATCHERS.forEach(WitnessedEffect::buildUp);
+            WitnessedEffect effect = (WitnessedEffect) ModEffects.WITNESSED.value();
+            WATCHERS.forEach((target, ghaze) ->
+                    effect.buildUp(target, isLookingAt(target, ghaze) ? LOOKING_PER_TICK : WITNESS_PER_TICK));
             WATCHERS.clear();
         });
     }
@@ -92,19 +92,6 @@ public class WitnessedEffect extends MobEffect {
                 candidate.distanceToSqr(target) < current.distanceToSqr(target) ? candidate : current);
     }
 
-    private static void buildUp(LivingEntity target, GhazeEntity ghaze) {
-        if (!target.isAlive() || target.isRemoved()) return;
-
-        MobEffectInstance current = target.getEffect(ModEffects.WITNESSED);
-        int buildUp = current != null ? current.getDuration() : 0;
-        int add = isLookingAt(target, ghaze) ? LOOKING_PER_TICK : WITNESS_PER_TICK;
-        int next = Math.min(buildUp + add, PETRIFY_TICKS);
-        // No particles, but shows its icon so the player knows what's happening
-        target.addEffect(new MobEffectInstance(ModEffects.WITNESSED, next, 0, false, false, true));
-
-        crack(target, petrification(next));
-    }
-
     /** Whether {@code target} is looking at the Ghaze's head (within {@link #LOOKING_COS}). */
     private static boolean isLookingAt(LivingEntity target, GhazeEntity ghaze) {
         Vec3 toHead = ghaze.getHeadPosition(1.0F).subtract(target.getEyePosition());
@@ -112,12 +99,25 @@ public class WitnessedEffect extends MobEffect {
         return target.getViewVector(1.0F).dot(toHead.normalize()) > LOOKING_COS;
     }
 
+    /** How petrified a build-up is: 0 (fine) to 1 (stone). Kept for callers outside the effect. */
+    public static float petrification(int buildUp) {
+        return Math.min(1.0F, Math.max(0.0F, buildUp / (float) PETRIFY_TICKS));
+    }
+
+    // ---- BuildupEffect hooks ----
+
+    @Override
+    protected void onBuildupTick(ServerLevel level, LivingEntity entity, int amplifier, float progress) {
+        slow(entity, progress);
+    }
+
     /**
      * Stone cracking, heard by everyone nearby: rare and quiet at first, then louder, lower and
      * more frequent as you stiffen (on average every 2 seconds at first, every 4 ticks at the end).
      * Only while it's climbing, so silence means you got away.
      */
-    private static void crack(LivingEntity target, float stone) {
+    @Override
+    protected void onBuiltUp(LivingEntity target, float stone, int amplifier) {
         if (target.getRandom().nextFloat() >= 0.025F + 0.225F * stone) return;
         float volume = 0.2F + 0.8F * stone;
         float pitch = 1.2F - 0.5F * stone + (target.getRandom().nextFloat() - 0.5F) * 0.1F;
@@ -125,58 +125,12 @@ public class WitnessedEffect extends MobEffect {
                 ModSounds.WITNESSED_CRACK, SoundSource.PLAYERS, volume, pitch);
     }
 
-    /** How petrified a build-up is: 0 (fine) to 1 (stone). */
-    public static float petrification(int buildUp) {
-        return Math.min(1.0F, Math.max(0.0F, buildUp / (float) PETRIFY_TICKS));
-    }
-
-    @Override
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-        return true;
-    }
-
-    @Override
-    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
-        MobEffectInstance instance = entity.getEffect(ModEffects.WITNESSED);
-        if (instance == null) return true;
-
-        float stone = petrification(instance.getDuration());
-        slow(entity, stone);
-
-        if (stone >= 1.0F && !(entity instanceof Player player && (player.isCreative() || player.isSpectator()))) {
-            petrify(level, entity);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onEffectRemoved(MobEffectInstance instance, LivingEntity entity) {
-        slow(entity, 0.0F);
-    }
-
-    /**
-     * Scales movement speed by (1 - stone): unaffected at 0, frozen at 1. Jumping is left
-     * alone, so you can still hop up a block to break line of sight and get away.
-     */
-    private static void slow(LivingEntity entity, float stone) {
-        setModifier(entity.getAttribute(Attributes.MOVEMENT_SPEED), stone);
-    }
-
-    private static void setModifier(AttributeInstance attribute, float stone) {
-        if (attribute == null) return;
-        if (stone <= 0.0F) {
-            attribute.removeModifier(SLOW_ID);
-        } else {
-            attribute.addOrUpdateTransientModifier(new AttributeModifier(SLOW_ID, -stone, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-        }
-    }
-
     /**
      * Fully petrified: dies, and leaves a statue. The damage ignores armor and resistance, but
      * not a Totem of Undying, which saves you (and clears the effect, like any totem).
      */
-    private static void petrify(ServerLevel level, LivingEntity entity) {
+    @Override
+    protected void onPeak(ServerLevel level, LivingEntity entity, int amplifier) {
         GhazeEntity watcher = nearestWatcher(level, entity);
         DamageSource source = watcher != null
                 ? entity.damageSources().source(PETRIFIED, watcher)
@@ -188,6 +142,29 @@ public class WitnessedEffect extends MobEffect {
             placeStatue(level, player);
         }
     }
+
+    @Override
+    protected void onReset(LivingEntity entity) {
+        slow(entity, 0.0F);
+    }
+
+    // ---- Slowness ----
+
+    /**
+     * Scales movement speed by (1 - stone): unaffected at 0, frozen at 1. Jumping is left
+     * alone, so you can still hop up a block to break line of sight and get away.
+     */
+    private static void slow(LivingEntity entity, float stone) {
+        AttributeInstance attribute = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attribute == null) return;
+        if (stone <= 0.0F) {
+            attribute.removeModifier(SLOW_ID);
+        } else {
+            attribute.addOrUpdateTransientModifier(new AttributeModifier(SLOW_ID, -stone, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+    }
+
+    // ---- Statue ----
 
     /**
      * Leaves a statue of the player where they stood, facing the way they faced. Needs two
