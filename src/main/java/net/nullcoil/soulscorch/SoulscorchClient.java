@@ -85,6 +85,12 @@ public class SoulscorchClient implements ClientModInitializer {
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_HANG, SeepingDripParticle.HangProvider::new);
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_FALL, SeepingDripParticle.FallProvider::new);
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_LAND, SeepingDripParticle.LandProvider::new);
+        ParticleProviderRegistry.getInstance().register(ModParticles.CORT_DRIP_HANG, sprites ->
+                new SeepingDripParticle.HangProvider(sprites, ModParticles.CORT_DRIP_FALL, SeepingDripParticle.CORT));
+        ParticleProviderRegistry.getInstance().register(ModParticles.CORT_DRIP_FALL, sprites ->
+                new SeepingDripParticle.FallProvider(sprites, ModParticles.CORT_DRIP_LAND, SeepingDripParticle.CORT));
+        ParticleProviderRegistry.getInstance().register(ModParticles.CORT_DRIP_LAND, sprites ->
+                new SeepingDripParticle.LandProvider(sprites, SeepingDripParticle.CORT));
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_SALLOW_LEAVES, FallingLeavesParticle.CherryProvider::new);
 
         ModelLayerRegistry.registerModelLayer(layer("boat/sallow"), BoatModel::createBoatModel);

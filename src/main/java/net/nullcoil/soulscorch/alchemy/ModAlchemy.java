@@ -10,6 +10,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.item.ModItems;
@@ -60,6 +61,11 @@ public class ModAlchemy {
                     Items.GLOWSTONE_DUST,
                     SOUL_RENDERING_STRONG
             );
+        });
+
+        // Soul Brewing Stand only: Volatile Extract in the bottle slots
+        SoulPotionBrewingBuilder.BUILD.register(builder -> {
+            builder.registerItemRecipe(ModItems.VOLATILE_EXTRACT, Ingredient.of(ModItems.VISCOUS_VIOLET_CORT), PECULIAR);
         });
     }
 }

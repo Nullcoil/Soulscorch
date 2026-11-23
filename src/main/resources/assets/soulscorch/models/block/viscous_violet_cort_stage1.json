@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "soulscorch:block/viscous_violet_cort_stage1"
+  }
+}

@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.FireChargeItem;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Items;
@@ -94,7 +95,7 @@ public class ModItems {
         GHAZE_SPAWN_EGG = registerItem("ghaze_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntities.GHAZE));
         GHAZE_TEAR = registerItem("ghaze_tear", Item::new, new Item.Properties());
         VISCOUS_VIOLET_CORT = registerItem("viscous_violet_cort", ModBlocks.VISCOUS_VIOLET_CORT,
-                ViscousVioletCortItem::new, new Item.Properties());
+                BlockItem::new, new Item.Properties());
     }
 
     // 2. The completed helper method
@@ -153,6 +154,7 @@ public class ModItems {
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries -> {
             entries.insertAfter(Items.GHAST_TEAR, GHAZE_TEAR);
+            entries.insertAfter(Items.NETHER_WART, VISCOUS_VIOLET_CORT);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.REDSTONE_BLOCKS).register(entries -> {
             entries.insertBefore(Items.COPPER_BULB.waxed().unaffected(), ModBlocks.IRON_BULB_BLOCK);
@@ -162,6 +164,7 @@ public class ModItems {
             entries.insertAfter(Items.MAGMA_BLOCK, ModBlocks.SOUL_SLAG_BLOCK);
             entries.insertAfter(Items.FLOWERING_AZALEA_LEAVES, SeepingBlocks.SEEPING_LEAVES);
             entries.insertAfter(Items.PALE_OAK_SAPLING, ModBlocks.SEEPING_SALLOW_SAPLING);
+            entries.insertAfter(Items.WARPED_FUNGUS, VISCOUS_VIOLET_CORT);
         });
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.SPAWN_EGGS).register(entries -> {
             entries.accept(SOULLESS_SPAWN_EGG);

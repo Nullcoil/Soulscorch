@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "soulscorch:block/viscous_violet_cort_stage0"
+    },
+    "age=1": {
+      "model": "soulscorch:block/viscous_violet_cort_stage1"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "soulscorch:viscous_violet_cort",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "soulscorch:viscous_violet_cort",
+              "properties": {
+                "age": "1"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "soulscorch:viscous_violet_cort",
+          "conditions": [
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:block_state_property",
+                "block": "soulscorch:viscous_violet_cort",
+                "properties": {
+                  "age": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:explosion_decay"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "soulscorch:blocks/viscous_violet_cort"
+}

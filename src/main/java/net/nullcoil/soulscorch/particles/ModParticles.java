@@ -11,6 +11,11 @@ public class ModParticles {
     public static SimpleParticleType SEEPING_DRIP_FALL = register("seeping_drip_fall");
     public static SimpleParticleType SEEPING_DRIP_LAND = register("seeping_drip_land");
 
+    // Viscous Violet Cort goop
+    public static final SimpleParticleType CORT_DRIP_HANG = register("cort_drip_hang");
+    public static final SimpleParticleType CORT_DRIP_FALL = register("cort_drip_fall");
+    public static final SimpleParticleType CORT_DRIP_LAND = register("cort_drip_land");
+
     public static final SimpleParticleType SEEPING_SALLOW_LEAVES = register("seeping_sallow_leaves");
 
     private static SimpleParticleType register(String name) {
