@@ -55,6 +55,7 @@ public class ModItems {
     public static final Item VOLATILE_EXTRACT;
     public static final Item GHAZE_SPAWN_EGG;
     public static final Item GHAZE_TEAR;
+    public static final Item VISCOUS_VIOLET_CORT;
 
     static {
         BLAZT_POWDER = registerItem("blazt_powder", Item::new, new Item.Properties());
@@ -92,6 +93,8 @@ public class ModItems {
                 ModFoods.VOLATILE_EXTRACT, ModConsumables.VOLATILE_EXTRACT).usingConvertsTo(Items.GLASS_BOTTLE).stacksTo(16));
         GHAZE_SPAWN_EGG = registerItem("ghaze_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntities.GHAZE));
         GHAZE_TEAR = registerItem("ghaze_tear", Item::new, new Item.Properties());
+        VISCOUS_VIOLET_CORT = registerItem("viscous_violet_cort", ModBlocks.VISCOUS_VIOLET_CORT,
+                ViscousVioletCortItem::new, new Item.Properties());
     }
 
     // 2. The completed helper method

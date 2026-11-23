@@ -13,12 +13,12 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.nullcoil.soulscorch.alchemy.SoulPotionBrewing;
 import net.nullcoil.soulscorch.block.ModBlockEntities;
 import net.nullcoil.soulscorch.block.custom.SoulBrewingStandBlock;
 import net.nullcoil.soulscorch.item.ModItems;
@@ -101,7 +101,7 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
             setChanged(level, blockPos, blockState);
         }
 
-        boolean bl = isBrewable(level.potionBrewing(), brewingStandBlockEntity.items);
+        boolean bl = isBrewable(level, brewingStandBlockEntity.items);
         boolean bl2 = brewingStandBlockEntity.brewTime > 0;
         ItemStack itemStack2 = (ItemStack)brewingStandBlockEntity.items.get(3);
         if (bl2) {
@@ -150,16 +150,17 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
         return bls;
     }
 
-    private static boolean isBrewable(PotionBrewing potionBrewing, NonNullList<ItemStack> nonNullList) {
+    /** Soul-only recipes first, then the shared ones a vanilla stand uses ({@link SoulPotionBrewing}). */
+    private static boolean isBrewable(Level level, NonNullList<ItemStack> nonNullList) {
         ItemStack itemStack = (ItemStack)nonNullList.get(3);
         if (itemStack.isEmpty()) {
             return false;
-        } else if (!potionBrewing.isIngredient(itemStack)) {
+        } else if (!SoulPotionBrewing.isIngredient(level, itemStack)) {
             return false;
         } else {
             for(int i = 0; i < 3; ++i) {
                 ItemStack itemStack2 = (ItemStack)nonNullList.get(i);
-                if (!itemStack2.isEmpty() && potionBrewing.hasMix(itemStack2, itemStack)) {
+                if (!itemStack2.isEmpty() && SoulPotionBrewing.hasMix(level, itemStack2, itemStack)) {
                     return true;
                 }
             }
@@ -170,10 +171,8 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
 
     private static void doBrew(Level level, BlockPos blockPos, NonNullList<ItemStack> nonNullList) {
         ItemStack itemStack = (ItemStack)nonNullList.get(3);
-        PotionBrewing potionBrewing = level.potionBrewing();
-
         for(int i = 0; i < 3; ++i) {
-            nonNullList.set(i, potionBrewing.mix(itemStack, (ItemStack)nonNullList.get(i)));
+            nonNullList.set(i, SoulPotionBrewing.mix(level, itemStack, (ItemStack)nonNullList.get(i)));
         }
 
         itemStack.shrink(1);
@@ -211,12 +210,11 @@ public class SoulBrewingStandBlockEntity extends BaseContainerBlockEntity implem
 
     public boolean canPlaceItem(int i, ItemStack itemStack) {
         if (i == 3) {
-            PotionBrewing potionBrewing = this.level != null ? this.level.potionBrewing() : PotionBrewing.EMPTY;
-            return potionBrewing.isIngredient(itemStack);
+            return this.level != null && SoulPotionBrewing.isIngredient(this.level, itemStack);
         } else if (i == 4) {
             return itemStack.is(ModItems.BLAZT_POWDER);
         } else {
-            return (itemStack.is(Items.POTION) || itemStack.is(Items.SPLASH_POTION) || itemStack.is(Items.LINGERING_POTION) || itemStack.is(Items.GLASS_BOTTLE)) && this.getItem(i).isEmpty();
+            return this.level != null && SoulPotionBrewing.isBottleInput(this.level, itemStack) && this.getItem(i).isEmpty();
         }
     }
 

@@ -14,10 +14,10 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.Level;
+import net.nullcoil.soulscorch.alchemy.SoulPotionBrewing;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.item.ModItems;
 
@@ -39,6 +39,7 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
     private final Container brewingStand;
     private final ContainerData brewingStandData;
     private final Slot ingredientSlot;
+    private final Slot potionSlot;
 
     public SoulBrewingStandMenu(int i, Inventory inventory) {
         this(i, inventory, new SimpleContainer(5), new SimpleContainerData(2));
@@ -50,11 +51,11 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
         checkContainerDataCount(containerData, 2);
         this.brewingStand = container;
         this.brewingStandData = containerData;
-        PotionBrewing potionBrewing = inventory.player.level().potionBrewing();
-        this.addSlot(new PotionSlot(container, 0, 56, 51));
-        this.addSlot(new PotionSlot(container, 1, 79, 58));
-        this.addSlot(new PotionSlot(container, 2, 102, 51));
-        this.ingredientSlot = this.addSlot(new IngredientsSlot(potionBrewing, container, 3, 79, 17));
+        Level level = inventory.player.level();
+        this.potionSlot = this.addSlot(new PotionSlot(level, container, 0, 56, 51));
+        this.addSlot(new PotionSlot(level, container, 1, 79, 58));
+        this.addSlot(new PotionSlot(level, container, 2, 102, 51));
+        this.ingredientSlot = this.addSlot(new IngredientsSlot(level, container, 3, 79, 17));
         this.addSlot(new FuelSlot(container, 4, 17, 17));
         this.addDataSlots(containerData);
         this.addStandardInventorySlots(inventory, 8, 84);
@@ -79,7 +80,7 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemStack2, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (PotionSlot.mayPlaceItem(itemStack)) {
+                } else if (this.potionSlot.mayPlace(itemStack)) {
                     if (!this.moveItemStackTo(itemStack2, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -127,12 +128,16 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
     }
 
     static class PotionSlot extends Slot {
-        public PotionSlot(Container container, int i, int j, int k) {
+        private final Level level;
+
+        public PotionSlot(Level level, Container container, int i, int j, int k) {
             super(container, i, j, k);
+            this.level = level;
         }
 
+        /** Potions, glass bottles, and the Soul-only bottle inputs like Volatile Extract. */
         public boolean mayPlace(ItemStack itemStack) {
-            return mayPlaceItem(itemStack);
+            return SoulPotionBrewing.isBottleInput(this.level, itemStack);
         }
 
         public int getMaxStackSize() {
@@ -148,9 +153,6 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
             super.onTake(player, itemStack);
         }
 
-        public static boolean mayPlaceItem(ItemStack itemStack) {
-            return itemStack.is(Items.POTION) || itemStack.is(Items.SPLASH_POTION) || itemStack.is(Items.LINGERING_POTION) || itemStack.is(Items.GLASS_BOTTLE);
-        }
 
         public Identifier getNoItemIcon() {
             return SoulBrewingStandMenu.EMPTY_SLOT_POTION;
@@ -158,15 +160,15 @@ public class SoulBrewingStandMenu extends AbstractContainerMenu {
     }
 
     static class IngredientsSlot extends Slot {
-        private final PotionBrewing potionBrewing;
+        private final Level level;
 
-        public IngredientsSlot(PotionBrewing potionBrewing, Container container, int i, int j, int k) {
+        public IngredientsSlot(Level level, Container container, int i, int j, int k) {
             super(container, i, j, k);
-            this.potionBrewing = potionBrewing;
+            this.level = level;
         }
 
         public boolean mayPlace(ItemStack itemStack) {
-            return this.potionBrewing.isIngredient(itemStack);
+            return SoulPotionBrewing.isIngredient(this.level, itemStack);
         }
     }
 

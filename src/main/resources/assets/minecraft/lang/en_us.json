@@ -3,6 +3,11 @@
   "subtitles.block.copper_bulb.turn_on": "Bulb turns on",
   "advancements.adventure.avoid_vibration.description": "Sneak near a Sculk Sensor, Warden, or other listening block to prevent detection",
 
+  "item.minecraft.tipped_arrow.effect.peculiar": "Tipped Arrow",
+  "item.minecraft.potion.effect.peculiar": "Peculiar Potion",
+  "item.minecraft.splash_potion.effect.peculiar": "Peculiar Splash Potion",
+  "item.minecraft.lingering_potion.effect.peculiar": "Peculiar Lingering Potion",
+
   "item.minecraft.tipped_arrow.effect.soul_rendering": "Tipped Arrow of Soul Rendering",
   "item.minecraft.potion.effect.soul_rendering": "Potion of Soul Rendering",
   "item.minecraft.splash_potion.effect.soul_rendering": "Splash Potion of Soul Rendering",

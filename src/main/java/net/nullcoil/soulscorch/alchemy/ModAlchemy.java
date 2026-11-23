@@ -15,6 +15,11 @@ import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.item.ModItems;
 
 public class ModAlchemy {
+    /**
+     * The Soul Brewing Stand's base potion, its Awkward Potion: no effect of its own; every
+     * Soul-only potion starts from it ({@link SoulPotionBrewingBuilder#registerRecipes}).
+     */
+    public static final Holder<Potion> PECULIAR;
     public static final Holder<Potion> SOUL_RENDERING;
     public static final Holder<Potion> SOUL_RENDERING_STRONG;
 
@@ -23,6 +28,7 @@ public class ModAlchemy {
     }
 
     static {
+        PECULIAR = register("peculiar", new Potion("peculiar"));
         SOUL_RENDERING = register("soul_rendering",
                 new Potion(
                         "soul_rendering",

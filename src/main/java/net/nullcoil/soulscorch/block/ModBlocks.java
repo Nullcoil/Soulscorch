@@ -29,7 +29,9 @@ public class ModBlocks {
     public static final Block SOUL_SLAG_BLOCK;
     public static final Block GHOST_PEPPER_SHRUB;
     public static final Block SEEPING_SALLOW_SAPLING;
+
     public static final Block SOUL_STONE;
+    public static final Block VISCOUS_VIOLET_CORT;
 
     static {
         SOUL_BREWING_STAND = registerBlock(
@@ -93,7 +95,7 @@ public class ModBlocks {
                 "ghost_pepper_shrub",
                 GhostPepperShrubBlock::new,
                 BlockBehaviour.Properties.of()
-                        .mapColor(MapColor.COLOR_RED)
+                        .mapColor(MapColor.COLOR_GRAY)
                         .noCollision()
                         .instabreak()
                         .randomTicks()
@@ -124,6 +126,20 @@ public class ModBlocks {
                         .instrument(NoteBlockInstrument.BASEDRUM)
                         .requiresCorrectToolForDrops()
                         .strength(1.5F, 6.0F)
+        );
+
+        VISCOUS_VIOLET_CORT = registerBlock(
+                "viscous_violet_cort",
+                ViscousVioletCortBlock::new,
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_PURPLE)
+                        .noCollision()
+                        .instabreak()
+                        .randomTicks()
+                        .sound(SoundType.NETHER_WART)
+                        .pushReaction(PushReaction.DESTROY)
+                        .isRedstoneConductor(Blocks::never),
+                false
         );
     }
 
