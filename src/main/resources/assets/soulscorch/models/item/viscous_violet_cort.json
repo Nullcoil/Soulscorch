@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "soulscorch:block/viscous_violet_cort"
+    "layer0": "soulscorch:block/viscous_violet_cort_stage0"
   }
 }
