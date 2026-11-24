@@ -63,6 +63,9 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
      *  so a quick see-lose-see never leaves two loops playing at once. */
     private int searchLoopId;
 
+    /** Testing toggle: whether it bursts into soul flames while agitated (see {@link #isOnFire()}). */
+    public static final boolean SOUL_FIRE_WHEN_AGITATED = false;
+
     /** Height of the head's pivot (its center) above the Ghaze's feet: 15 pixels. */
     public static final double HEAD_HEIGHT = 15.0 / 16.0;
     /** How far it watches: loses interest in a target farther away than this many blocks,
@@ -212,10 +215,11 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         return this.getPosition(partialTick).add(0.0, HEAD_HEIGHT, 0.0);
     }
 
-    /** Burns while agitated, like a blaze while it attacks (fire-immune, so it's only for show). */
+    /** Burns while agitated, like a blaze while it attacks (fire-immune, so it's only for show).
+     *  Testing toggle: set {@link #SOUL_FIRE_WHEN_AGITATED} to false to turn the flames off. */
     @Override
     public boolean isOnFire() {
-        return this.isAgitated();
+        return SOUL_FIRE_WHEN_AGITATED && this.isAgitated();
     }
 
     /**
