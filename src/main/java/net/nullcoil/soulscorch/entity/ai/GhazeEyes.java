@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -12,7 +11,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.block.ModBlocks;
+import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.client.soulless.SoullessActivity;
+import net.nullcoil.soulscorch.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -26,8 +27,8 @@ import java.util.List;
  *
  * <ul>
  *   <li><b>Calm:</b> each eye glances at things of interest on its own side that it has a clear
- *       view of (Viscous Violet Corts, Hytodoms, skeletons, Soulless and Restless that are
- *       awake, and now and then a player; never a Heedless), or just looks around.</li>
+ *       view of (Viscous Violet Corts, and any entity: Soulless and Restless only while
+ *       they're awake, players only now and then, never a Heedless), or just looks around.</li>
  *   <li><b>Watching:</b> every eye follows its target.</li>
  *   <li><b>Searching:</b> every eye darts around.</li>
  * </ul>
@@ -173,13 +174,14 @@ public class GhazeEyes {
         eye.hold = searching ? Mth.nextInt(random, 3, 10) : Mth.nextInt(random, 8, 35);
     }
 
-    /** What catches its eye. Corts are found separately (see scanCorts). */
+    /** What catches its eye: any entity, except the Heedless, and Soulless and Restless only
+     *  while they're awake. Corts are found separately (see scanCorts). */
     private static boolean interesting(Entity entity) {
-        if (!entity.isAlive() || entity.isInvisible() || entity.isSpectator()) return false;
-        if (entity instanceof HytodomEntity || entity instanceof AbstractSkeleton || entity instanceof Player) return true;
+        if (!entity.isAlive()) return false;
+        if (entity.is(ModTags.Entities.UNINTERESTING)) return false;
         if (entity instanceof SoullessEntity soulless) return soulless.getActivity() != SoullessActivity.PASSIVE;
         if (entity instanceof RestlessEntity restless) return restless.getAwakened();
-        return false; // everything else, including the Heedless
+        return true;
     }
 
     /** Whether it's still worth looking at: alive, in range, and still in view of this eye. */

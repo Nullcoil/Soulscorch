@@ -67,6 +67,7 @@ public class ModTags {
         public static final TagKey<EntityType<?>> PHOBIAS_OF_PIGLINS = createTag("phobias_of_piglins");
         public static final TagKey<EntityType<?>> SEEPING_SALLOW_BOATS = createTag("seeping_sallow_boats");
         public static final TagKey<EntityType<?>> NETHER_BOATS = createTag("nether_boats");
+        public static final TagKey<EntityType<?>> UNINTERESTING = createTag("uninteresting");
 
         private static TagKey<EntityType<?>> createTag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE, Soulscorch.id(name));
