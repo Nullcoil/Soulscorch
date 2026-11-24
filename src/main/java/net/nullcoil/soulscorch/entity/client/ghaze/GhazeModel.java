@@ -8,10 +8,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.monster.ghast.GhastModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.Soulscorch;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class GhazeModel extends EntityModel<GhazeRenderState> {
 	public static final ModelLayerLocation GHAZE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "ghaze"), "main");
@@ -29,8 +26,6 @@ public class GhazeModel extends EntityModel<GhazeRenderState> {
 	/** Most a tentacle leans while spinning, in radians (about 57 degrees). */
 	private static final float MAX_LEAN = 1.0F;
 
-	/** How far a pupil slides across its face from the center, in pixels (the face is 8 wide). */
-	private static final float PUPIL_RANGE = 2.0F;
 	private static final float HALF_PI = (float) (Math.PI / 2.0);
 
 	/** Turns (yaw). */
@@ -143,47 +138,11 @@ public class GhazeModel extends EntityModel<GhazeRenderState> {
 		}
 	}
 
-	/**
-	 * Each eye moves on its own. While it can see its target, every eye looks toward them from
-	 * its own side (the ones facing away roll to the edge nearest them). Calm, they drift
-	 * around lazily, each in its own direction; searching, they dart about.
-	 */
+	/** Each eye's pupil slides across its face; where it looks is worked out in GhazeEyes. */
 	private void setupEyes(GhazeRenderState state) {
-		Vec3 look = state.lookTarget;
-		if (look != null) {
-			// The target, seen from inside the skull. The renderer turns the model by
-			// 180 - bodyRot around Y and flips x and y (scale -1, -1, 1), so undo that, then
-			// undo the head's turn and the skull's tilt, exactly as the parts are posed.
-			Vector3f v = new Vector3f((float) look.x, (float) look.y, (float) look.z);
-			new Quaternionf().rotationY(-(180.0F - state.bodyRot) * Mth.DEG_TO_RAD).transform(v);
-			v.set(-v.x, -v.y, v.z);
-			partRotation(this.head).conjugate().transform(v);
-			partRotation(this.skull).conjugate().transform(v);
-
-			for (int i = 0; i < this.eyes.length; i++) {
-				// Into this eye's socket: it looks out along -z
-				Vector3f e = new Quaternionf().rotationY(-i * HALF_PI).transform(new Vector3f(v));
-				float side = (float) Mth.atan2(e.x, -e.z) / HALF_PI;
-				float up = (float) Mth.atan2(e.y, Math.sqrt(e.x * e.x + e.z * e.z)) / HALF_PI;
-				this.eyes[i].x = Mth.clamp(side, -1.0F, 1.0F) * PUPIL_RANGE;
-				this.eyes[i].y = Mth.clamp(up, -1.0F, 1.0F) * PUPIL_RANGE;
-			}
-		} else {
-			float speed = state.searching ? 0.35F : 0.05F;
-			float reach = state.searching ? 1.0F : 0.6F;
-			float t = state.ageInTicks * speed + state.windSeed;
-			for (int i = 0; i < this.eyes.length; i++) {
-				float s = i * 2.39F; // out of step with each other
-				float side = 0.7F * Mth.sin(t + s) + 0.3F * Mth.sin(t * 2.3F + s * 1.7F);
-				float up = 0.6F * Mth.sin(t * 0.8F + s * 1.3F + 1.0F) + 0.4F * Mth.sin(t * 1.9F + s * 0.7F);
-				this.eyes[i].x = side * reach * PUPIL_RANGE;
-				this.eyes[i].y = up * reach * PUPIL_RANGE;
-			}
+		for (int i = 0; i < this.eyes.length; i++) {
+			this.eyes[i].x = state.pupilX[i];
+			this.eyes[i].y = state.pupilY[i];
 		}
-	}
-
-	/** A part's rotation, built the same way ModelPart applies it. */
-	private static Quaternionf partRotation(ModelPart part) {
-		return new Quaternionf().rotationZYX(part.zRot, part.yRot, part.xRot);
 	}
 }

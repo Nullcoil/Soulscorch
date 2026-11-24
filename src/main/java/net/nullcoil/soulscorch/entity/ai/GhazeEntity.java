@@ -138,6 +138,8 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     public float tiltZ;
     public float tiltZO;
     private boolean headStarted;
+    /** Client only: where each of its four eyes is looking. */
+    public final GhazeEyes eyes = new GhazeEyes();
 
     public GhazeEntity(EntityType<? extends GhazeEntity> type, Level level) {
         super(type, level);
@@ -261,6 +263,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         } else {
             this.tickTentacles();
             this.tickHead();
+            this.eyes.tick(this);
 
             // Searching started (or the Ghaze came into range already searching): start the loop.
             // The loop stops itself the moment it sees its target again or calms down.

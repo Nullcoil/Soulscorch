@@ -1,7 +1,6 @@
 package net.nullcoil.soulscorch.entity.client.ghaze;
 
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.world.phys.Vec3;
 
 public class GhazeRenderState extends LivingEntityRenderState {
     public boolean isAgitated = false;
@@ -20,8 +19,7 @@ public class GhazeRenderState extends LivingEntityRenderState {
     /** The skull's tilt (radians) around its x and z axes, toward whichever side faces the target. */
     public float tiltX;
     public float tiltZ;
-    /** From the center of its head to its target's eyes (world space), while it can see them; else null. */
-    public Vec3 lookTarget;
-    /** Hunting a target it can't see: the eyes dart around. */
-    public boolean searching;
+    /** Each eye's pupil offset on its face, in pixels (see GhazeEyes). */
+    public final float[] pupilX = new float[4];
+    public final float[] pupilY = new float[4];
 }

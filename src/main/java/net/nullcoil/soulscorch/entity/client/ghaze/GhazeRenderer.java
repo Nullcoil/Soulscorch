@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
+import net.nullcoil.soulscorch.entity.ai.GhazeEyes;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
 import org.jspecify.annotations.NonNull;
@@ -39,11 +39,11 @@ public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, Gh
         state.tiltX = Mth.lerp(partialTick, entity.tiltXO, entity.tiltX);
         state.tiltZ = Mth.lerp(partialTick, entity.tiltZO, entity.tiltZ);
 
-        state.searching = entity.isSearching();
-        Entity target = entity.isAgitated() && !state.searching ? entity.level().getEntity(entity.getGazeTargetId()) : null;
-        state.lookTarget = target != null
-                ? target.getEyePosition(partialTick).subtract(entity.getHeadPosition(partialTick))
-                : null;
+        GhazeEyes eyes = entity.eyes;
+        for (int i = 0; i < GhazeEyes.EYES; i++) {
+            state.pupilX[i] = Mth.lerp(partialTick, eyes.pupilXO[i], eyes.pupilX[i]);
+            state.pupilY[i] = Mth.lerp(partialTick, eyes.pupilYO[i], eyes.pupilY[i]);
+        }
     }
 
     @Override
