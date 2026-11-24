@@ -167,7 +167,13 @@
   },
   "ghaze_search": {
     "subtitle": "sounds.soulscorch.ghaze_search",
-    "sounds": ["soulscorch:ghaze_search"]
+    "sounds": ["soulscorch:ethel_spin"]
+  },
+  "ghaze_search_loop": {
+    "subtitle": "sounds.soulscorch.ghaze_search",
+    "sounds": [
+      "soulscorch:ghaze_search"
+    ]
   },
   "ghaze_hurt": {
     "subtitle": "sounds.soulscorch.ghaze_hurt",

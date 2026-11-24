@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
 import org.jspecify.annotations.NonNull;
@@ -31,6 +32,18 @@ public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, Gh
         state.tentacleSwing = entity.tentacleSwing;
         state.wiggle = entity.wiggle;
         state.windSeed = (entity.getId() * 0.618034F) % 1.0F * 100.0F;
+
+        // The head's own turn and tilt (GhazeEntity.tickHead), instead of the usual look
+        float headYaw = Mth.rotLerp(partialTick, entity.headYawO, entity.headYaw);
+        state.yRot = Mth.wrapDegrees(headYaw - state.bodyRot);
+        state.tiltX = Mth.lerp(partialTick, entity.tiltXO, entity.tiltX);
+        state.tiltZ = Mth.lerp(partialTick, entity.tiltZO, entity.tiltZ);
+
+        state.searching = entity.isSearching();
+        Entity target = entity.isAgitated() && !state.searching ? entity.level().getEntity(entity.getGazeTargetId()) : null;
+        state.lookTarget = target != null
+                ? target.getEyePosition(partialTick).subtract(entity.getHeadPosition(partialTick))
+                : null;
     }
 
     @Override

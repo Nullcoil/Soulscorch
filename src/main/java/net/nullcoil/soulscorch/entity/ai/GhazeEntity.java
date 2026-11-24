@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -36,6 +37,7 @@ import net.nullcoil.soulscorch.sound.ModSounds;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.function.Consumer;
 import java.util.List;
 
 public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireTyped {
@@ -45,6 +47,21 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     /** Entity id of who it's glaring at (-1: nobody). Synced so that player's camera gets pulled. */
     private static final EntityDataAccessor<Integer> DATA_GAZE_TARGET =
             SynchedEntityData.defineId(GhazeEntity.class, EntityDataSerializers.INT);
+
+    /** Hunting a target it can't see. Synced so the client can loop the search sound. */
+    private static final EntityDataAccessor<Boolean> DATA_SEARCHING =
+            SynchedEntityData.defineId(GhazeEntity.class, EntityDataSerializers.BOOLEAN);
+
+    /**
+     * Client only: starts the looping search sound for a Ghaze. Set by SoulscorchClient, so
+     * this class never touches client-only sound classes (which don't exist on a server).
+     */
+    public static Consumer<GhazeEntity> searchLoopStarter = ghaze -> {};
+    /** Client only: whether it was searching last tick, to start the loop when that begins. */
+    private boolean wasSearching;
+    /** Client only: goes up each time a search starts. A loop stops once it no longer matches,
+     *  so a quick see-lose-see never leaves two loops playing at once. */
+    private int searchLoopId;
 
     /** Height of the head's pivot (its center) above the Ghaze's feet: 15 pixels. */
     public static final double HEAD_HEIGHT = 15.0 / 16.0;
@@ -101,6 +118,24 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     private float spinDirection = 1.0F;
     private int spinCooldown = SPIN_COOLDOWN_MIN;
 
+    // ---- Head and eyes (client only; see tickHead) ----
+    /** How far to either side of straight ahead each eye sees, in degrees, up and down too.
+     *  The head only turns or tilts once the target is past this for every eye. */
+    public static final float EYE_FIELD_OF_VIEW = 30.0F;
+    /** Fastest the head turns, degrees per tick, and tilts, radians per tick. */
+    private static final float HEAD_TURN_SPEED = 12.0F;
+    private static final float HEAD_TILT_SPEED = 0.15F;
+
+    /** Which way the head faces (world yaw, degrees). Its four eyes face this plus 0, 90, 180 and 270. */
+    public float headYaw;
+    public float headYawO;
+    /** The skull's tilt around its own x and z axes (radians), toward the side the target is on. */
+    public float tiltX;
+    public float tiltXO;
+    public float tiltZ;
+    public float tiltZO;
+    private boolean headStarted;
+
     public GhazeEntity(EntityType<? extends GhazeEntity> type, Level level) {
         super(type, level);
         // Floats around like a ghast (pushed toward where it wants to go every few ticks)
@@ -121,6 +156,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         super.defineSynchedData(builder);
         builder.define(DATA_AGITATED, false);
         builder.define(DATA_GAZE_TARGET, -1);
+        builder.define(DATA_SEARCHING, false);
     }
 
     @Override
@@ -154,6 +190,16 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
 
     public boolean isAgitated() {
         return this.entityData.get(DATA_AGITATED);
+    }
+
+    /** Hunting a target it can't see right now (the search loop plays meanwhile). */
+    public boolean isSearching() {
+        return this.entityData.get(DATA_SEARCHING);
+    }
+
+    /** Client only: which search the current loop belongs to (see {@link #searchLoopId}). */
+    public int getSearchLoopId() {
+        return this.searchLoopId;
     }
 
     /** Entity id of who it's glaring at, or -1. */
@@ -205,10 +251,21 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
             if (sees) {
                 WitnessedEffect.witness(target, this);
             }
-            this.tickSightCues(agitated, sees);
+            this.tickSightCues(sees);
+            this.entityData.set(DATA_SEARCHING, agitated && !sees);
 
         } else {
             this.tickTentacles();
+            this.tickHead();
+
+            // Searching started (or the Ghaze came into range already searching): start the loop.
+            // The loop stops itself the moment it sees its target again or calms down.
+            boolean searching = this.isSearching();
+            if (searching && !this.wasSearching) {
+                this.searchLoopId++;
+                searchLoopStarter.accept(this);
+            }
+            this.wasSearching = searching;
         }
     }
 
@@ -273,6 +330,60 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         this.agitation += ((agitated ? 1.0F : 0.0F) - this.agitation) * AGITATION_FADE;
     }
 
+    /**
+     * Four eyes, one per side, so it never has to face its target head-on: agitated, the head
+     * turns only until the eye nearest them has them within {@link #EYE_FIELD_OF_VIEW}, and
+     * tilts only as far as that eye needs to see above or below. The tilt tips the head toward
+     * whichever side the target is on, not just its front. Calm, it looks where it's going like
+     * before, front eye leading.
+     *
+     * <p>Only for show: nothing on the server depends on which way the head faces (line of
+     * sight, Witnessed and the camera pull all go from the head's center).
+     */
+    private void tickHead() {
+        if (!this.headStarted) {
+            this.headYaw = this.getYHeadRot();
+            this.headStarted = true;
+        }
+        this.headYawO = this.headYaw;
+        this.tiltXO = this.tiltX;
+        this.tiltZO = this.tiltZ;
+
+        Entity target = this.isAgitated() ? this.level().getEntity(this.getGazeTargetId()) : null;
+        float wantTiltX;
+        float wantTiltZ;
+        if (target != null) {
+            Vec3 to = target.getEyePosition().subtract(this.getHeadPosition(1.0F));
+            double horizontal = Math.sqrt(to.x * to.x + to.z * to.z);
+            float targetYaw = (float) (Mth.atan2(to.z, to.x) * Mth.RAD_TO_DEG) - 90.0F;
+            float targetPitch = (float) (-Mth.atan2(to.y, horizontal) * Mth.RAD_TO_DEG); // positive: below
+
+            // How far they are from the nearest eye (eyes are 90 degrees apart, so at most 45)
+            float offset = Mth.wrapDegrees(targetYaw - this.headYaw);
+            float fromEye = offset - 90.0F * Math.round(offset / 90.0F);
+            if (Math.abs(fromEye) > EYE_FIELD_OF_VIEW) {
+                float turn = fromEye - Math.copySign(EYE_FIELD_OF_VIEW, fromEye);
+                this.headYaw = Mth.wrapDegrees(this.headYaw + Mth.clamp(turn, -HEAD_TURN_SPEED, HEAD_TURN_SPEED));
+            }
+
+            // Tip the head toward them, only past what the eye can see up or down. In the
+            // head's frame, a target at relative yaw b lies along (-sin b, 0, -cos b): tilting
+            // around x tips the front and back eyes, around z the side ones.
+            float tilt = Math.copySign(Math.max(0.0F, Math.abs(targetPitch) - EYE_FIELD_OF_VIEW), targetPitch) * Mth.DEG_TO_RAD;
+            float relative = Mth.wrapDegrees(targetYaw - this.headYaw) * Mth.DEG_TO_RAD;
+            wantTiltX = tilt * Mth.cos(relative);
+            wantTiltZ = -tilt * Mth.sin(relative);
+        } else {
+            // Calm: follows its look (where it's drifting to), tilting forward like before
+            this.headYaw = Mth.wrapDegrees(this.headYaw
+                    + Mth.clamp(Mth.wrapDegrees(this.getYHeadRot() - this.headYaw), -HEAD_TURN_SPEED, HEAD_TURN_SPEED));
+            wantTiltX = this.getXRot() * Mth.DEG_TO_RAD;
+            wantTiltZ = 0.0F;
+        }
+        this.tiltX += Mth.clamp(wantTiltX - this.tiltX, -HEAD_TILT_SPEED, HEAD_TILT_SPEED);
+        this.tiltZ += Mth.clamp(wantTiltZ - this.tiltZ, -HEAD_TILT_SPEED, HEAD_TILT_SPEED);
+    }
+
     /** Blind, it can't see anyone: it can't become agitated, and loses whoever it was watching. */
     public boolean isBlind() {
         return this.hasEffect(MobEffects.BLINDNESS);
@@ -301,26 +412,25 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     }
 
     /**
-     * "Ghaze watches" the moment it gets sight of its target, "Ghaze searches" the moment it
-     * loses it, so you can hear when you've broken line of sight (and when you haven't).
+     * "Ghaze watches" the moment it gets sight of its target, so you can hear when you haven't
+     * broken line of sight. Losing sight starts the search loop instead (client side, from
+     * DATA_SEARCHING), which runs until it sees them again.
      */
-    private void tickSightCues(boolean agitated, boolean sees) {
+    private void tickSightCues(boolean sees) {
         if (this.sightCueCooldown > 0) this.sightCueCooldown--;
-        if (sees != this.seesTarget && this.sightCueCooldown <= 0) {
-            // Gaining sight always counts; losing it only while still hunting (not when it calms down)
-            if (sees || agitated) {
-                this.playSound(sees ? ModSounds.GHAZE_WATCH : ModSounds.GHAZE_SEARCH, this.getSoundVolume(), this.getVoicePitch());
-                this.sightCueCooldown = SIGHT_CUE_COOLDOWN;
-            }
+        if (sees && !this.seesTarget && this.sightCueCooldown <= 0) {
+            this.playSound(ModSounds.GHAZE_WATCH, this.getSoundVolume(), this.getVoicePitch());
+            this.sightCueCooldown = SIGHT_CUE_COOLDOWN;
         }
         this.seesTarget = sees;
     }
 
-    /** Calm: breathes. Agitated: watches while it can see its target, searches while it can't. */
+    /** Calm: breathes. Agitated: watches while it can see its target. While searching the
+     *  search loop is already playing, so there's no ambient sound on top of it. */
     @Override
     protected SoundEvent getAmbientSound() {
         if (!this.isAgitated()) return ModSounds.GHAZE_AMBIENT;
-        return this.seesTarget ? ModSounds.GHAZE_WATCH : ModSounds.GHAZE_SEARCH;
+        return this.seesTarget ? ModSounds.GHAZE_WATCH : null;
     }
 
     /** Twice as chatty while agitated, so the cue keeps reminding you what it's doing. */

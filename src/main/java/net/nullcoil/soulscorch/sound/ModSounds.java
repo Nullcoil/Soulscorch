@@ -37,6 +37,8 @@ public class ModSounds {
     public static final SoundEvent GHAZE_AMBIENT = registerSoundEvent("ghaze_ambient");
     public static final SoundEvent GHAZE_WATCH = registerSoundEvent("ghaze_watch");
     public static final SoundEvent GHAZE_SEARCH = registerSoundEvent("ghaze_search");
+    /** Loops for as long as a Ghaze is searching (see GhazeSearchSoundInstance). */
+    public static final SoundEvent GHAZE_SEARCH_LOOP = registerSoundEvent("ghaze_search_loop");
     public static final SoundEvent GHAZE_HURT = registerSoundEvent("ghaze_hurt");
     public static final SoundEvent GHAZE_DEATH = registerSoundEvent("ghaze_death");
     public static final SoundEvent WITNESSED_CRACK = registerSoundEvent("witnessed_crack");
