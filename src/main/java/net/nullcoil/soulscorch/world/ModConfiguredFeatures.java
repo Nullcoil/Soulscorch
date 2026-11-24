@@ -15,9 +15,11 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.DeltaFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RandomizedIntStateProvider;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.custom.GhostPepperShrubBlock;
+import net.nullcoil.soulscorch.block.custom.ViscousVioletCortBlock;
 import net.nullcoil.soulscorch.world.feature.BlockColumnConfiguration;
 import net.nullcoil.soulscorch.world.feature.ModFeatures;
 
@@ -33,6 +35,9 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> LARGE_SOUL_STONE_COLUMNS = createKey("large_soul_stone_columns");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SMALL_HANGING_SOUL_STONE_COLUMNS = createKey("small_hanging_soul_stone_columns");
     public static final ResourceKey<ConfiguredFeature<?, ?>> LARGE_HANGING_SOUL_STONE_COLUMNS = createKey("large_hanging_soul_stone_columns");
+
+    // Soulvore Caverns ceiling
+    public static final ResourceKey<ConfiguredFeature<?, ?>> VISCOUS_VIOLET_CORT = createKey("viscous_violet_cort");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         BlockState soulStone = ModBlocks.SOUL_STONE.defaultBlockState();
@@ -61,6 +66,16 @@ public class ModConfiguredFeatures {
                 Feature.SIMPLE_BLOCK,
                 new SimpleBlockConfiguration(
                         BlockStateProvider.simple(ModBlocks.GHOST_PEPPER_SHRUB.defaultBlockState().setValue(GhostPepperShrubBlock.AGE, GhostPepperShrubBlock.MAX_AGE))
+                ));
+
+        // One hanging Cort, young or grown at random. Clusters come from its placement.
+        FeatureUtils.register(context, VISCOUS_VIOLET_CORT,
+                Feature.SIMPLE_BLOCK,
+                new SimpleBlockConfiguration(
+                        new RandomizedIntStateProvider(
+                                BlockStateProvider.simple(ModBlocks.VISCOUS_VIOLET_CORT),
+                                ViscousVioletCortBlock.AGE,
+                                UniformInt.of(0, ViscousVioletCortBlock.MAX_AGE))
                 ));
     }
 

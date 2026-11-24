@@ -34,5 +34,20 @@ public class ModWorldGen {
                 GenerationStep.Decoration.VEGETAL_DECORATION,
                 SOULVORE_SEEPING_SALLOW
         );
+
+        // Ghost Peppers on the Caverns' Soul Soil floors, 1.5x as often as in the Soul Sand Valley
+        BiomeModifications.addFeature(
+                BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
+                GenerationStep.Decoration.VEGETAL_DECORATION,
+                ModPlacedFeatures.SOULVORE_GHOST_PEPPER_PATCH
+        );
+
+        // Viscous Violet Cort on the Caverns' ceilings. Added after the Sallow, and it only
+        // climbs through air, so it never hangs inside a tree's leaves.
+        BiomeModifications.addFeature(
+                BiomeSelectors.includeByKey(ModBiomes.SOULVORE_CAVERNS),
+                GenerationStep.Decoration.VEGETAL_DECORATION,
+                ModPlacedFeatures.VISCOUS_VIOLET_CORT
+        );
     }
 }
