@@ -22,6 +22,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.nidalib.attribute.Corruption;
@@ -34,6 +35,12 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class JellyfishEntity extends Monster {
+    /**
+     * How far below the top of the jellyfish an entity's feet can be and still count as standing on it.
+     * Covers the jellyfish drifting up into whatever is on top of it, and a tick of lag for players.
+     */
+    private static final double STAND_TOLERANCE = 0.5;
+
     public final AnimationState IDLE = new AnimationState();
 
     // 1. Give each entity its own unique spin speed
@@ -49,6 +56,44 @@ public class JellyfishEntity extends Monster {
         };
 
         this.xpReward = 2;
+    }
+
+    /**
+     * Solid from above only, like a one-way platform: entities can land and stand on top, but anything coming
+     * from the side or below still passes into it and gets stung.
+     */
+    @Override
+    public boolean canBeCollidedWith(@Nullable Entity other) {
+        return other != null && this.isAlive() && isStandingOnTop(other);
+    }
+
+    /** True if the entity's feet are at (or just below) this jellyfish's top. */
+    public boolean isStandingOnTop(Entity other) {
+        if (other == this || other instanceof JellyfishEntity || other.noPhysics) return false;
+        return other.getBoundingBox().minY >= this.getBoundingBox().maxY - STAND_TOLERANCE;
+    }
+
+    /**
+     * Lifts whatever is standing on top back onto the top when the jellyfish drifts up into it (it passes through
+     * entities, since they aren't solid to it). Players move themselves, so they are lifted on their own client;
+     * other entities on the server.
+     */
+    private void liftEntitiesOnTop() {
+        AABB box = this.getBoundingBox();
+        double top = box.maxY;
+        AABB feetZone = new AABB(box.minX, top - STAND_TOLERANCE, box.minZ, box.maxX, top, box.maxZ);
+        boolean client = this.level().isClientSide();
+
+        for (Entity e : this.level().getEntities(this, feetZone, e -> !(e instanceof JellyfishEntity) && !e.noPhysics)) {
+            if (client ? !(e instanceof Player p && p.isLocalPlayer()) : e instanceof Player) continue;
+
+            double feet = e.getBoundingBox().minY;
+            if (feet >= top || feet < top - STAND_TOLERANCE) continue;
+
+            e.move(MoverType.SHULKER, new Vec3(0, top - feet, 0));
+            Vec3 v = e.getDeltaMovement();
+            if (v.y < 0) e.setDeltaMovement(v.x, 0, v.z);
+        }
     }
 
     @Override protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {}
@@ -101,11 +146,14 @@ public class JellyfishEntity extends Monster {
             this.IDLE.startIfStopped(this.tickCount);
         }
 
+        liftEntitiesOnTop();
+
         if (!this.level().isClientSide()) {
             List<Entity> entities = this.level().getEntities(this, this.getBoundingBox(),
                     e -> e instanceof LivingEntity &&
                             !e.is(ModTags.Entities.SOULSCORCH_ENTITIES) &&
-                            !(e instanceof Frog));
+                            !(e instanceof Frog) &&
+                            !isStandingOnTop(e));
 
             for (Entity e : entities) {
                 LivingEntity living = (LivingEntity) e;
