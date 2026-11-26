@@ -4,9 +4,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.nullcoil.soulscorch.entity.ai.GhazeEyes;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEyes;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 import org.jspecify.annotations.NonNull;
 
 public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, GhazeModel> {

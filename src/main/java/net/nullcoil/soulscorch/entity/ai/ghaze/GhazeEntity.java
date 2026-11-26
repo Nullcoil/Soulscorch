@@ -1,4 +1,4 @@
-package net.nullcoil.soulscorch.entity.ai;
+package net.nullcoil.soulscorch.entity.ai.ghaze;
 
 import it.crystalnest.prometheus.api.FireManager;
 import it.crystalnest.prometheus.api.type.FireTyped;
@@ -32,6 +32,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.effect.custom.WitnessedEffect;
+import net.nullcoil.soulscorch.entity.ai.SoulAlarm;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.ArrayList;

@@ -10,7 +10,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 
 /**
  * The Ghaze's gaze: while one is agitated at you and you can see each other, your camera

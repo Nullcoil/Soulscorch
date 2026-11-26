@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
-import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 /**

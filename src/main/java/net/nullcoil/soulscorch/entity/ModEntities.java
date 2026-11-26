@@ -1,15 +1,20 @@
 package net.nullcoil.soulscorch.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.monster.spider.Spider;
+import net.nullcoil.nidalib.climbing.WallClimbing;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ai.*;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.projectile.SoulChargeProjectile;
 

@@ -1,4 +1,4 @@
-package net.nullcoil.soulscorch.entity.ai;
+package net.nullcoil.soulscorch.entity.ai.ghaze;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -11,7 +11,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.block.ModBlocks;
-import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
+import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
+import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
 import net.nullcoil.soulscorch.entity.client.soulless.SoullessActivity;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jetbrains.annotations.Nullable;

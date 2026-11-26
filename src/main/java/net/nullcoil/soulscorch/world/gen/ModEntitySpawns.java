@@ -10,12 +10,11 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ModEntities;
 import net.nullcoil.soulscorch.entity.ai.BlaztEntity;
-import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
 import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
 import net.nullcoil.soulscorch.entity.ai.jellyfish.JellyfishEntity;
-import net.nullcoil.soulscorch.util.ModTags;
 import net.nullcoil.soulscorch.world.biome.ModBiomes;
 
 public class ModEntitySpawns {

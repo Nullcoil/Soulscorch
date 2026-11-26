@@ -26,7 +26,7 @@ import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.custom.PlayerStatueBlock;
 import net.nullcoil.soulscorch.block.entity.PlayerStatueBlockEntity;
 import net.nullcoil.soulscorch.effect.ModEffects;
-import net.nullcoil.soulscorch.entity.ai.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.Map;
