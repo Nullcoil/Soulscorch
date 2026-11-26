@@ -1,17 +1,16 @@
 package net.nullcoil.soulscorch.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.monster.spider.Spider;
-import net.nullcoil.nidalib.climbing.WallClimbing;
+import net.nullcoil.nidalib.climbing.ClimbSettings;
+import net.nullcoil.nidalib.climbing.WallClimbers;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ai.*;
 import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
@@ -92,9 +91,19 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(RESIDENT, ResidentEntity.createAttributes());
     }
 
+    public static void registerWallClimbers() {
+        WallClimbers.register(EntityTypes.SPIDER, ClimbSettings.WALLS_AND_CEILINGS);
+        WallClimbers.register(EntityTypes.CAVE_SPIDER, ClimbSettings.WALLS_AND_CEILINGS);
+        WallClimbers.register(EntityTypes.SILVERFISH, ClimbSettings.builder()
+                .walls(true).ceilings(false)
+                .speedFactor(1d)
+                .build());
+    }
+
     public static void register() {
         Soulscorch.LOGGER.info("Registering Mod Entities for " + Soulscorch.MOD_ID);
         registerAttributes();
+        registerWallClimbers();
         ModBoats.register();
     }
 }
