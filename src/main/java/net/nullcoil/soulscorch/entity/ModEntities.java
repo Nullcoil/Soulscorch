@@ -91,19 +91,17 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(RESIDENT, ResidentEntity.createAttributes());
     }
 
-    public static void registerWallClimbers() {
-        WallClimbers.register(EntityTypes.SPIDER, ClimbSettings.WALLS_AND_CEILINGS);
+    public static void registerClimbers() {
         WallClimbers.register(EntityTypes.CAVE_SPIDER, ClimbSettings.WALLS_AND_CEILINGS);
+        WallClimbers.register(EntityTypes.SPIDER, ClimbSettings.WALLS_AND_CEILINGS);
         WallClimbers.register(EntityTypes.SILVERFISH, ClimbSettings.builder()
-                .walls(true).ceilings(false)
-                .speedFactor(1d)
-                .build());
+                .walls(true).ceilings(false).speedFactor(0.5f).build());
     }
 
     public static void register() {
         Soulscorch.LOGGER.info("Registering Mod Entities for " + Soulscorch.MOD_ID);
         registerAttributes();
-        registerWallClimbers();
+        registerClimbers();
         ModBoats.register();
     }
 }
