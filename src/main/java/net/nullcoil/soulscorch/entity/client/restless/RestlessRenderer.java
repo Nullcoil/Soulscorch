@@ -5,10 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
-import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
+import net.nullcoil.soulscorch.entity.ai.Restless;
 
 @Environment(EnvType.CLIENT)
-public class RestlessRenderer extends MobRenderer<RestlessEntity, RestlessRenderState, RestlessModel> {
+public class RestlessRenderer extends MobRenderer<Restless, RestlessRenderState, RestlessModel> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath("soulscorch", "textures/entity/restless/restless.png");
     private static final Identifier AWAKENED =
@@ -22,7 +22,7 @@ public class RestlessRenderer extends MobRenderer<RestlessEntity, RestlessRender
     }
 
     @Override
-    public void extractRenderState(RestlessEntity entity, RestlessRenderState state, float partialTick) {
+    public void extractRenderState(Restless entity, RestlessRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
         state.awakened = entity.getAwakened();
         state.age = entity.tickCount + partialTick;

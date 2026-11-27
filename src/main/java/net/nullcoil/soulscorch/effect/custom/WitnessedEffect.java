@@ -26,7 +26,7 @@ import net.nullcoil.soulscorch.block.ModBlocks;
 import net.nullcoil.soulscorch.block.custom.PlayerStatueBlock;
 import net.nullcoil.soulscorch.block.entity.PlayerStatueBlockEntity;
 import net.nullcoil.soulscorch.effect.ModEffects;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.Map;
@@ -62,14 +62,14 @@ public class WitnessedEffect extends BuildupEffect {
     public static final ResourceKey<DamageType> PETRIFIED =
             ResourceKey.create(Registries.DAMAGE_TYPE, Soulscorch.id("petrified"));
     /** How far to look for the Ghaze to credit for a petrification (death message). */
-    private static final double CREDIT_RANGE = GhazeEntity.WATCH_RADIUS;
+    private static final double CREDIT_RANGE = Ghaze.WATCH_RADIUS;
 
     public WitnessedEffect(MobEffectCategory category, int color) {
         super(category, color, PETRIFY_TICKS);
     }
 
     /** This tick's closest Ghaze that can see each target. Server thread only; cleared every tick. */
-    private static final Map<LivingEntity, GhazeEntity> WATCHERS = new WeakHashMap<>();
+    private static final Map<LivingEntity, Ghaze> WATCHERS = new WeakHashMap<>();
 
     /** Applies the build-up once a tick, after every Ghaze has had its turn. */
     public static void register() {
@@ -86,14 +86,14 @@ public class WitnessedEffect extends BuildupEffect {
      * {@code ghaze} can see {@code target} this tick. Only the closest Ghaze that sees them
      * counts; the build-up itself happens at the end of the tick.
      */
-    public static void witness(LivingEntity target, GhazeEntity ghaze) {
+    public static void witness(LivingEntity target, Ghaze ghaze) {
         if (target.level().isClientSide()) return;
         WATCHERS.merge(target, ghaze, (current, candidate) ->
                 candidate.distanceToSqr(target) < current.distanceToSqr(target) ? candidate : current);
     }
 
     /** Whether {@code target} is looking at the Ghaze's head (within {@link #LOOKING_COS}). */
-    private static boolean isLookingAt(LivingEntity target, GhazeEntity ghaze) {
+    private static boolean isLookingAt(LivingEntity target, Ghaze ghaze) {
         Vec3 toHead = ghaze.getHeadPosition(1.0F).subtract(target.getEyePosition());
         if (toHead.lengthSqr() < 1.0E-6) return true;
         return target.getViewVector(1.0F).dot(toHead.normalize()) > LOOKING_COS;
@@ -131,7 +131,7 @@ public class WitnessedEffect extends BuildupEffect {
      */
     @Override
     protected void onPeak(ServerLevel level, LivingEntity entity, int amplifier) {
-        GhazeEntity watcher = nearestWatcher(level, entity);
+        Ghaze watcher = nearestWatcher(level, entity);
         DamageSource source = watcher != null
                 ? entity.damageSources().source(PETRIFIED, watcher)
                 : entity.damageSources().source(PETRIFIED);
@@ -198,10 +198,10 @@ public class WitnessedEffect extends BuildupEffect {
     }
 
     /** The closest agitated Ghaze glaring at this entity, for the death message. */
-    private static GhazeEntity nearestWatcher(ServerLevel level, LivingEntity entity) {
-        GhazeEntity nearest = null;
+    private static Ghaze nearestWatcher(ServerLevel level, LivingEntity entity) {
+        Ghaze nearest = null;
         double best = CREDIT_RANGE * CREDIT_RANGE;
-        for (GhazeEntity ghaze : level.getEntitiesOfClass(GhazeEntity.class, entity.getBoundingBox().inflate(CREDIT_RANGE))) {
+        for (Ghaze ghaze : level.getEntitiesOfClass(Ghaze.class, entity.getBoundingBox().inflate(CREDIT_RANGE))) {
             if (ghaze.getTarget() != entity) continue;
             double distance = ghaze.distanceToSqr(entity);
             if (distance < best) {

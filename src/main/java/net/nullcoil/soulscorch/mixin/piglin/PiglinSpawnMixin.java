@@ -7,7 +7,7 @@ import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biomes;
 import net.nullcoil.soulscorch.entity.ModEntities;
-import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoullessEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

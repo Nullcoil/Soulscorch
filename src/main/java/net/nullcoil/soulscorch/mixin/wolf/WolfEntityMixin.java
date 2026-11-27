@@ -9,7 +9,7 @@ import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.nullcoil.soulscorch.entity.ModEntities;
-import net.nullcoil.soulscorch.entity.ai.SoulborneWolfEntity;
+import net.nullcoil.soulscorch.entity.ai.SoulborneWolf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,7 +27,7 @@ public abstract class WolfEntityMixin extends TamableAnimal {
         if(!(other instanceof Wolf wolf2)) return;
 
         if(this.isTame() && wolf2.isTame() && level.getBiome(this.getOnPos()).is(Biomes.SOUL_SAND_VALLEY)) {
-            SoulborneWolfEntity soulWolf = ModEntities.SOULBORNE_WOLF.create(level, EntitySpawnReason.BREEDING);
+            SoulborneWolf soulWolf = ModEntities.SOULBORNE_WOLF.create(level, EntitySpawnReason.BREEDING);
             if(soulWolf != null) {
                 soulWolf.setTame(true, true);
                 soulWolf.setOwner(this.getOwner());

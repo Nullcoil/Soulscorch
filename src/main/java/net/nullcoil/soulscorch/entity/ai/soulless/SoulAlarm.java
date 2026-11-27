@@ -1,4 +1,4 @@
-package net.nullcoil.soulscorch.entity.ai;
+package net.nullcoil.soulscorch.entity.ai.soulless;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

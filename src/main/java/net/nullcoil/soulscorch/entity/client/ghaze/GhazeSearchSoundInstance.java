@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 /**
@@ -18,11 +18,11 @@ import net.nullcoil.soulscorch.sound.ModSounds;
  */
 @Environment(EnvType.CLIENT)
 public class GhazeSearchSoundInstance extends AbstractTickableSoundInstance {
-    private final GhazeEntity ghaze;
+    private final Ghaze ghaze;
     /** Which search this loop belongs to; a newer search means a newer loop has taken over. */
     private final int loopId;
 
-    public GhazeSearchSoundInstance(GhazeEntity ghaze) {
+    public GhazeSearchSoundInstance(Ghaze ghaze) {
         super(ModSounds.GHAZE_SEARCH_LOOP, SoundSource.HOSTILE, SoundInstance.createUnseededRandom());
         this.ghaze = ghaze;
         this.loopId = ghaze.getSearchLoopId();

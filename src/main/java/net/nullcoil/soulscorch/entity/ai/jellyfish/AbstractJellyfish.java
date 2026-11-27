@@ -7,7 +7,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
@@ -26,7 +25,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.nidalib.attribute.Corruption;
-import net.nullcoil.nidalib.attribute.ModAttributes;
 import net.nullcoil.soulscorch.effect.ModEffects;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class JellyfishEntity extends Monster {
+public class AbstractJellyfish extends Monster {
     /**
      * How far below the top of the jellyfish an entity's feet can be and still count as standing on it.
      * Covers the jellyfish drifting up into whatever is on top of it, and a tick of lag for players.
@@ -47,7 +45,7 @@ public class JellyfishEntity extends Monster {
     private float spinSpeed;
     private boolean spinCalculated = false;
 
-    public JellyfishEntity(EntityType<? extends JellyfishEntity> type, Level level) {
+    public AbstractJellyfish(EntityType<? extends AbstractJellyfish> type, Level level) {
         super(type, level);
         this.moveControl = new JellyfishMoveControl(this);
         this.lookControl = new LookControl(this) {
@@ -69,7 +67,7 @@ public class JellyfishEntity extends Monster {
 
     /** True if the entity's feet are at (or just below) this jellyfish's top. */
     public boolean isStandingOnTop(Entity other) {
-        if (other == this || other instanceof JellyfishEntity || other.noPhysics) return false;
+        if (other == this || other instanceof AbstractJellyfish || other.noPhysics) return false;
         return other.getBoundingBox().minY >= this.getBoundingBox().maxY - STAND_TOLERANCE;
     }
 
@@ -84,7 +82,7 @@ public class JellyfishEntity extends Monster {
         AABB feetZone = new AABB(box.minX, top - STAND_TOLERANCE, box.minZ, box.maxX, top, box.maxZ);
         boolean client = this.level().isClientSide();
 
-        for (Entity e : this.level().getEntities(this, feetZone, e -> !(e instanceof JellyfishEntity) && !e.noPhysics)) {
+        for (Entity e : this.level().getEntities(this, feetZone, e -> !(e instanceof AbstractJellyfish) && !e.noPhysics)) {
             if (client ? !(e instanceof Player p && p.isLocalPlayer()) : e instanceof Player) continue;
 
             double feet = e.getBoundingBox().minY;
@@ -195,9 +193,9 @@ public class JellyfishEntity extends Monster {
         private static final double HORIZONTAL_DAMPING = 0.98;
         private static final double VERTICAL_DAMPING = 0.95;
         private boolean hasActiveTarget = false;
-        private final JellyfishEntity jelly;
+        private final AbstractJellyfish jelly;
 
-        public JellyfishMoveControl(JellyfishEntity jelly) {
+        public JellyfishMoveControl(AbstractJellyfish jelly) {
             super(jelly);
             this.jelly = jelly;
         }
@@ -250,9 +248,9 @@ public class JellyfishEntity extends Monster {
     public boolean fireImmune() { return true; }
 
     static class FlyRandomlyGoal extends Goal {
-        private final JellyfishEntity jelly;
+        private final AbstractJellyfish jelly;
 
-        public FlyRandomlyGoal(JellyfishEntity jelly) {
+        public FlyRandomlyGoal(AbstractJellyfish jelly) {
             this.jelly = jelly;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -358,8 +356,8 @@ public class JellyfishEntity extends Monster {
     }
 
     private boolean isTooDense(LevelReader level, BlockPos pos) {
-        List<JellyfishEntity> nearbyJellyfish = this.level().getEntitiesOfClass(
-                JellyfishEntity.class,
+        List<AbstractJellyfish> nearbyJellyfish = this.level().getEntitiesOfClass(
+                AbstractJellyfish.class,
                 this.getBoundingBox().inflate(16)
         );
 
@@ -370,10 +368,10 @@ public class JellyfishEntity extends Monster {
         return spinSpeed;
     }
 
-    public static boolean checkJellyfishSpawnRules(EntityType<? extends JellyfishEntity> type, ServerLevelAccessor level,
+    public static boolean checkJellyfishSpawnRules(EntityType<? extends AbstractJellyfish> type, ServerLevelAccessor level,
                                                    EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         if (spawnReason == EntitySpawnReason.NATURAL) {
-            JellyfishEntity dummy = type.create(level.getLevel(), spawnReason);
+            AbstractJellyfish dummy = type.create(level.getLevel(), spawnReason);
             if (dummy != null) {
                 dummy.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
                 return dummy.checkSpawnObstruction(level);

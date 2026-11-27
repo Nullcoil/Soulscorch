@@ -7,12 +7,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
+import net.nullcoil.soulscorch.entity.ai.heedless.Heedless;
 import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessProximity;
 import org.jspecify.annotations.NonNull;
 
 
-public class HeedlessRenderer extends MobRenderer<HeedlessEntity, HeedlessRenderState, HeedlessModel> {
+public class HeedlessRenderer extends MobRenderer<Heedless, HeedlessRenderState, HeedlessModel> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/heedless/heedless.png");
 
@@ -25,7 +25,7 @@ public class HeedlessRenderer extends MobRenderer<HeedlessEntity, HeedlessRender
     public HeedlessRenderState createRenderState() { return new HeedlessRenderState(); }
 
     @Override
-    public void extractRenderState(HeedlessEntity entity, HeedlessRenderState state, float age) {
+    public void extractRenderState(Heedless entity, HeedlessRenderState state, float age) {
         super.extractRenderState(entity, state, age);
         Vec3 cam = Minecraft.getInstance().gameRenderer.mainCamera().position();
         float dist = (float) Mth.sqrt(

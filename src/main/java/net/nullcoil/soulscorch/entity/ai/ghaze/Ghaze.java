@@ -32,7 +32,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.effect.custom.WitnessedEffect;
-import net.nullcoil.soulscorch.entity.ai.SoulAlarm;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoulAlarm;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.ArrayList;
@@ -41,23 +41,23 @@ import java.util.EnumSet;
 import java.util.function.Consumer;
 import java.util.List;
 
-public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireTyped {
+public class Ghaze extends Monster implements SoulAlarm.Listener, FireTyped {
     /** Whether it has a target. Synced so the client can swap the texture and stop the idle spin. */
     private static final EntityDataAccessor<Boolean> DATA_AGITATED =
-            SynchedEntityData.defineId(GhazeEntity.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(Ghaze.class, EntityDataSerializers.BOOLEAN);
     /** Entity id of who it's glaring at (-1: nobody). Synced so that player's camera gets pulled. */
     private static final EntityDataAccessor<Integer> DATA_GAZE_TARGET =
-            SynchedEntityData.defineId(GhazeEntity.class, EntityDataSerializers.INT);
+            SynchedEntityData.defineId(Ghaze.class, EntityDataSerializers.INT);
 
     /** Hunting a target it can't see. Synced so the client can loop the search sound. */
     private static final EntityDataAccessor<Boolean> DATA_SEARCHING =
-            SynchedEntityData.defineId(GhazeEntity.class, EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(Ghaze.class, EntityDataSerializers.BOOLEAN);
 
     /**
      * Client only: starts the looping search sound for a Ghaze. Set by SoulscorchClient, so
      * this class never touches client-only sound classes (which don't exist on a server).
      */
-    public static Consumer<GhazeEntity> searchLoopStarter = ghaze -> {};
+    public static Consumer<Ghaze> searchLoopStarter = ghaze -> {};
     /** Client only: whether it was searching last tick, to start the loop when that begins. */
     private boolean wasSearching;
     /** Client only: goes up each time a search starts. A loop stops once it no longer matches,
@@ -142,7 +142,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
     /** Client only: where each of its four eyes is looking. */
     public final GhazeEyes eyes = new GhazeEyes();
 
-    public GhazeEntity(EntityType<? extends GhazeEntity> type, Level level) {
+    public Ghaze(EntityType<? extends Ghaze> type, Level level) {
         super(type, level);
         // Floats around like a ghast (pushed toward where it wants to go every few ticks)
         this.moveControl = new GhazeMoveControl(this);
@@ -478,7 +478,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
      *       eases in instead of sailing past.</li>
      * </ul>
      */
-    static class GhazeMoveControl extends MoveControl<GhazeEntity> {
+    static class GhazeMoveControl extends MoveControl<Ghaze> {
         /** Starts easing in this many blocks from where it's going. */
         private static final double ARRIVE_DISTANCE = 2.5;
         /** Share of its speed kept each tick while braking (air drag alone keeps 0.91). */
@@ -489,7 +489,7 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         private int floatDuration;
         private int brakeTicks;
 
-        GhazeMoveControl(GhazeEntity ghaze) {
+        GhazeMoveControl(Ghaze ghaze) {
             super(ghaze);
         }
 
@@ -577,11 +577,11 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         /** Only the nearest few candidates get a full path check (pathfinding isn't cheap). */
         private static final int PATH_CHECKS = 4;
 
-        private final GhazeEntity ghaze;
+        private final Ghaze ghaze;
         private int repositionCooldown;
         private boolean repositioning;
 
-        WatchGoal(GhazeEntity ghaze) {
+        WatchGoal(Ghaze ghaze) {
             this.ghaze = ghaze;
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
@@ -710,12 +710,12 @@ public class GhazeEntity extends Monster implements SoulAlarm.Listener, FireType
         private static final int REST_MAX = 200;
         private static final int ATTEMPTS = 32;
 
-        private final GhazeEntity ghaze;
+        private final Ghaze ghaze;
         private Vec3 destination;
         private int travelTicks;
         private int restTicks;
 
-        DriftGoal(GhazeEntity ghaze) {
+        DriftGoal(Ghaze ghaze) {
             this.ghaze = ghaze;
             this.restTicks = Mth.nextInt(ghaze.getRandom(), REST_MIN, REST_MAX);
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));

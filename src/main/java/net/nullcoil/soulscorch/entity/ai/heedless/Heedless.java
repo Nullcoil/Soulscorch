@@ -29,7 +29,7 @@ import net.nullcoil.soulscorch.sound.ModSounds;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 
-public class HeedlessEntity extends Monster implements Enemy {
+public class Heedless extends Monster implements Enemy {
     private int fuse;
     private int cooldown = 0;
     private final int maxCooldown = 10*20;
@@ -57,7 +57,7 @@ public class HeedlessEntity extends Monster implements Enemy {
     // Client-side: the twitch the current warning plays (-1 = none yet)
     private int warnVariant = -1;
 
-    public HeedlessEntity(EntityType<? extends Monster> type, Level level) {
+    public Heedless(EntityType<? extends Monster> type, Level level) {
         super(type, level);
     }
 

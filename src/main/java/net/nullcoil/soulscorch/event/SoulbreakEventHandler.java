@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.effect.ModEffects;
-import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoullessEntity;
 import net.nullcoil.soulscorch.util.ModTags;
 
 import java.util.*;

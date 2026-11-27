@@ -20,8 +20,8 @@ import net.nullcoil.soulscorch.util.ModTags;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class SoulborneWolfEntity extends Wolf {
-    public SoulborneWolfEntity(EntityType<? extends Wolf> entityType, Level level) {
+public class SoulborneWolf extends Wolf {
+    public SoulborneWolf(EntityType<? extends Wolf> entityType, Level level) {
         super(entityType, level);
     }
 

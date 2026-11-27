@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.WolfCollarLayer;
 import net.minecraft.client.renderer.entity.state.WolfRenderState;
 import net.minecraft.resources.Identifier;
-import net.nullcoil.soulscorch.entity.ai.SoulborneWolfEntity;
+import net.nullcoil.soulscorch.entity.ai.SoulborneWolf;
 import org.jspecify.annotations.NonNull;
 
-public class SoulWolfRenderer extends AgeableMobRenderer<SoulborneWolfEntity, WolfRenderState, WolfModel> {
+public class SoulWolfRenderer extends AgeableMobRenderer<SoulborneWolf, WolfRenderState, WolfModel> {
 
     public SoulWolfRenderer(EntityRendererProvider.Context context) {
         super(context, new AdultWolfModel(context.bakeLayer(ModelLayers.WOLF)), new BabyWolfModel(context.bakeLayer(ModelLayers.WOLF_BABY)), .4f);
@@ -31,7 +31,7 @@ public class SoulWolfRenderer extends AgeableMobRenderer<SoulborneWolfEntity, Wo
     }
 
     @Override
-    public void extractRenderState(SoulborneWolfEntity entity, WolfRenderState state, float partialTick) {
+    public void extractRenderState(SoulborneWolf entity, WolfRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
         state.isAngry = entity.isAngry();
         state.isSitting = entity.isInSittingPose();

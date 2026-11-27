@@ -30,23 +30,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.sound.ModSounds;
 
 import java.util.EnumSet;
 
-public class BlaztEntity extends Mob implements Enemy {
+public class Blazt extends Mob implements Enemy {
     // Synced Data so the client knows when to change textures/animations
-    private static final EntityDataAccessor<Boolean> SHOOTING = SynchedEntityData.defineId(BlaztEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> BULLRUSHING = SynchedEntityData.defineId(BlaztEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> STUNNED = SynchedEntityData.defineId(BlaztEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SHOOTING = SynchedEntityData.defineId(Blazt.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> BULLRUSHING = SynchedEntityData.defineId(Blazt.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> STUNNED = SynchedEntityData.defineId(Blazt.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState shootAnimationState = new AnimationState();
 
-    public BlaztEntity(EntityType<? extends Mob> entityType, Level level) {
+    public Blazt(EntityType<? extends Mob> entityType, Level level) {
         super(entityType, level);
         this.moveControl = new BlaztMoveControl(this);
         this.setNoGravity(true); // Flies by default
@@ -231,8 +230,8 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     // --- Move Control: vanilla's ghast movement, paused while stunned ---
-    static class BlaztMoveControl extends Ghast.GhastMoveControl<BlaztEntity> {
-        public BlaztMoveControl(BlaztEntity blazt) {
+    static class BlaztMoveControl extends Ghast.GhastMoveControl<Blazt> {
+        public BlaztMoveControl(Blazt blazt) {
             super(blazt, false, () -> false);
         }
 
@@ -245,11 +244,11 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     static class BlaztBullrushGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
         private int chargeTimer;
         private int stunTimer;
 
-        public BlaztBullrushGoal(BlaztEntity blazt) {
+        public BlaztBullrushGoal(Blazt blazt) {
             this.blazt = blazt;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -333,9 +332,9 @@ public class BlaztEntity extends Mob implements Enemy {
 
     // --- Default Floating ---
     static class RandomFloatAroundGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
 
-        public RandomFloatAroundGoal(BlaztEntity blazt) {
+        public RandomFloatAroundGoal(Blazt blazt) {
             this.blazt = blazt;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -366,10 +365,10 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     static class BlaztShootGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
         public int chargeTime;
 
-        public BlaztShootGoal(BlaztEntity blazt) {
+        public BlaztShootGoal(Blazt blazt) {
             this.blazt = blazt;
         }
 
@@ -449,10 +448,10 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     static class BlaztDashGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
         private int cooldown = 100;
 
-        public BlaztDashGoal(BlaztEntity blazt) {
+        public BlaztDashGoal(Blazt blazt) {
             this.blazt = blazt;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -493,9 +492,9 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     static class BlaztApproachGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
 
-        public BlaztApproachGoal(BlaztEntity blazt) {
+        public BlaztApproachGoal(Blazt blazt) {
             this.blazt = blazt;
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
@@ -531,9 +530,9 @@ public class BlaztEntity extends Mob implements Enemy {
     }
 
     static class BlaztLookGoal extends Goal {
-        private final BlaztEntity blazt;
+        private final Blazt blazt;
 
-        public BlaztLookGoal(BlaztEntity blazt) {
+        public BlaztLookGoal(Blazt blazt) {
             this.blazt = blazt;
             this.setFlags(EnumSet.of(Flag.LOOK));
         }

@@ -6,10 +6,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEyes;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
 import org.jspecify.annotations.NonNull;
 
-public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, GhazeModel> {
+public class GhazeRenderer extends MobRenderer<Ghaze, GhazeRenderState, GhazeModel> {
     private static final Identifier TEXTURE = Soulscorch.id("textures/entity/ghaze/ghaze.png");
     private static final Identifier AGITATED = Soulscorch.id("textures/entity/ghaze/ghaze.png");
 
@@ -24,7 +24,7 @@ public class GhazeRenderer extends MobRenderer<GhazeEntity, GhazeRenderState, Gh
     }
 
     @Override
-    public void extractRenderState(GhazeEntity entity, GhazeRenderState state, float partialTick) {
+    public void extractRenderState(Ghaze entity, GhazeRenderState state, float partialTick) {
         super.extractRenderState(entity, state, partialTick);
         state.isAgitated = entity.isAgitated();
         state.agitation = entity.agitation;

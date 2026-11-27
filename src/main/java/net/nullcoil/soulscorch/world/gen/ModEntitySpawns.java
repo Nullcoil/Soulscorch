@@ -9,12 +9,12 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.nullcoil.soulscorch.Soulscorch;
 import net.nullcoil.soulscorch.entity.ModEntities;
-import net.nullcoil.soulscorch.entity.ai.BlaztEntity;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
-import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
-import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
-import net.nullcoil.soulscorch.entity.ai.heedless.HeedlessEntity;
-import net.nullcoil.soulscorch.entity.ai.jellyfish.JellyfishEntity;
+import net.nullcoil.soulscorch.entity.ai.Blazt;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
+import net.nullcoil.soulscorch.entity.ai.Restless;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.heedless.Heedless;
+import net.nullcoil.soulscorch.entity.ai.jellyfish.AbstractJellyfish;
 import net.nullcoil.soulscorch.world.biome.ModBiomes;
 
 public class ModEntitySpawns {
@@ -59,21 +59,21 @@ public class ModEntitySpawns {
         // =========================================
 
         SpawnPlacements.register(ModEntities.BLAZT, SpawnPlacementTypes.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlaztEntity::checkMobSpawnRules);
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Blazt::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntities.SOULLESS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING, SoullessEntity::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntities.HEEDLESS, SpawnPlacementTypes.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING, HeedlessEntity::checkMobSpawnRules);
+                Heightmap.Types.MOTION_BLOCKING, Heedless::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntities.RESTLESS, SpawnPlacementTypes.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING, RestlessEntity::checkMobSpawnRules);
+                Heightmap.Types.MOTION_BLOCKING, Restless::checkMobSpawnRules);
 
         SpawnPlacements.register(ModEntities.HYTODOM, SpawnPlacementTypes.NO_RESTRICTIONS,
-                Heightmap.Types.MOTION_BLOCKING, JellyfishEntity::checkJellyfishSpawnRules);
+                Heightmap.Types.MOTION_BLOCKING, AbstractJellyfish::checkJellyfishSpawnRules);
 
         SpawnPlacements.register(ModEntities.GHAZE, SpawnPlacementTypes.NO_RESTRICTIONS,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, GhazeEntity::checkMobSpawnRules);
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Ghaze::checkMobSpawnRules);
     }
 }

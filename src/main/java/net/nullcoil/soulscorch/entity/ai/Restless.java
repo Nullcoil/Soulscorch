@@ -34,14 +34,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class RestlessEntity extends Monster implements Enemy, HoglinBase {
+public class Restless extends Monster implements Enemy, HoglinBase {
 
-    private static final EntityDataAccessor<Boolean> AWAKENED = SynchedEntityData.defineId(RestlessEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> AWAKENED = SynchedEntityData.defineId(Restless.class, EntityDataSerializers.BOOLEAN);
 
     private static boolean aiming = false; // Changed to primitive boolean
     private Vec3 chargeDirection;
 
-    public RestlessEntity(EntityType<? extends Monster> entityType, Level level) {
+    public Restless(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -155,14 +155,14 @@ public class RestlessEntity extends Monster implements Enemy, HoglinBase {
 
 
     public class BullrushGoal extends Goal {
-        private final RestlessEntity mob;
+        private final Restless mob;
         private LivingEntity target;
         private Vec3 interceptPoint;
         private int timer;
         private enum State { WAITING, CHARGING, DONE }
         private State state = State.DONE;
 
-        public BullrushGoal(RestlessEntity mob) {
+        public BullrushGoal(Restless mob) {
             this.mob = mob;
         }
 
@@ -283,9 +283,9 @@ public class RestlessEntity extends Monster implements Enemy, HoglinBase {
     }
 
     static class LookAtTargetGoal extends Goal {
-        private final RestlessEntity restless;
+        private final Restless restless;
 
-        public LookAtTargetGoal(RestlessEntity restless) {
+        public LookAtTargetGoal(Restless restless) {
             this.restless = restless;
             this.setFlags(EnumSet.of(Flag.LOOK)); // setControls mapping
         }

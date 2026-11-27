@@ -10,7 +10,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
 
 /**
  * The Ghaze's gaze: while one is agitated at you and you can see each other, your camera
@@ -24,7 +24,7 @@ public final class GhazeGaze {
     private GhazeGaze() {}
 
     /** Only Ghazes this close (blocks) can pull: as far as they watch. */
-    private static final double RANGE = GhazeEntity.WATCH_RADIUS;
+    private static final double RANGE = Ghaze.WATCH_RADIUS;
     /** Share of the way to the Ghaze's face the camera turns per second (subtle). */
     private static final float PULL_PER_SECOND = 0.6F;
     /** Fastest the pull turns the camera, in degrees per second. */
@@ -46,11 +46,11 @@ public final class GhazeGaze {
         Vec3 eyes = player.getEyePosition(partialTick);
 
         // The nearest Ghaze glaring at this player that it can see
-        GhazeEntity watcher = null;
+        Ghaze watcher = null;
         Vec3 face = null;
         double nearest = RANGE * RANGE;
         AABB area = player.getBoundingBox().inflate(RANGE);
-        for (GhazeEntity ghaze : minecraft.level.getEntitiesOfClass(GhazeEntity.class, area)) {
+        for (Ghaze ghaze : minecraft.level.getEntitiesOfClass(Ghaze.class, area)) {
             if (!ghaze.isAgitated() || ghaze.getGazeTargetId() != player.getId()) continue;
             Vec3 head = ghaze.getHeadPosition(partialTick);
             double distance = head.distanceToSqr(eyes);

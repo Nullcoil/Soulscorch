@@ -20,8 +20,8 @@ import net.nullcoil.soulscorch.mixin.cat.CatInvoker;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jspecify.annotations.Nullable;
 
-public class SoulborneCatEntity extends Cat {
-    public SoulborneCatEntity(EntityType<? extends Cat> entityType, Level level) {
+public class SoulborneCat extends Cat {
+    public SoulborneCat(EntityType<? extends Cat> entityType, Level level) {
         super(entityType, level);
     }
 

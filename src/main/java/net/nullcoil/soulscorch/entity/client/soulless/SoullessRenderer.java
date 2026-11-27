@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.PiglinRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoullessEntity;
 
 @Environment(EnvType.CLIENT)
 public class SoullessRenderer extends HumanoidMobRenderer<SoullessEntity, SoullessRenderState, SoullessModel> {

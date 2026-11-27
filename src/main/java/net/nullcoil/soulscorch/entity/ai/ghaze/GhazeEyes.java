@@ -11,8 +11,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.nullcoil.soulscorch.block.ModBlocks;
-import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
-import net.nullcoil.soulscorch.entity.ai.SoullessEntity;
+import net.nullcoil.soulscorch.entity.ai.Restless;
+import net.nullcoil.soulscorch.entity.ai.soulless.SoullessEntity;
 import net.nullcoil.soulscorch.entity.client.soulless.SoullessActivity;
 import net.nullcoil.soulscorch.util.ModTags;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +92,7 @@ public class GhazeEyes {
     }
 
     /** Called every client tick, after the head has turned and tilted. */
-    public void tick(GhazeEntity ghaze) {
+    public void tick(Ghaze ghaze) {
         Level level = ghaze.level();
         RandomSource random = ghaze.getRandom();
         Vec3 head = ghaze.getHeadPosition(1.0F);
@@ -139,7 +139,7 @@ public class GhazeEyes {
     }
 
     /** Picks what an eye does next: something of interest on its side, or a glance somewhere. */
-    private void choose(GhazeEntity ghaze, int i, Eye eye, Vec3 head, boolean searching, RandomSource random) {
+    private void choose(Ghaze ghaze, int i, Eye eye, Vec3 head, boolean searching, RandomSource random) {
         eye.entity = null;
         eye.block = null;
         eye.saccade = true;
@@ -181,12 +181,12 @@ public class GhazeEyes {
         if (!entity.isAlive()) return false;
         if (entity.is(ModTags.Entities.UNINTERESTING)) return false;
         if (entity instanceof SoullessEntity soulless) return soulless.getActivity() != SoullessActivity.PASSIVE;
-        if (entity instanceof RestlessEntity restless) return restless.getAwakened();
+        if (entity instanceof Restless restless) return restless.getAwakened();
         return true;
     }
 
     /** Whether it's still worth looking at: alive, in range, and still in view of this eye. */
-    private boolean stillInterested(GhazeEntity ghaze, int i, Eye eye, Vec3 head) {
+    private boolean stillInterested(Ghaze ghaze, int i, Eye eye, Vec3 head) {
         if (eye.entity != null) {
             if (eye.entity.isRemoved() || !interesting(eye.entity)) return false;
             if (eye.entity.distanceToSqr(ghaze) > INTEREST_RANGE * INTEREST_RANGE) return false;
@@ -199,19 +199,19 @@ public class GhazeEyes {
     }
 
     /** Whether eye {@code i} can see a point: on its side of the head, and nothing in the way. */
-    private boolean canSee(GhazeEntity ghaze, int i, Vec3 head, Vec3 point) {
+    private boolean canSee(Ghaze ghaze, int i, Vec3 head, Vec3 point) {
         if (!this.inView(ghaze, i, point.subtract(head))) return false;
         HitResult hit = ghaze.level().clip(new ClipContext(head, point,
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ghaze));
         return hit.getType() == HitResult.Type.MISS;
     }
 
-    private boolean inView(GhazeEntity ghaze, int i, Vec3 toPoint) {
+    private boolean inView(Ghaze ghaze, int i, Vec3 toPoint) {
         float[] angles = this.anglesFor(ghaze, i, toPoint);
         return Math.abs(angles[0]) <= EYE_REACH_SIDE && Math.abs(angles[1]) <= EYE_REACH_UP;
     }
 
-    private float[] pupilFor(GhazeEntity ghaze, int i, Vec3 toPoint) {
+    private float[] pupilFor(Ghaze ghaze, int i, Vec3 toPoint) {
         float[] angles = this.anglesFor(ghaze, i, toPoint);
         return new float[]{
                 Mth.clamp(angles[0] / HALF_PI, -1.0F, 1.0F) * PUPIL_RANGE,
@@ -224,7 +224,7 @@ public class GhazeEyes {
      * and down (toward +y), the way the model lays the eyes out. Uses the head's turn and
      * tilt (not its small wobble).
      */
-    private float[] anglesFor(GhazeEntity ghaze, int i, Vec3 toPoint) {
+    private float[] anglesFor(Ghaze ghaze, int i, Vec3 toPoint) {
         double horizontal = Math.sqrt(toPoint.x * toPoint.x + toPoint.z * toPoint.z);
         float yaw = (float) (Mth.atan2(toPoint.z, toPoint.x) * Mth.RAD_TO_DEG) - 90.0F;
         float pitch = (float) -Mth.atan2(toPoint.y, horizontal); // radians, positive: below

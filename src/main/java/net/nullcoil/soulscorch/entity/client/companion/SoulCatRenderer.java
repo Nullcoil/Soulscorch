@@ -13,9 +13,9 @@ import net.minecraft.client.renderer.entity.state.CatRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.SoulborneCatEntity;
+import net.nullcoil.soulscorch.entity.ai.SoulborneCat;
 
-public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatRenderState, AbstractFelineModel<CatRenderState>> {
+public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCat, CatRenderState, AbstractFelineModel<CatRenderState>> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/midnight.png");
     private static final Identifier BABY =
@@ -37,7 +37,7 @@ public class SoulCatRenderer extends AgeableMobRenderer<SoulborneCatEntity, CatR
     }
 
     @Override
-    public void extractRenderState(final SoulborneCatEntity entity, final CatRenderState state, final float partialTicks) {
+    public void extractRenderState(final SoulborneCat entity, final CatRenderState state, final float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         state.texture = entity.getVariant().value().assetInfo(state.isBaby).texturePath();
         state.isCrouching = entity.isCrouching();

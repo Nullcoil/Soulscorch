@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.jellyfish.JellyfishEntity;
+import net.nullcoil.soulscorch.entity.ai.jellyfish.AbstractJellyfish;
 
 @Environment(EnvType.CLIENT)
-public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishRenderState, JellyfishModel> {
+public class JellyfishRenderer extends MobRenderer<AbstractJellyfish, JellyfishRenderState, JellyfishModel> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/hytodom.png");
 
@@ -37,7 +37,7 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishRen
     }
 
     @Override
-    public void extractRenderState(JellyfishEntity entity, JellyfishRenderState state, float tickDelta) {
+    public void extractRenderState(AbstractJellyfish entity, JellyfishRenderState state, float tickDelta) {
         super.extractRenderState(entity, state, tickDelta);
         state.IDLE.copyFrom(entity.IDLE);
         state.velocityX = (float) entity.getDeltaMovement().x;

@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.nullcoil.soulscorch.entity.ai.RestlessEntity;
+import net.nullcoil.soulscorch.entity.ai.Restless;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,8 +26,8 @@ public class PlayerDamageMixin {
             AABB searchBox = player.getBoundingBox().inflate(32.0);
 
             // 3. Find all Restless entities in that box that are currently asleep
-            List<RestlessEntity> sleepingRestless = level.getEntitiesOfClass(
-                    RestlessEntity.class,
+            List<Restless> sleepingRestless = level.getEntitiesOfClass(
+                    Restless.class,
                     searchBox,
                     restless -> !restless.getAwakened()
             );
@@ -35,7 +35,7 @@ public class PlayerDamageMixin {
             // 4. If there is at least one sleeping Restless nearby...
             if (!sleepingRestless.isEmpty()) {
                 // Pick exactly one at random
-                RestlessEntity chosenOne = sleepingRestless.get(player.getRandom().nextInt(sleepingRestless.size()));
+                Restless chosenOne = sleepingRestless.get(player.getRandom().nextInt(sleepingRestless.size()));
 
                 // Wake it up and immediately lock it onto the injured player!
                 chosenOne.setAwakened(true);

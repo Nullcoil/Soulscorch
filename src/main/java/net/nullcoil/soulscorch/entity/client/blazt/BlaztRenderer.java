@@ -6,10 +6,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.nullcoil.soulscorch.Soulscorch;
-import net.nullcoil.soulscorch.entity.ai.BlaztEntity;
+import net.nullcoil.soulscorch.entity.ai.Blazt;
 
 @Environment(EnvType.CLIENT)
-public class BlaztRenderer extends MobRenderer<BlaztEntity, BlaztRenderState, BlaztModel> {
+public class BlaztRenderer extends MobRenderer<Blazt, BlaztRenderState, BlaztModel> {
     private static final Identifier TEXTURE =
             Identifier.fromNamespaceAndPath(Soulscorch.MOD_ID, "textures/entity/blazt/blazt.png");
     private static final Identifier SHOOTING_TEXTURE =
@@ -29,7 +29,7 @@ public class BlaztRenderer extends MobRenderer<BlaztEntity, BlaztRenderState, Bl
     }
 
     @Override
-    public void extractRenderState(BlaztEntity entity, BlaztRenderState state, float tickDelta) {
+    public void extractRenderState(Blazt entity, BlaztRenderState state, float tickDelta) {
         // updateRenderState -> extractRenderState
         super.extractRenderState(entity, state, tickDelta);
         state.shooting = entity.isShooting();

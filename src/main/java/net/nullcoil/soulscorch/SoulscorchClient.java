@@ -23,9 +23,10 @@ import net.nullcoil.soulscorch.entity.client.blazt.BlaztRenderer;
 import net.nullcoil.soulscorch.entity.client.companion.SoulCatRenderer;
 import net.nullcoil.soulscorch.entity.client.companion.SoulWolfRenderer;
 import net.nullcoil.soulscorch.entity.client.ghaze.GhazeModel;
+import net.nullcoil.soulscorch.entity.client.wreth.WrethModel;
 import net.nullcoil.soulscorch.entity.client.ghaze.GhazeRenderer;
 import net.nullcoil.soulscorch.entity.client.ghaze.GhazeSearchSoundInstance;
-import net.nullcoil.soulscorch.entity.ai.ghaze.GhazeEntity;
+import net.nullcoil.soulscorch.entity.ai.ghaze.Ghaze;
 import net.minecraft.client.Minecraft;
 import net.nullcoil.soulscorch.entity.client.heedless.HeedlessModel;
 import net.nullcoil.soulscorch.entity.client.heedless.HeedlessRenderer;
@@ -38,6 +39,7 @@ import net.nullcoil.soulscorch.entity.client.restless.RestlessModel;
 import net.nullcoil.soulscorch.entity.client.restless.RestlessRenderer;
 import net.nullcoil.soulscorch.entity.client.soulless.SoullessModel;
 import net.nullcoil.soulscorch.entity.client.soulless.SoullessRenderer;
+import net.nullcoil.soulscorch.entity.client.wreth.WrethRenderer;
 import net.nullcoil.soulscorch.entity.vehicle.NetherBoatRenderer;
 import net.nullcoil.soulscorch.particles.ModParticles;
 import net.nullcoil.soulscorch.particles.SeepingDripParticle;
@@ -82,8 +84,11 @@ public class SoulscorchClient implements ClientModInitializer {
 
         ModelLayerRegistry.registerModelLayer(GhazeModel.GHAZE, GhazeModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.GHAZE, GhazeRenderer::new);
-        GhazeEntity.searchLoopStarter = ghaze ->
+        Ghaze.searchLoopStarter = ghaze ->
                 Minecraft.getInstance().getSoundManager().play(new GhazeSearchSoundInstance(ghaze));
+
+        ModelLayerRegistry.registerModelLayer(WrethModel.WRETH, WrethModel::createBodyLayer);
+        EntityRendererRegistry.register(ModEntities.WRETH, WrethRenderer::new);
 
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_HANG, SeepingDripParticle.HangProvider::new);
         ParticleProviderRegistry.getInstance().register(ModParticles.SEEPING_DRIP_FALL, SeepingDripParticle.FallProvider::new);
